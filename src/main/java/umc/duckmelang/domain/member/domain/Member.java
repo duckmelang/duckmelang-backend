@@ -3,6 +3,7 @@ package umc.duckmelang.domain.member.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import umc.duckmelang.domain.authprovider.domain.AuthProvider;
+import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.review.domain.Review;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
@@ -10,7 +11,6 @@ import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -49,6 +49,9 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AuthProvider> authProviderList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberIdol> memberIdolList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviewList = new ArrayList<>();
