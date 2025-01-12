@@ -1,14 +1,15 @@
 spring:
   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/duckmelang
     username: root
     password: 1102
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
   logging:
     level:
       org.springframework: DEBUG
-  jwt:
-    secret: ZHVja21lbGFuZ2R1Y2ttZWxhbmdkdWNrbWVsYW5nZHVja21lbGFuZw==
-  cors:
-    allowed-origins: "*"
-    allowed-methods: "*"
-    allowed-headers: "*"
