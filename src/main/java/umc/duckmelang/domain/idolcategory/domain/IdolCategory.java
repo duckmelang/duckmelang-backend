@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.postidol.domain.PostIdol;
+import umc.duckmelang.global.common.BaseEntity;
+
 
 import java.util.ArrayList;
 import java.util.List;

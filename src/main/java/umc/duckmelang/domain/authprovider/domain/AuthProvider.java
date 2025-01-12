@@ -3,6 +3,8 @@ package umc.duckmelang.domain.authprovider.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.global.common.BaseEntity;
+
 
 @Entity
 @Getter
