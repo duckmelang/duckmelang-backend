@@ -15,6 +15,9 @@ public class AuthProvider extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
+    private String textId;
+
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private String provider;
