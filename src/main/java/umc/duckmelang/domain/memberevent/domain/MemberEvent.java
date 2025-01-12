@@ -14,6 +14,7 @@ import umc.duckmelang.global.common.BaseEntity;
 public class MemberEvent extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_event_id")
     private Long id;
 
     //n:1 단방향

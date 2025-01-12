@@ -16,6 +16,7 @@ import umc.duckmelang.global.common.BaseEntity;
 public class Application extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "application_id")
     private Long id;
 
     @Enumerated(EnumType.STRING)
