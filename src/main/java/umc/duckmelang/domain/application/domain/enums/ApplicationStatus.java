@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.application.enums;
+package umc.duckmelang.domain.application.domain.enums;
 
 public enum ApplicationStatus {
     PENDING,

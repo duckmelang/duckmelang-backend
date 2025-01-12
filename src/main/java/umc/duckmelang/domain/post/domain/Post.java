@@ -1,13 +1,15 @@
-package umc.duckmelang.domain.post.entity;
+package umc.duckmelang.domain.post.domain;
 
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import umc.duckmelang.domain.application.entity.Application;
-import umc.duckmelang.domain.bookmark.entity.Bookmark;
-import umc.duckmelang.domain.eventcategory.entity.EventCategory;
-import umc.duckmelang.domain.postimage.entity.PostImage;
+import umc.duckmelang.domain.application.domain.Application;
+import umc.duckmelang.domain.bookmark.domain.Bookmark;
+import umc.duckmelang.domain.eventcategory.domain.EventCategory;
+import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.postidol.domain.PostIdol;
+import umc.duckmelang.domain.postimage.domain.PostImage;
 import umc.duckmelang.global.common.BaseEntity;
 
 import java.time.LocalDate;

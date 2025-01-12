@@ -1,8 +1,10 @@
-package umc.duckmelang.domain.bookmark.entity;
+package umc.duckmelang.domain.application.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import umc.duckmelang.domain.post.entity.Post;
+import umc.duckmelang.domain.application.domain.enums.ApplicationStatus;
+import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.global.common.BaseEntity;
 
 @Entity
@@ -11,11 +13,14 @@ import umc.duckmelang.global.common.BaseEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Bookmark extends BaseEntity {
+public class Application extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bookmark_id", nullable = false)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(8) DEFAULT 'PENDING'")
+    private ApplicationStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
@@ -25,32 +30,28 @@ public class Bookmark extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public void setMemberId(Long memberId) {
-        if (this.memberId == null) {}
-    }
-
     // 연관관계 편의 메서드
     public void setPost(Post post) {
         // 기존 관계 제거
         if (this.post != null) {
-            this.post.getBookmarkList().remove(this);
+            this.post.getApplicationList().remove(this);
         }
         this.post = post;
         // 새로운 관계 설정
         if (post != null) {
-            post.getBookmarkList().add(this);
+            post.getApplicationList().add(this);
         }
     }
 
     public void setMember(Member member) {
         // 기존 관계 제거
         if (this.member != null) {
-            this.member.getBookmarkList().remove(this);
+            this.member.getApplicationList().remove(this);
         }
         this.member = member;
         // 새로운 관계 설정
         if (member != null) {
-            member.getBookmarkList().add(this);
+            member.getApplicationList().add(this);
         }
     }
 }

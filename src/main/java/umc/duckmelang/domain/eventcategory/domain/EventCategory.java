@@ -1,8 +1,8 @@
-package umc.duckmelang.domain.eventcategory.entity;
+package umc.duckmelang.domain.eventcategory.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import umc.duckmelang.domain.post.entity.Post;
+import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.global.common.BaseEntity;
 
 import java.util.*;
