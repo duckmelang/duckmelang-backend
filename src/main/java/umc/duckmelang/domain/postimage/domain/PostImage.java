@@ -26,12 +26,10 @@ public class PostImage extends BaseEntity {
 
     // 연관관계 편의 메서드
     public void setPost(Post post) {
-        // 기존 관계 제거
         if (this.post != null) {
             this.post.getPostImageList().remove(this);
         }
         this.post = post;
-        // 새로운 관계 설정
         if (post != null) {
             post.getPostImageList().add(this);
         }

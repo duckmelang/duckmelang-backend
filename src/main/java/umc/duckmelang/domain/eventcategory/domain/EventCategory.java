@@ -16,6 +16,7 @@ import java.util.*;
 public class EventCategory extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "event_category_id")
     private Long id;
 
     @Column(name = "name", columnDefinition = "TINYTEXT", nullable = false)

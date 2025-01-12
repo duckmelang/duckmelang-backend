@@ -19,6 +19,7 @@ public class IdolCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idol_category_id")
     private Long id;
 
     @Column(nullable = false, length = 30)
@@ -31,9 +32,10 @@ public class IdolCategory extends BaseEntity {
     private String profileImage;
 
     @OneToMany(mappedBy = "idolCategory", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostIdol> postIdols = new ArrayList<>();
+    private List<PostIdol> postIdolList = new ArrayList<>();
 
+    //n:1 단방향 고려
     @OneToMany(mappedBy = "idolCategory", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberIdol> memberIdols = new ArrayList<>();
+    private List<MemberIdol> memberIdolList = new ArrayList<>();
 
 }

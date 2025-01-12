@@ -62,12 +62,10 @@ public class Post extends BaseEntity {
 
     // 연관관계 편의 메서드
     public void setMember(Member member) {
-        // 기존 관계 제거
         if (this.member != null) {
             this.member.getPostList().remove(this);
         }
         this.member = member;
-        // 새로운 관계 설정
         if (member != null) {
             member.getPostList().add(this);
         }
@@ -75,12 +73,10 @@ public class Post extends BaseEntity {
 
     // 연관관계 편의 메서드
     public void setEventCategory(EventCategory eventCategory) {
-        // 기존 관계 제거
         if (this.eventCategory != null) {
             this.eventCategory.getPostList().remove(this);
         }
         this.eventCategory = eventCategory;
-        // 새로운 관계 설정
         if (eventCategory != null) {
             eventCategory.getPostList().add(this);
         }

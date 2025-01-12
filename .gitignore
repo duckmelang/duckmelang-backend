@@ -4,7 +4,8 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-!**/src/test/**
+!**/src/test/java/umc/duckmelang/domain/review/*
+!**/src/test/java/umc/duckmelang/domain/member/*
 
 ### STS ###
 .apt_generated
