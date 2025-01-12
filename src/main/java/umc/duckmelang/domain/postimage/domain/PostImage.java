@@ -7,8 +7,7 @@ import umc.duckmelang.global.common.BaseEntity;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class PostImage extends BaseEntity {

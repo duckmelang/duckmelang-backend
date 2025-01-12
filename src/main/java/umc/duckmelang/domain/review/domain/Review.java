@@ -6,7 +6,6 @@ import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.global.common.BaseEntity;
 
 @Entity
-@Setter
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -12,7 +12,6 @@ import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.bookmark.domain.Bookmark;
 import umc.duckmelang.domain.landmine.domain.Landmine;
-import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.global.common.BaseEntity;
 
 import java.time.LocalDate;
@@ -20,7 +19,6 @@ import java.util.*;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
