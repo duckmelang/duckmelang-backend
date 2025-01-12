@@ -5,9 +5,12 @@ import lombok.*;
 import umc.duckmelang.domain.authprovider.domain.AuthProvider;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
+import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.review.domain.Review;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
-
+import umc.duckmelang.domain.application.domain.Application;
+import umc.duckmelang.domain.bookmark.domain.Bookmark;
+import umc.duckmelang.global.common.BaseEntity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -58,5 +61,14 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberEvent> memberEventList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> postList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Application> applicationList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Bookmark> bookmarkList = new ArrayList<>();
 
 }
