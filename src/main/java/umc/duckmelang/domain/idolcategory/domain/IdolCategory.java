@@ -25,7 +25,7 @@ public class IdolCategory extends BaseEntity {
     @Column(length = 30)
     private String company;
 
-    @Column(length = 255)
+    @Column(length = 1024)
     private String profileImage;
 
     @OneToMany(mappedBy = "idolCategory", cascade = CascadeType.ALL, orphanRemoval = true)

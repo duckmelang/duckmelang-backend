@@ -15,7 +15,7 @@ public class MemberProfileImage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1024)
     private String memberImage; // S3 URL을 저장할 필드
 
     @ManyToOne(fetch = FetchType.LAZY)
