@@ -49,5 +49,15 @@ public class MateRelationship extends BaseEntity {
         if (secondMember != null)
             secondMember.getMateRelationshipinSecondList().add(this);
     }
+
+    public void setApplication(Application application) {
+        if (this.application != null) {
+            this.application.setMateRelationship(null);
+        }
+        this.application = application;
+        if (application != null) {
+            application.setMateRelationship(this);
+        }
+    }
 }
 

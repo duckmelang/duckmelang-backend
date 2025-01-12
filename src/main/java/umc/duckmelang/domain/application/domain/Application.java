@@ -3,6 +3,7 @@ package umc.duckmelang.domain.application.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import umc.duckmelang.domain.application.domain.enums.ApplicationStatus;
+import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.global.common.BaseEntity;
@@ -30,6 +31,9 @@ public class Application extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @OneToOne(mappedBy = "mateRelationShip", cascade = CascadeType.ALL)
+    private MateRelationship mateRelationship;
+
     // 연관관계 편의 메서드
     public void setPost(Post post) {
         if (this.post != null) {
@@ -49,5 +53,10 @@ public class Application extends BaseEntity {
         if (member != null) {
             member.getApplicationList().add(this);
         }
+    }
+
+    // MateRelationship entity의 연관관계 편의 메서드를 위한 setter 메서드
+    public void setMateRelationship(MateRelationship mateRelationship) {
+        this.mateRelationship = mateRelationship;
     }
 }
