@@ -12,3 +12,7 @@ spring:
   logging:
     level:
       root: INFO
+  cors:
+    allowed-origins: "*"
+    allowed-methods: "*"
+    allowed-headers: "*"

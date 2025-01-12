@@ -23,12 +23,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers("/login", "/login/oauth", "/signup").permitAll()
-                        .anyRequest().authenticated()
-                )
+                .cors().and()
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 비활성화
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll() // Swagger 관련 경로 허용
+                        .requestMatchers("/api/test/**").permitAll() // JWT 테스트 경로 허용
+                        .anyRequest().authenticated()) // 그 외 요청 인증 필요
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
 
