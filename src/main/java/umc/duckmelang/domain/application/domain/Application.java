@@ -31,7 +31,7 @@ public class Application extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(mappedBy = "mateRelationShip", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "application", cascade = CascadeType.ALL)
     private MateRelationship mateRelationship;
 
     // 연관관계 편의 메서드

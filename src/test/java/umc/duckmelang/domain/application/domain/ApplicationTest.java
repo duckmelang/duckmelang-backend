@@ -9,8 +9,9 @@ public class ApplicationTest {
     @DisplayName("북마크 생성 테스트")
     void addApplicationRelationTest(){
         //given
-        Application application = new Application();
-        application.setId(1L);
+        Application application = Application.builder()
+                .id(1L)
+                .build();
         
     }
 }
