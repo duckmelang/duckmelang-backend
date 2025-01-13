@@ -1,4 +1,4 @@
-package umc.duckmelang.temp.service;
+package umc.duckmelang.domain.temp.service;
 
 public interface TempQueryService {
 

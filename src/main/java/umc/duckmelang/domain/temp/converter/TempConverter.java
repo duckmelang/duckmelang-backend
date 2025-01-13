@@ -1,6 +1,6 @@
-package umc.duckmelang.temp.converter;
+package umc.duckmelang.domain.temp.converter;
 
-import umc.duckmelang.temp.dto.TempResponse;
+import umc.duckmelang.domain.temp.dto.TempResponse;
 
 public class TempConverter {
     public static TempResponse.TempTestDTO toTempTestDTO(){

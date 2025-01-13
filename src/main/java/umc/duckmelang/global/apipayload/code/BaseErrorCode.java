@@ -1,4 +1,4 @@
-package umc.duckmelang.apipayload.code;
+package umc.duckmelang.global.apipayload.code;
 
 public interface BaseErrorCode {
 

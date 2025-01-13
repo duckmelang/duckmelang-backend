@@ -1,4 +1,4 @@
-package umc.duckmelang.temp.dto;
+package umc.duckmelang.domain.temp.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

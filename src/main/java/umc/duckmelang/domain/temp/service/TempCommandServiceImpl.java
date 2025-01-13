@@ -1,4 +1,4 @@
-package umc.duckmelang.temp.service;
+package umc.duckmelang.domain.temp.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

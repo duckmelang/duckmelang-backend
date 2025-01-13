@@ -1,9 +1,9 @@
-package umc.duckmelang.temp.service;
+package umc.duckmelang.domain.temp.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import umc.duckmelang.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.apipayload.exception.handler.TempHandler;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.handler.TempHandler;
 
 @Service
 @RequiredArgsConstructor

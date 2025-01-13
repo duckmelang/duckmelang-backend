@@ -1,12 +1,12 @@
-package umc.duckmelang.apipayload;
+package umc.duckmelang.global.apipayload;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import umc.duckmelang.apipayload.code.BaseCode;
-import umc.duckmelang.apipayload.code.status.SuccessStatus;
+import umc.duckmelang.global.apipayload.code.BaseCode;
+import umc.duckmelang.global.apipayload.code.status.SuccessStatus;
 
 @Getter
 @AllArgsConstructor

@@ -1,9 +1,9 @@
-package umc.duckmelang.apipayload.exception;
+package umc.duckmelang.global.apipayload.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import umc.duckmelang.apipayload.code.BaseErrorCode;
-import umc.duckmelang.apipayload.code.ErrorReasonDTO;
+import umc.duckmelang.global.apipayload.code.BaseErrorCode;
+import umc.duckmelang.global.apipayload.code.ErrorReasonDTO;
 
 @Getter
 @AllArgsConstructor

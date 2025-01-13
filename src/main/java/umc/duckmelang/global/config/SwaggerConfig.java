@@ -1,4 +1,4 @@
-package umc.duckmelang.config;
+package umc.duckmelang.global.config;
 
 
 import io.swagger.v3.oas.models.Components;

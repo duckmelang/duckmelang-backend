@@ -1,10 +1,10 @@
-package umc.duckmelang.apipayload.code.status;
+package umc.duckmelang.global.apipayload.code.status;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import umc.duckmelang.apipayload.code.BaseCode;
-import umc.duckmelang.apipayload.code.ReasonDTO;
+import umc.duckmelang.global.apipayload.code.BaseCode;
+import umc.duckmelang.global.apipayload.code.ReasonDTO;
 
 @Getter
 @AllArgsConstructor
