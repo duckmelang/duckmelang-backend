@@ -28,6 +28,9 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(length=30)
+    private String loginId;
+
     @Column(length = 30)
     private String name;
 
@@ -37,7 +40,7 @@ public class Member extends BaseEntity {
     @Column(length = 500)
     private String introduction;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate birth;
 
     private Boolean gender;
@@ -85,4 +88,9 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "secondMember", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MateRelationship> mateRelationshipinSecondList = new ArrayList<>();
+
+    // 비밀번호 설정 함수
+    public void encodePassword(String password){
+        this.password=password;
+    }
 }

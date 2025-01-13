@@ -21,20 +21,21 @@ public class SwaggerConfig {
                 .description("UMC duckmelang API 명세서")
                 .version("1.0.0");
 
-        String jwtSchemeName = "BearerAuth";
+        String jwtSchemeName = "JWT TOKEN";
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
 
         // SecuritySchemes 등록
-        SecurityScheme securityScheme = new SecurityScheme()
-                .name(jwtSchemeName)
-                .type(SecurityScheme.Type.HTTP) // HTTP 방식
-                .scheme("bearer")
-                .bearerFormat("JWT");
+        Components components = new Components()
+                .addSecuritySchemes(jwtSchemeName, new SecurityScheme()
+                        .name(jwtSchemeName)
+                        .type(SecurityScheme.Type.HTTP) // HTTP 방식
+                        .scheme("bearer")
+                        .bearerFormat("JWT"));
 
         return new OpenAPI()
                 .addServersItem(new Server().url("/"))
                 .info(info)
                 .addSecurityItem(securityRequirement)
-                .components(new Components().addSecuritySchemes(jwtSchemeName, securityScheme));
+                .components(components);
     }
 }

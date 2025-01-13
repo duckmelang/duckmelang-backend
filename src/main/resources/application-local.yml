@@ -1,5 +1,6 @@
 spring:
   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/duckmelang
     username: root
     password: 1102
@@ -11,6 +12,4 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
   logging:
     level:
-      org.springframework: DEBUG
-server:
-  port: 8080
+      org.springframework: INFO
