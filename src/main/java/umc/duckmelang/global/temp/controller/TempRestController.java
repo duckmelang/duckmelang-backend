@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.temp.controller;
+package umc.duckmelang.global.temp.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import umc.duckmelang.global.apipayload.ApiResponse;
-import umc.duckmelang.domain.temp.converter.TempConverter;
-import umc.duckmelang.domain.temp.dto.TempResponse;
-import umc.duckmelang.domain.temp.service.TempQueryService;
+import umc.duckmelang.global.temp.converter.TempConverter;
+import umc.duckmelang.global.temp.dto.TempResponse;
+import umc.duckmelang.global.temp.service.TempQueryService;
 
 @RestController
 @RequestMapping("/temp")
