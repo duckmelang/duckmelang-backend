@@ -1,4 +1,4 @@
-package umc.duckmelang.global.jwt;
+package umc.duckmelang.global.auth.jwt;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

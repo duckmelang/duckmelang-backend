@@ -1,4 +1,4 @@
-package umc.duckmelang.global.jwt;
+package umc.duckmelang.global.auth.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,14 +34,17 @@ public class MemberPrincipal implements UserDetails{
     public boolean isAccountNonExpired() {
         return true;
     }
+
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
     @Override
     public boolean isEnabled() {
         return true;

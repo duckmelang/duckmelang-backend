@@ -17,13 +17,4 @@ public class MemberResponseDto {
         Long memberId;
         LocalDateTime createdAt;
     }
-
-    @Builder
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class TokenResponse {
-        private String accessToken;
-        private String refreshToken;
-    }
 }

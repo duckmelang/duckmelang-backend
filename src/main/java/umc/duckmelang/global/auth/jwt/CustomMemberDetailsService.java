@@ -1,4 +1,4 @@
-package umc.duckmelang.global.jwt;
+package umc.duckmelang.global.auth.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,8 +16,11 @@ public class CustomMemberDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        // 사용자 조회
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("해당 이메일(" + email + ")의 회원을 찾을 수 없습니다."));
+
+        // UserDetails 구현체 반환
         return new MemberPrincipal(member);
     }
 }
