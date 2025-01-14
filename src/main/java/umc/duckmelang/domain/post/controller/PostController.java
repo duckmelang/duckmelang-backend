@@ -1,6 +1,8 @@
 package umc.duckmelang.domain.post.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -11,6 +13,7 @@ import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostResponseDTO;
 import umc.duckmelang.domain.post.service.PostQueryService;
+import umc.duckmelang.domain.postidol.domain.PostIdol;
 import umc.duckmelang.global.apipayload.ApiResponse;
 
 @RestController
@@ -32,4 +35,15 @@ public class PostController {
         Page<Post> postList = postQueryService.getPostList(page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDTO(postList));
     }
+
+    @GetMapping("/idol/{idolId}")
+    @Operation(summary = "홈화면 게시글 아이돌 기반 조회 API", description = "해당하는 아이돌의 글만 조회하는 API 입니다. 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
+    @Parameters({
+            @Parameter(name = "idolId", description = "아이돌 Id, path variable 입니다!")
+    })
+    public ApiResponse<PostResponseDTO.PostPreviewListDTO> getPostListByIdol (@PathVariable(name="idolId") Long idolId, @RequestParam(name = "page") Integer page){
+        Page<Post> postList = postQueryService.getPostListByIdol(idolId, page);
+        return ApiResponse.onSuccess(PostConverter.postPreviewListDTO(postList));
+    }
+
 }

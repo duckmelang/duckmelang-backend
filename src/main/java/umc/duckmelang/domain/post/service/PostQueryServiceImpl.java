@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.repository.PostRepository;
-
 @Service
 @RequiredArgsConstructor
 public class PostQueryServiceImpl implements PostQueryService{
@@ -17,6 +16,9 @@ public class PostQueryServiceImpl implements PostQueryService{
     public Page<Post> getPostList(Integer page){
         return postRepository.findAll(PageRequest.of(page, 10));
     }
-
+    @Override
+    public Page<Post> getPostListByIdol(Long idolId, Integer page){
+        return postRepository.findByIdol(idolId, PageRequest.of(page, 10));
+    }
 
 }
