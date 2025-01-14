@@ -6,10 +6,15 @@ spring:
     password: 1102
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
   logging:
     level:
       org.springframework: INFO
+
+jwt:
+  secret: "thisIsMyJwtSecretKeyOfLength32!!"
+  access-expiration: 1800000       #30분
+  refresh-expiration: 604800000    #7일

@@ -28,9 +28,6 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(length=30)
-    private String loginId;
-
     @Column(length = 30)
     private String name;
 
@@ -50,6 +47,9 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false, length = 100)
     private String password;
+
+    // 일단 Refresh Token을 db에 저장하는 경우로 진행하겠습니다.
+    private String refreshToken;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberProfileImage> memberProfileImageList = new ArrayList<>();
@@ -92,5 +92,9 @@ public class Member extends BaseEntity {
     // 비밀번호 설정 함수
     public void encodePassword(String password){
         this.password=password;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

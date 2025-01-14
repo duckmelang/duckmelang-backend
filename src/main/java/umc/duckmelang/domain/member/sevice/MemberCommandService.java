@@ -4,5 +4,5 @@ import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 
 public interface MemberCommandService {
-    Member joinMember(MemberRequestDto.JoinDto request);
+    Member signupMember(MemberRequestDto.SignupDto request);
 }

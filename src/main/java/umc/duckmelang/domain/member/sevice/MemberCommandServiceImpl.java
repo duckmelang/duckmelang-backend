@@ -9,6 +9,7 @@ import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 
+
 @Service
 @RequiredArgsConstructor
 public class MemberCommandServiceImpl implements MemberCommandService{
@@ -18,7 +19,7 @@ public class MemberCommandServiceImpl implements MemberCommandService{
 
     @Override
     @Transactional
-    public Member joinMember(MemberRequestDto.JoinDto request){
+    public Member signupMember(MemberRequestDto.SignupDto request){
         Member newMember = MemberConverter.toMember(request);
         newMember.encodePassword(passwordEncoder.encode(request.getPassword()));
         return memberRepository.save(newMember);
