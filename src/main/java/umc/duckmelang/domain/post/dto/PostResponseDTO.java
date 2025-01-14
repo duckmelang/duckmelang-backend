@@ -31,6 +31,20 @@ public class PostResponseDTO {
         Long totalElements;
         Boolean isFirst;
         Boolean isLast;
+    }
 
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class PostDetailDTO{
+        private String name;
+        private LocalDate birth;
+        private Boolean gender;
+        private String title;
+        private String content;
+        private List<String> idol;
+        private String category;
+        private LocalDate date;
+        private LocalDateTime createdAt;
     }
 }

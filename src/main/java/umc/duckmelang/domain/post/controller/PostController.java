@@ -16,6 +16,9 @@ import umc.duckmelang.domain.post.service.PostQueryService;
 import umc.duckmelang.domain.postidol.domain.PostIdol;
 import umc.duckmelang.global.apipayload.ApiResponse;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
@@ -44,6 +47,15 @@ public class PostController {
     public ApiResponse<PostResponseDTO.PostPreviewListDTO> getPostListByIdol (@PathVariable(name="idolId") Long idolId, @RequestParam(name = "page") Integer page){
         Page<Post> postList = postQueryService.getPostListByIdol(idolId, page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDTO(postList));
+    }
+
+    @GetMapping("/{postId}")
+    @Operation(summary = "게시글 상세 조회 API", description = "홈화면에서 게시글 1개 클릭시 자세히 보여주는 API입니다. 성별은 true일때 남자, false일때 여자입니다. 스크랩, 채팅, 조회와 원하는 조건은 아직 만들지 않았음")
+    @Parameters({@Parameter(name = "postId", description = "게시글 Id, path variable 입니다")})
+    public ApiResponse<PostResponseDTO.PostDetailDTO> getPostDetail (@PathVariable(name="postId") Long postId){
+        Post post = postQueryService.getPostDetail(postId)
+                .orElseThrow(()-> new IllegalArgumentException("해당 게시글이 존재하지 않습니다"));
+        return ApiResponse.onSuccess(PostConverter.postDetailDTO(post));
     }
 
 }

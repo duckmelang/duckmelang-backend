@@ -35,6 +35,26 @@ public class PostConverter {
                 .build();
     }
 
+    public static PostResponseDTO.PostDetailDTO postDetailDTO(Post post) {
+
+        List<String> idolNames = post.getPostIdolList().stream()
+                .map(postIdol -> postIdol.getIdolCategory().getName())
+                .collect(Collectors.toList());
+
+        return PostResponseDTO.PostDetailDTO.builder()
+                .name(post.getMember().getName())
+                .birth(post.getMember().getBirth())
+                .gender(post.getMember().getGender())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .idol(idolNames)
+                .category(post.getEventCategory().getName())
+                .date(post.getEventDate())
+                .createdAt(post.getCreatedAt())
+                .build();
+
+    }
+
 
 
 }
