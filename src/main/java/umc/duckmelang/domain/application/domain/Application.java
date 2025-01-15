@@ -59,4 +59,12 @@ public class Application extends BaseEntity {
     public void setMateRelationship(MateRelationship mateRelationship) {
         this.mateRelationship = mateRelationship;
     }
+
+    //비즈니스 메소드
+    public boolean updateStatus(ApplicationStatus status) {
+        if (this.status == ApplicationStatus.PENDING) {
+            this.status = status;
+        }
+        return this.status == status;
+    }
 }
