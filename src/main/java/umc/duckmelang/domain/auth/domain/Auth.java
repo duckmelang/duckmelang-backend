@@ -6,7 +6,6 @@ import umc.duckmelang.domain.auth.enums.ProviderKind;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.global.common.BaseEntity;
 
-
 @Entity
 @Getter
 @Builder

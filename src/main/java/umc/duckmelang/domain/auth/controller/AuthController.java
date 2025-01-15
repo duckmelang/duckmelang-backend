@@ -93,4 +93,4 @@ public class AuthController {
         authService.saveOrUpdateRefreshToken(auth.getMember(), ProviderKind.LOCAL, newRefreshToken);
         return ApiResponse.onSuccess(new AuthResponseDto.TokenResponse(newAccessToken, newRefreshToken));
     }
-    }
+}
