@@ -18,4 +18,13 @@ public class MemberResponseDto {
         private List<Long> idolCategoryIds;
 
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SelectEventsResultDto {
+        private Long memberId;
+        private List<Long> eventCategoryIds;
+    }
 }

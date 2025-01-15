@@ -17,4 +17,10 @@ public class MemberRequestDto {
         @Size(min = 1, message = "최소 하나의 아이돌을 선택해야 합니다.")
         private List<Long> idolCategoryIds;
     }
+
+    @Builder
+    @Getter
+    public static class SelectEventsDto{
+        private List<Long> eventCategoryIds;
+    }
 }
