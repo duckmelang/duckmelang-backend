@@ -62,9 +62,10 @@ public class Application extends BaseEntity {
 
     //비즈니스 메소드
     public boolean updateStatus(ApplicationStatus status) {
-        if (this.status == ApplicationStatus.PENDING) {
-            this.status = status;
+        if (this.status != ApplicationStatus.PENDING) {
+            return false;
         }
-        return this.status == status;
+        this.status = status;
+        return true;
     }
 }
