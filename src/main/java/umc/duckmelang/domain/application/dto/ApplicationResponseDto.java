@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.util.*;
 import umc.duckmelang.domain.application.domain.enums.ApplicationStatus;
 
 import java.time.LocalDateTime;
@@ -28,4 +29,31 @@ public class ApplicationResponseDto {
         Long mateRelationshipId;
         LocalDateTime createdAt;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ReceivedApplicationListDto{
+        List<ReceivedApplicationDto> receivedApplicationList;
+        Integer listSize;
+        Integer totalPage;
+        Long totalElements;
+        Boolean isFirst;
+        Boolean isLast;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SentApplicationListDto{
+        List<SentApplicationDto> sentApplicationList;
+        Integer listSize;
+        Integer totalPage;
+        Long totalElements;
+        Boolean isFirst;
+        Boolean isLast;
+    }
+
 }
