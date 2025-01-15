@@ -1,12 +1,12 @@
 package umc.duckmelang.global.common.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.stereotype.Component;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.GeneralException;
 
 import java.util.Date;
 
@@ -45,11 +45,16 @@ public class JwtUtil {
 
     // 토큰 검증
     public boolean validateToken(String token){
-        try{
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
             return true;
-        } catch(Exception e){
-            return false;
+        } catch (ExpiredJwtException e) {
+            throw new GeneralException(ErrorStatus.TOKEN_EXPIRED);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new GeneralException(ErrorStatus.INVALID_TOKEN);
         }
     }
 

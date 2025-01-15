@@ -13,5 +13,5 @@ spring:
 
 jwt:
   secret-key: "duckmelangduckmelangduckmelangduckmelangduckmelang"
-  access-expiration: 1800000       #30분
-  refresh-expiration: 604800000    #7일
+  access-expiration: 60000       #1분
+  refresh-expiration: 604800000  #7일
