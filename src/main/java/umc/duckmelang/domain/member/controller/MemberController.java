@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import umc.duckmelang.domain.landmine.domain.Landmine;
 import umc.duckmelang.domain.member.converter.MemberConverter;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
@@ -49,6 +50,21 @@ public class MemberController {
 
         return ApiResponse.onSuccess(MemberConverter.toSelectEventResponseDto(updatedMemberEventList));
     }
+
+    @Operation(summary = "지뢰 설정 API", description = "회원이 기피하는 키워드(들)를 선택하는 API입니다. 하나도 선택하지 않을 수 있습니다.(이 경우 빈 리스트를 반환합니다)")
+    @PostMapping("/{memberId}/landmine")
+    public ApiResponse<MemberResponseDto.SelectLandmineResultDto> selectLandmines(
+            @PathVariable(name = "memberId") Long memberId,
+            @RequestBody @Valid MemberRequestDto.SelectLandminesDto request) {
+
+        List<Landmine> updatedLandmineList = memberCommandService.selectLandmines(memberId, request);
+
+        // 리스트가 비어 있는 경우 허용(따라서 예외 처리 생략)
+
+        return ApiResponse.onSuccess(MemberConverter.toSelectLandmineResponseDto(updatedLandmineList));
+
+    }
+
 
 
 

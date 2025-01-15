@@ -23,4 +23,10 @@ public class MemberRequestDto {
     public static class SelectEventsDto{
         private List<Long> eventCategoryIds;
     }
+
+    @Builder
+    @Getter
+    public static class SelectLandminesDto {
+        private List<String> landmineContents;
+    }
 }

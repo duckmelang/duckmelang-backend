@@ -1,5 +1,6 @@
 package umc.duckmelang.domain.member.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -8,6 +9,8 @@ import umc.duckmelang.domain.eventcategory.domain.EventCategory;
 import umc.duckmelang.domain.eventcategory.repository.EventCategoryRepository;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.idolcategory.repository.IdolCategoryRepository;
+import umc.duckmelang.domain.landmine.domain.Landmine;
+import umc.duckmelang.domain.landmine.repository.LandmineRepository;
 import umc.duckmelang.domain.member.domain.Member;
 
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
@@ -17,6 +20,7 @@ import umc.duckmelang.domain.memberevent.repository.MemberEventRepository;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberidol.repository.MemberIdolRepository;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +48,9 @@ class MemberCommandServiceTest {
 
     @Mock
     private MemberEventRepository memberEventRepository;
+
+    @Mock
+    private LandmineRepository landmineRepository;
 
     public MemberCommandServiceTest() {
         MockitoAnnotations.openMocks(this);
@@ -214,4 +221,101 @@ class MemberCommandServiceTest {
 
 
 
+    // 키워드가 겹치지 않도록 지뢰를 3가지 설정하는 경우
+    @Test
+    public void selectLandmines_success() {
+        // Given
+        Long memberId = 1L;
+
+        // Mock Member 객체 생성
+        Member member = Member.builder()
+                .id(memberId)
+                .name("Test User")
+                .email("test@example.com")
+                .build();
+
+        List<String> landmineContents = Arrays.asList("지뢰1", "지뢰2", "지뢰3");
+        MemberRequestDto.SelectLandminesDto requestDto = MemberRequestDto.SelectLandminesDto.builder()
+                .landmineContents(landmineContents)
+                .build();
+
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
+
+        // Mock deleteAllByMember() 메서드 설정
+        doNothing().when(landmineRepository).deleteAllByMember(member);
+
+        // Mock saveAll() 메서드 설정
+        List<Landmine> mockLandmineList = landmineContents.stream()
+                .map(content -> new Landmine(null, content, member)) // ID는 null로 설정
+                .toList();
+
+        when(landmineRepository.saveAll(anyList())).thenReturn(mockLandmineList);
+
+        // When
+        List<Landmine> result = memberCommandService.selectLandmines(memberId, requestDto);
+
+        // Then
+        assertThat(result).hasSize(3);
+        verify(memberRepository, times(1)).findById(memberId);
+        verify(landmineRepository, times(1)).deleteAllByMember(member);
+        verify(landmineRepository, times(1)).saveAll(anyList());
+    }
+
+    // 지뢰 키워드를 단 하나도 설정하지 않은 경우
+    @Test
+    public void selectLandmines_withEmptyContents_shouldReturnEmptyList() {
+        // Given
+        Long memberId = 1L;
+
+        // Mock Member 객체 생성
+        Member member = Member.builder()
+                .id(memberId)
+                .name("Test User")
+                .email("test@example.com")
+                .build();
+
+        MemberRequestDto.SelectLandminesDto requestDto = MemberRequestDto.SelectLandminesDto.builder()
+                .landmineContents(Collections.emptyList())
+                .build();
+
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
+
+        // When
+        List<Landmine> result = memberCommandService.selectLandmines(memberId, requestDto);
+
+        // Then
+        assertThat(result).isEmpty();
+        verify(landmineRepository, never()).deleteAllByMember(any());
+    }
+
+    // 중복되는 지뢰 키워드를 입력했을 경우
+    @Test
+    public void selectLandmines_withDuplicateKeywords_shouldThrowException() {
+        // Given
+        Long memberId = 1L;
+
+        // Mock Member 객체 생성
+        Member member = Member.builder()
+                .id(memberId)
+                .name("Test User")
+                .email("test@example.com")
+                .build();
+
+        List<String> landmineContents = Arrays.asList("지뢰1", "지뢰2", "지뢰1"); // 중복된 키워드 포함
+        MemberRequestDto.SelectLandminesDto requestDto = MemberRequestDto.SelectLandminesDto.builder()
+                .landmineContents(landmineContents)
+                .build();
+
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
+
+        // When & Then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            memberCommandService.selectLandmines(memberId, requestDto);
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("중복된 키워드가 존재합니다: 지뢰1");
+        verify(landmineRepository, never()).deleteAllByMember(any());
+    }
 }
+
+

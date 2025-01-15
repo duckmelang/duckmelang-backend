@@ -27,4 +27,13 @@ public class MemberResponseDto {
         private Long memberId;
         private List<Long> eventCategoryIds;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SelectLandmineResultDto {
+        private Long memberId;
+        private List<String> landmineContents;
+    }
 }

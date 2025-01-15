@@ -7,6 +7,8 @@ import umc.duckmelang.domain.eventcategory.domain.EventCategory;
 import umc.duckmelang.domain.eventcategory.repository.EventCategoryRepository;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.idolcategory.repository.IdolCategoryRepository;
+import umc.duckmelang.domain.landmine.domain.Landmine;
+import umc.duckmelang.domain.landmine.repository.LandmineRepository;
 import umc.duckmelang.domain.member.converter.MemberConverter;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
@@ -17,7 +19,10 @@ import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberidol.repository.MemberIdolRepository;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +33,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     private final MemberIdolRepository memberIdolRepository;
     private final EventCategoryRepository eventCategoryRepository;
     private final MemberEventRepository memberEventRepository;
+    private final LandmineRepository landmineRepository;
 
 
     @Override
@@ -81,4 +87,39 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         return memberEventRepository.saveAll(memberEventList);
     }
+
+    @Override
+    @Transactional
+    public List<Landmine> selectLandmines(Long memberId, MemberRequestDto.SelectLandminesDto request) {
+        // 회원 조회 및 유효성 검증
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        // 지뢰를 하나도 설정하지 않은 경우, 아래 로직을 진행하지 않고 바로 빈 리스트를 return
+        if (request.getLandmineContents() == null || request.getLandmineContents().isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // 지뢰 내용을 가져온다
+        List<String> landmineContents = request.getLandmineContents();
+        // 지뢰 내용을 검증하여 중복된 키워드가 있는지 체크하고, 있다면 에러 발생
+        Set<String> uniqueContents = new HashSet<>();
+        for (String content : landmineContents) {
+            if (!uniqueContents.add(content)) {
+                throw new IllegalArgumentException("중복된 키워드가 존재합니다: " + content);
+            }
+        }
+
+        // 기존 데이터 존재 시 삭제
+        landmineRepository.deleteAllByMember(member);
+
+        // 새 데이터 저장
+        List<Landmine> landmineList = request.getLandmineContents().stream()
+                .map(content -> MemberConverter.toLandmine(member, content))
+                .collect(Collectors.toList());
+
+        return landmineRepository.saveAll(landmineList);
+    }
+
+
 }
