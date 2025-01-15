@@ -1,4 +1,4 @@
-package umc.duckmelang.global.auth.dto;
+package umc.duckmelang.domain.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

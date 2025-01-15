@@ -21,6 +21,7 @@ public class SwaggerConfig {
                 .description("UMC duckmelang API 명세서")
                 .version("1.0.0");
 
+        // SecuritySecheme 명
         String jwtSchemeName = "JWT TOKEN";
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
 

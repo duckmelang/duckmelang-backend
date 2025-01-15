@@ -1,4 +1,4 @@
-package umc.duckmelang.global.auth.dto;
+package umc.duckmelang.domain.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

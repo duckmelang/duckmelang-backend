@@ -2,7 +2,7 @@ package umc.duckmelang.domain.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import umc.duckmelang.domain.authprovider.domain.AuthProvider;
+import umc.duckmelang.domain.auth.domain.Auth;
 import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
@@ -48,14 +48,11 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String password;
 
-    // 일단 Refresh Token을 db에 저장하는 경우로 진행하겠습니다.
-    private String refreshToken;
-
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberProfileImage> memberProfileImageList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AuthProvider> authProviderList = new ArrayList<>();
+    private List<Auth> authList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberIdol> memberIdolList = new ArrayList<>();
@@ -92,9 +89,5 @@ public class Member extends BaseEntity {
     // 비밀번호 설정 함수
     public void encodePassword(String password){
         this.password=password;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
     }
 }
