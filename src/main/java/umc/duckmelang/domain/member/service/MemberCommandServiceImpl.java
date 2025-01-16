@@ -105,6 +105,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         // 지뢰 내용을 가져온다
         List<String> landmineContents = request.getLandmineContents();
+
         // 지뢰 내용을 검증하여 중복된 키워드가 있는지 체크하고, 있다면 에러 발생
         Set<String> uniqueContents = new HashSet<>();
         for (String content : landmineContents) {
@@ -146,7 +147,24 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         MemberProfileImage memberProfileImage = MemberConverter.toMemberProfileImage(member, profileImageUrl);
 
         return memberProfileImageRepository.save(memberProfileImage);
+    }
 
+    @Override
+    @Transactional
+    public Member createIntroduction(Long memberId, MemberRequestDto.CreateIntroductionDto request) {
+        // 회원 조회 및 유효성 검증
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        // 자기소개 문구 유효성검증
+        if (request.getIntroduction().trim().isEmpty()) {
+            throw new IllegalArgumentException("자기소개는 공란으로 비워둘 수 없습니다.");
+        }
+
+        // 자기소개 업데이트
+        Member updatedMember = MemberConverter.toMemberWithIntroduction(member, request.getIntroduction());
+
+        return memberRepository.save(updatedMember);
     }
 
 }

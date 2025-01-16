@@ -93,5 +93,16 @@ public class MemberConverter {
                 .build();
     }
 
+    public static Member toMemberWithIntroduction(Member member, String introduction) {
+        return member.withIntroduction(introduction);
+    }
 
+    public static MemberResponseDto.CreateIntroductionResultDto toCreateIntroductionResponseDto(Member member) {
+
+        return MemberResponseDto.CreateIntroductionResultDto.builder()
+                .memberId(member.getId())
+                .introduction(member.getIntroduction())
+                .build();
+
+    }
 }
