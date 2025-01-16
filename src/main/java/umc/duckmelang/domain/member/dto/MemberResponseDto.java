@@ -32,7 +32,7 @@ public class MemberResponseDto {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SelectLandmineResultDto {
+    public static class CreateLandmineResultDto {
         private Long memberId;
         private List<String> landmineContents;
     }
@@ -41,7 +41,7 @@ public class MemberResponseDto {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SelectMemberProfileImageResultDto{
+    public static class CreateMemberProfileImageResultDto {
         private Long memberId;
         private String memberProfileImageURL;
     }

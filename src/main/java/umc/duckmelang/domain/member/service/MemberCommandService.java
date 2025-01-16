@@ -11,6 +11,6 @@ import java.util.List;
 public interface MemberCommandService {
     List<MemberIdol> selectIdols(Long memberId, MemberRequestDto.SelectIdolsDto request);
     List<MemberEvent> selectEvents(Long memberId, MemberRequestDto.SelectEventsDto request);
-    List<Landmine> selectLandmines(Long memberId, MemberRequestDto.SelectLandminesDto request);
-    MemberProfileImage selectMemberProfileImage(Long memberId, MemberRequestDto.SelectMemberProfileImageDto request);
+    List<Landmine> createLandmines(Long memberId, MemberRequestDto.CreateLandminesDto request);
+    MemberProfileImage createMemberProfileImage(Long memberId, MemberRequestDto.CreateMemberProfileImageDto request);
 }

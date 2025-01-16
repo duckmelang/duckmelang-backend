@@ -228,7 +228,7 @@ class MemberCommandServiceTest {
 
     // 키워드가 겹치지 않도록 지뢰를 3가지 설정하는 경우
     @Test
-    public void selectLandmines_success() {
+    public void createLandmines_success() {
         // Given
         Long memberId = 1L;
 
@@ -240,7 +240,7 @@ class MemberCommandServiceTest {
                 .build();
 
         List<String> landmineContents = Arrays.asList("지뢰1", "지뢰2", "지뢰3");
-        MemberRequestDto.SelectLandminesDto requestDto = MemberRequestDto.SelectLandminesDto.builder()
+        MemberRequestDto.CreateLandminesDto requestDto = MemberRequestDto.CreateLandminesDto.builder()
                 .landmineContents(landmineContents)
                 .build();
 
@@ -257,7 +257,7 @@ class MemberCommandServiceTest {
         when(landmineRepository.saveAll(anyList())).thenReturn(mockLandmineList);
 
         // When
-        List<Landmine> result = memberCommandService.selectLandmines(memberId, requestDto);
+        List<Landmine> result = memberCommandService.createLandmines(memberId, requestDto);
 
         // Then
         assertThat(result).hasSize(3);
@@ -268,7 +268,7 @@ class MemberCommandServiceTest {
 
     // 지뢰 키워드를 단 하나도 설정하지 않은 경우
     @Test
-    public void selectLandmines_withEmptyContents_shouldReturnEmptyList() {
+    public void createLandmines_withEmptyContents_shouldReturnEmptyList() {
         // Given
         Long memberId = 1L;
 
@@ -279,14 +279,14 @@ class MemberCommandServiceTest {
                 .email("test@example.com")
                 .build();
 
-        MemberRequestDto.SelectLandminesDto requestDto = MemberRequestDto.SelectLandminesDto.builder()
+        MemberRequestDto.CreateLandminesDto requestDto = MemberRequestDto.CreateLandminesDto.builder()
                 .landmineContents(Collections.emptyList())
                 .build();
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
 
         // When
-        List<Landmine> result = memberCommandService.selectLandmines(memberId, requestDto);
+        List<Landmine> result = memberCommandService.createLandmines(memberId, requestDto);
 
         // Then
         assertThat(result).isEmpty();
@@ -295,7 +295,7 @@ class MemberCommandServiceTest {
 
     // 중복되는 지뢰 키워드를 입력했을 경우
     @Test
-    public void selectLandmines_withDuplicateKeywords_shouldThrowException() {
+    public void createLandmines_withDuplicateKeywords_shouldThrowException() {
         // Given
         Long memberId = 1L;
 
@@ -307,7 +307,7 @@ class MemberCommandServiceTest {
                 .build();
 
         List<String> landmineContents = Arrays.asList("지뢰1", "지뢰2", "지뢰1"); // 중복된 키워드 포함
-        MemberRequestDto.SelectLandminesDto requestDto = MemberRequestDto.SelectLandminesDto.builder()
+        MemberRequestDto.CreateLandminesDto requestDto = MemberRequestDto.CreateLandminesDto.builder()
                 .landmineContents(landmineContents)
                 .build();
 
@@ -315,7 +315,7 @@ class MemberCommandServiceTest {
 
         // When & Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            memberCommandService.selectLandmines(memberId, requestDto);
+            memberCommandService.createLandmines(memberId, requestDto);
         });
 
         assertThat(exception.getMessage()).isEqualTo("중복된 키워드가 존재합니다: 지뢰1");
@@ -330,7 +330,7 @@ class MemberCommandServiceTest {
 
     // 프로필 이미지를 설정하지 않은 경우 (기본 이미지 URL 반환)
     @Test
-    public void selectMemberProfileImage_withEmptyProfileImage_shouldUseDefaultImage() {
+    public void createMemberProfileImage_withEmptyProfileImage_shouldUseDefaultImage() {
         // Given
         Long memberId = 1L;
         String profileImageUrl = "";
@@ -351,7 +351,7 @@ class MemberCommandServiceTest {
                 .build();
 
 
-        MemberRequestDto.SelectMemberProfileImageDto requestDto = MemberRequestDto.SelectMemberProfileImageDto.builder()
+        MemberRequestDto.CreateMemberProfileImageDto requestDto = MemberRequestDto.CreateMemberProfileImageDto.builder()
                 .memberProfileImageURL(profileImageUrl)
                 .build();
 
@@ -359,7 +359,7 @@ class MemberCommandServiceTest {
         when(memberProfileImageRepository.save(any(MemberProfileImage.class))).thenReturn(savedProfileImage);
 
         // When
-        MemberProfileImage result = memberCommandService.selectMemberProfileImage(memberId, requestDto);
+        MemberProfileImage result = memberCommandService.createMemberProfileImage(memberId, requestDto);
 
         // Then
         assertThat(result.getMemberImage()).isEqualTo("default-profile-image-url"); // 기본 이미지 URL 검증
@@ -369,7 +369,7 @@ class MemberCommandServiceTest {
 
     // 유효한 프로필 이미지를 설정한 경우
     @Test
-    public void selectMemberProfileImage_withValidProfileImage_shouldSaveSuccessfully() {
+    public void createMemberProfileImage_withValidProfileImage_shouldSaveSuccessfully() {
         // Given
         Long memberId = 1L;
         String profileImageUrl = "https://example.com/profile-image.jpg";
@@ -381,7 +381,7 @@ class MemberCommandServiceTest {
                 .email("test@example.com")
                 .build();
 
-        MemberRequestDto.SelectMemberProfileImageDto requestDto = MemberRequestDto.SelectMemberProfileImageDto.builder()
+        MemberRequestDto.CreateMemberProfileImageDto requestDto = MemberRequestDto.CreateMemberProfileImageDto.builder()
                 .memberProfileImageURL(profileImageUrl)
                 .build();
 
@@ -397,7 +397,7 @@ class MemberCommandServiceTest {
 
 
         // When
-        MemberProfileImage result = memberCommandService.selectMemberProfileImage(memberId, requestDto);
+        MemberProfileImage result = memberCommandService.createMemberProfileImage(memberId, requestDto);
 
         // Then
         assertThat(result.getMemberImage()).isEqualTo(profileImageUrl); // 설정된 이미지 URL 검증
@@ -408,10 +408,10 @@ class MemberCommandServiceTest {
 
     // 존재하지 않는 회원 ID를 전달한 경우
     @Test
-    public void selectMemberProfileImage_withInvalidMemberId_shouldThrowException() {
+    public void createMemberProfileImage_withInvalidMemberId_shouldThrowException() {
         // Given
         Long memberId = 999L; // 존재하지 않는 ID
-        MemberRequestDto.SelectMemberProfileImageDto requestDto = MemberRequestDto.SelectMemberProfileImageDto.builder()
+        MemberRequestDto.CreateMemberProfileImageDto requestDto = MemberRequestDto.CreateMemberProfileImageDto.builder()
                 .memberProfileImageURL("https://example.com/profile-image.jpg")
                 .build();
 
@@ -419,7 +419,7 @@ class MemberCommandServiceTest {
 
         // When & Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            memberCommandService.selectMemberProfileImage(memberId, requestDto);
+            memberCommandService.createMemberProfileImage(memberId, requestDto);
         });
 
         assertThat(exception.getMessage()).isEqualTo("존재하지 않는 회원입니다."); // 예외 메시지 검증

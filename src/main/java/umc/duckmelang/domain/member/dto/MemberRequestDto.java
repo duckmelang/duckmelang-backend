@@ -1,6 +1,5 @@
 package umc.duckmelang.domain.member.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -26,13 +25,13 @@ public class MemberRequestDto {
 
     @Builder
     @Getter
-    public static class SelectLandminesDto {
+    public static class CreateLandminesDto {
         private List<String> landmineContents;
     }
 
     @Builder
     @Getter
-    public static class SelectMemberProfileImageDto {
+    public static class CreateMemberProfileImageDto {
         private String memberProfileImageURL;
     }
 }

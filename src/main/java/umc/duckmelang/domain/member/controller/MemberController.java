@@ -54,26 +54,26 @@ public class MemberController {
 
     @Operation(summary = "지뢰 설정 API", description = "회원이 기피하는 키워드(들)를 선택하는 API입니다. 하나도 선택하지 않을 수 있습니다.(이 경우 빈 리스트를 반환합니다)")
     @PostMapping("/{memberId}/landmine")
-    public ApiResponse<MemberResponseDto.SelectLandmineResultDto> selectLandmines(
+    public ApiResponse<MemberResponseDto.CreateLandmineResultDto> createLandmines(
             @PathVariable(name = "memberId") Long memberId,
-            @RequestBody @Valid MemberRequestDto.SelectLandminesDto request) {
+            @RequestBody @Valid MemberRequestDto.CreateLandminesDto request) {
 
-        List<Landmine> updatedLandmineList = memberCommandService.selectLandmines(memberId, request);
+        List<Landmine> updatedLandmineList = memberCommandService.createLandmines(memberId, request);
 
         // 리스트가 비어 있는 경우 허용(따라서 예외 처리 생략)
 
-        return ApiResponse.onSuccess(MemberConverter.toSelectLandmineResponseDto(updatedLandmineList));
+        return ApiResponse.onSuccess(MemberConverter.toCreateLandmineResponseDto(updatedLandmineList));
     }
 
     @Operation(summary = "프로필 사진 설정 API", description = "회원이 최초로 프로필 사진을 설정하는 API입니다. 프로필 사진을 설정하지 않을 경우 기본 프로필이 설정됩니다.")
     @PostMapping("/{memberId}/profile-image")
-    public ApiResponse<MemberResponseDto.SelectMemberProfileImageResultDto> selectMemberProfileImage(
+    public ApiResponse<MemberResponseDto.CreateMemberProfileImageResultDto> createMemberProfileImage(
             @PathVariable(name = "memberId") Long memberId,
-            @RequestBody @Valid MemberRequestDto.SelectMemberProfileImageDto request) {
+            @RequestBody @Valid MemberRequestDto.CreateMemberProfileImageDto request) {
 
-        MemberProfileImage updatedMemberProfileImage = memberCommandService.selectMemberProfileImage(memberId, request);
+        MemberProfileImage updatedMemberProfileImage = memberCommandService.createMemberProfileImage(memberId, request);
 
-        return ApiResponse.onSuccess(MemberConverter.toSelectMemberProfileImageResponseDto(updatedMemberProfileImage));
+        return ApiResponse.onSuccess(MemberConverter.toCreateMemberProfileImageResponseDto(updatedMemberProfileImage));
     }
 
 

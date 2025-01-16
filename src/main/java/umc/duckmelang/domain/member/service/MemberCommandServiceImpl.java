@@ -93,7 +93,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     @Override
     @Transactional
-    public List<Landmine> selectLandmines(Long memberId, MemberRequestDto.SelectLandminesDto request) {
+    public List<Landmine> createLandmines(Long memberId, MemberRequestDto.CreateLandminesDto request) {
         // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -127,7 +127,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     @Override
     @Transactional
-    public MemberProfileImage selectMemberProfileImage(Long memberId, MemberRequestDto.SelectMemberProfileImageDto request) {
+    public MemberProfileImage createMemberProfileImage(Long memberId, MemberRequestDto.CreateMemberProfileImageDto request) {
         // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));

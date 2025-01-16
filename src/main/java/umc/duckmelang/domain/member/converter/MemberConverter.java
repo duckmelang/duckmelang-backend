@@ -64,7 +64,7 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResponseDto.SelectLandmineResultDto toSelectLandmineResponseDto(List<Landmine> landmineList) {
+    public static MemberResponseDto.CreateLandmineResultDto toCreateLandmineResponseDto(List<Landmine> landmineList) {
 
         Member member = landmineList.get(0).getMember(); // 반환된 리스트 내 모든 MemberEvent는 같은 Member를 참조하고 있음을 전제
 
@@ -72,7 +72,7 @@ public class MemberConverter {
                 .map(Landmine::getContent)
                 .collect(Collectors.toList());
 
-        return MemberResponseDto.SelectLandmineResultDto.builder()
+        return MemberResponseDto.CreateLandmineResultDto.builder()
                 .memberId(member.getId())
                 .landmineContents(landmineContents)
                 .build();
@@ -85,9 +85,9 @@ public class MemberConverter {
                 .memberImage(profileImageUrl)
                 .build();    }
 
-    public static MemberResponseDto.SelectMemberProfileImageResultDto toSelectMemberProfileImageResponseDto(MemberProfileImage memberProfileImage) {
+    public static MemberResponseDto.CreateMemberProfileImageResultDto toCreateMemberProfileImageResponseDto(MemberProfileImage memberProfileImage) {
 
-        return MemberResponseDto.SelectMemberProfileImageResultDto.builder()
+        return MemberResponseDto.CreateMemberProfileImageResultDto.builder()
                 .memberId(memberProfileImage.getMember().getId())
                 .memberProfileImageURL(memberProfileImage.getMemberImage())
                 .build();
