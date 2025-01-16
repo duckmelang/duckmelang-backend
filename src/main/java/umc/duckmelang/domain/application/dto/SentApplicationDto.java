@@ -29,4 +29,9 @@ public class SentApplicationDto {
         this.eventCategory = name;
         this.applicationId = applicationId;
     }
+
+    @Override
+    public String toString() {
+        return postTitle + " " + postMemberNickname + " " + eventDate + " " + eventCategory;
+    }
 }

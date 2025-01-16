@@ -58,22 +58,4 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
             @Param("status") ApplicationStatus status,
             Pageable pageable
     );
-
-    @Query("SELECT p.id as postId, " +
-            "p.title as postTitle, " +
-            "pm.nickname as nickname, " +
-            "p.eventDate as eventDate, " +
-            "e.name as name, " +
-            "a.id as applicationId " +
-            "FROM Application a " +
-            "INNER JOIN a.member m " +
-            "INNER JOIN a.post p " +
-            "INNER JOIN p.member pm " +
-            "INNER JOIN p.eventCategory e " +
-            "WHERE m.id = :applicationOwnerId " +
-            "AND a.status = :status")
-    List<Tuple> testSentApplicationListTest(
-            @Param("applicationOwnerId") Long applicationOwnerId,
-            @Param("status") ApplicationStatus status
-    );
 }

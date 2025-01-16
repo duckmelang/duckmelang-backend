@@ -42,19 +42,23 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
     @Override
     @Transactional(readOnly = true)
     public Page<SentApplicationDto> getSentSucceedingApplicationList(Long memberId, Integer page) {
-        return applicationRepository.findSentApplicationList(memberId, ApplicationStatus.SUCCEED.toString(), PageRequest.of(page,10));
+        Page<SentApplicationDto> p =  applicationRepository.findSentApplicationList(memberId, ApplicationStatus.SUCCEED, PageRequest.of(page,10));
+        for (SentApplicationDto dto : p.getContent()) {
+            System.out.println(dto.toString());
+        }
+        return p;
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<SentApplicationDto> getSentFailedApplicationList(Long memberId, Integer page) {
-        return applicationRepository.findSentApplicationList(memberId, ApplicationStatus.FAILED.toString(), PageRequest.of(page,10));
+        return applicationRepository.findSentApplicationList(memberId, ApplicationStatus.FAILED, PageRequest.of(page,10));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<SentApplicationDto> getSentPendingApplicationList(Long memberId, Integer page) {
-        return applicationRepository.findSentApplicationList(memberId, ApplicationStatus.PENDING.toString(), PageRequest.of(page,10));
+        return applicationRepository.findSentApplicationList(memberId, ApplicationStatus.PENDING, PageRequest.of(page,10));
     }
 
 }

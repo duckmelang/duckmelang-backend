@@ -32,7 +32,6 @@ import umc.duckmelang.domain.application.dto.*;
 public class ApplicationRestController {
     private final ApplicationCommandService applicationCommandService;
     private final ApplicationQueryService applicationQueryService;
-    private final ApplicationRepository applicationRepository;
 
     @PostMapping("/received/failed/{applicationId}")
     @Operation(summary = "받은 동행요청 거절 API",description = "path variable로 상태를 변경하고자 하는 동행요청 id를 받습니다.\nrequest body로 member id(추후 JWT로 교체)를 받습니다.")
@@ -130,11 +129,6 @@ public class ApplicationRestController {
     public ApiResponse<ApplicationResponseDto.SentApplicationListDto> getSentSucceedingApplicationList(@RequestParam Long memberId, @RequestParam(name = "page") Integer page){
         Page<SentApplicationDto> dto = applicationQueryService.getSentSucceedingApplicationList(memberId, page);
         return ApiResponse.onSuccess(ApplicationConverter.toSentApplicationListDto(dto));
-    }
-
-    @GetMapping("/test")
-    public ApiResponse<List<Tuple>> test(@RequestParam Long memberId, @RequestParam(name = "page") Integer page){
-        return ApiResponse.onSuccess(applicationRepository.testSentApplicationListTest(memberId, ApplicationStatus.PENDING));
     }
 
     @GetMapping("/sent/failed")
