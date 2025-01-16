@@ -1,6 +1,7 @@
 package umc.duckmelang.domain.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.GeneralException;
+import umc.duckmelang.global.apipayload.exception.TokenException;
 import umc.duckmelang.global.common.jwt.JwtUtil;
 
 @RestController
@@ -46,13 +48,13 @@ public class AuthController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String accessToken = jwtUtil.generateAccessToken(request.getEmail());
-        String refreshToken = jwtUtil.generateRefreshToken(request.getEmail());
-
-        // 로그인한 Member 객체 가져오기
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Member member = userDetails.getMember(); // 올바르게 Member 객체를 가져옵니다.
+        Member member = userDetails.getMember();
+
+        // 토큰 발급
+        String accessToken = jwtUtil.generateAccessToken(member.getId());
+        String refreshToken = jwtUtil.generateRefreshToken(member.getId());
+
         authService.saveOrUpdateRefreshToken(member, ProviderKind.LOCAL, refreshToken);
         return ApiResponse.onSuccess(new AuthResponseDto.TokenResponse(accessToken, refreshToken));
     }
@@ -62,35 +64,25 @@ public class AuthController {
     public ApiResponse<AuthResponseDto.TokenResponse> newToken(
             @RequestHeader("Authorization") String authorizationHeader){
 
-        // Authorization 헤더가 없는 경우
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return ApiResponse.onFailure("INVALID_TOKEN", "유효하지 않은 토큰입니다.", null);
+            throw new TokenException(ErrorStatus.TOKEN_NOT_FOUND);
         }
 
-        String refreshToken = authorizationHeader.substring(7); // 'Bearer ' 제거하고 토큰만 추출
+        String refreshToken = authorizationHeader.substring(7);
+        jwtUtil.validateToken(refreshToken);
+        Long memberId = jwtUtil.getMemberIdFromToken(refreshToken);
 
-        // 토큰 검증
-        if (!jwtUtil.validateToken(refreshToken)) {
-            return ApiResponse.onFailure("TOKEN_EXPIRED", "토큰이 만료되었습니다.", null);
-        }
-
-        String email = jwtUtil.getEmailFromToken(refreshToken);
-
-        // Refresh Token을 기반으로 사용자 정보 조회
-        Auth auth = authRepository.findByMemberEmail(email)
-                .orElseThrow(() -> new RuntimeException("토큰과 연관된 사용자를 찾을 수 없습니다."));
-
-        // 토큰이 다를 경우
+        Auth auth = authRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new TokenException(ErrorStatus.INVALID_TOKEN));
         if (!auth.getRefreshToken().equals(refreshToken)) {
-            return ApiResponse.onFailure("INVALID_TOKEN", "올바르지 않은 토큰입니다.", null);
+            throw new TokenException(ErrorStatus.INVALID_TOKEN);
         }
 
-        // 새로운 Access Token 및 Refresh Token 생성
-        String newAccessToken = jwtUtil.generateAccessToken(email);
-        String newRefreshToken = jwtUtil.generateRefreshToken(email);
-
-        // 새로운 Refresh Token 저장
+        // 새로운 토큰 생성
+        String newAccessToken = jwtUtil.generateAccessToken(memberId);
+        String newRefreshToken = jwtUtil.generateRefreshToken(memberId);
         authService.saveOrUpdateRefreshToken(auth.getMember(), ProviderKind.LOCAL, newRefreshToken);
+
         return ApiResponse.onSuccess(new AuthResponseDto.TokenResponse(newAccessToken, newRefreshToken));
     }
 }

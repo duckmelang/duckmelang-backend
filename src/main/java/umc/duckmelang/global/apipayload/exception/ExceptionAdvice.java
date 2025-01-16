@@ -26,7 +26,6 @@ import java.util.Optional;
 @RestControllerAdvice(annotations = {RestController.class})
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
-
     @ExceptionHandler
     public ResponseEntity<Object> validation(ConstraintViolationException e, WebRequest request) {
         String errorMessage = e.getConstraintViolations().stream()
@@ -115,5 +114,23 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 errorCommonStatus.getHttpStatus(),
                 request
         );
+    }
+
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<Object> handleTokenException(TokenException e, HttpServletRequest request) {
+        // 예외에서 ErrorStatus 추출
+        ErrorStatus errorStatus = e.getErrorStatus();
+
+        // 클라이언트에 반환할 응답 객체 생성
+        ApiResponse<Object> response = ApiResponse.onFailure(
+                errorStatus.getCode(),
+                errorStatus.getMessage(),
+                null
+        );
+
+        // 상태 코드와 응답 바디 반환
+        return ResponseEntity
+                .status(errorStatus.getHttpStatus())
+                .body(response);
     }
 }

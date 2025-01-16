@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.GeneralException;
+import umc.duckmelang.global.apipayload.exception.TokenException;
 
 import java.util.Date;
 
@@ -24,9 +24,9 @@ public class JwtUtil {
     private long refreshTokenExpiration;
 
     // Access Token 생성
-    public String generateAccessToken(String email){
+    public String generateAccessToken(Long memberId){
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(String.valueOf(memberId))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -34,9 +34,9 @@ public class JwtUtil {
     }
 
     // Refresh Token 생성
-    public String generateRefreshToken(String email){
+    public String generateRefreshToken(Long memberId){
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(String.valueOf(memberId))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -44,27 +44,28 @@ public class JwtUtil {
     }
 
     // 토큰 검증
-    public boolean validateToken(String token){
+    public ErrorStatus validateToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(token);
-            return true;
+            return null; // 유효한 경우 null 반환
         } catch (ExpiredJwtException e) {
-            throw new GeneralException(ErrorStatus.TOKEN_EXPIRED);
+            return ErrorStatus.TOKEN_EXPIRED;
         } catch (JwtException | IllegalArgumentException e) {
-            throw new GeneralException(ErrorStatus.INVALID_TOKEN);
+            return ErrorStatus.INVALID_TOKEN;
         }
     }
 
-    // 토큰에서 이메일 추출
-    public String getEmailFromToken(String token){
-        Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
+    // 토큰에서 memberId 추출
+    public Long getMemberIdFromToken(String token) {
+            return Long.parseLong(Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject());
     }
 
     // 요청 헤더에서 토큰 추출
