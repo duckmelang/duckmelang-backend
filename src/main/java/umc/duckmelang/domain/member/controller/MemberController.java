@@ -11,6 +11,7 @@ import umc.duckmelang.domain.member.dto.MemberResponseDto;
 import umc.duckmelang.domain.member.service.MemberCommandService;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
+import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.global.apipayload.ApiResponse;
 
 import java.util.List;
@@ -62,10 +63,20 @@ public class MemberController {
         // 리스트가 비어 있는 경우 허용(따라서 예외 처리 생략)
 
         return ApiResponse.onSuccess(MemberConverter.toSelectLandmineResponseDto(updatedLandmineList));
+    }
 
+    @Operation(summary = "프로필 사진 설정 API", description = "회원이 최초로 프로필 사진을 설정하는 API입니다. 프로필 사진을 설정하지 않을 경우 기본 프로필이 설정됩니다.")
+    @PostMapping("/{memberId}/profile-image")
+    public ApiResponse<MemberResponseDto.SelectMemberProfileImageResultDto> selectMemberProfileImage(
+            @PathVariable(name = "memberId") Long memberId,
+            @RequestBody @Valid MemberRequestDto.SelectMemberProfileImageDto request) {
+
+        MemberProfileImage updatedMemberProfileImage = memberCommandService.selectMemberProfileImage(memberId, request);
+
+        return ApiResponse.onSuccess(MemberConverter.toSelectMemberProfileImageResponseDto(updatedMemberProfileImage));
     }
 
 
 
 
-}
+    }

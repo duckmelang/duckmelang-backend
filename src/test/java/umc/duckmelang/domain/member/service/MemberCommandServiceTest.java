@@ -1,6 +1,5 @@
 package umc.duckmelang.domain.member.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,6 +18,8 @@ import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberevent.repository.MemberEventRepository;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberidol.repository.MemberIdolRepository;
+import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
+import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRepository;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -51,6 +52,10 @@ class MemberCommandServiceTest {
 
     @Mock
     private LandmineRepository landmineRepository;
+
+    @Mock
+    private MemberProfileImageRepository memberProfileImageRepository;
+
 
     public MemberCommandServiceTest() {
         MockitoAnnotations.openMocks(this);
@@ -316,6 +321,112 @@ class MemberCommandServiceTest {
         assertThat(exception.getMessage()).isEqualTo("중복된 키워드가 존재합니다: 지뢰1");
         verify(landmineRepository, never()).deleteAllByMember(any());
     }
+
+
+
+
+
+
+
+    // 프로필 이미지를 설정하지 않은 경우 (기본 이미지 URL 반환)
+    @Test
+    public void selectMemberProfileImage_withEmptyProfileImage_shouldUseDefaultImage() {
+        // Given
+        Long memberId = 1L;
+        String profileImageUrl = "";
+
+
+        // Mock Member 객체 생성
+        Member member = Member.builder()
+                .id(memberId)
+                .name("Test User")
+                .email("test@example.com")
+                .build();
+
+        // Mock MemberProfileImage 객체 (기본 이미지 설정)
+        MemberProfileImage savedProfileImage = MemberProfileImage.builder()
+                .id(1L) // 저장 후 ID가 생성된 상태를 가정
+                .member(member)
+                .memberImage("default-profile-image-url") // 기본 프로필 이미지 URL
+                .build();
+
+
+        MemberRequestDto.SelectMemberProfileImageDto requestDto = MemberRequestDto.SelectMemberProfileImageDto.builder()
+                .memberProfileImageURL(profileImageUrl)
+                .build();
+
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
+        when(memberProfileImageRepository.save(any(MemberProfileImage.class))).thenReturn(savedProfileImage);
+
+        // When
+        MemberProfileImage result = memberCommandService.selectMemberProfileImage(memberId, requestDto);
+
+        // Then
+        assertThat(result.getMemberImage()).isEqualTo("default-profile-image-url"); // 기본 이미지 URL 검증
+        verify(memberProfileImageRepository).deleteAllByMember(member); // 기존 데이터 삭제 확인
+        verify(memberProfileImageRepository).save(any(MemberProfileImage.class)); // 새 데이터 저장 확인
+    }
+
+    // 유효한 프로필 이미지를 설정한 경우
+    @Test
+    public void selectMemberProfileImage_withValidProfileImage_shouldSaveSuccessfully() {
+        // Given
+        Long memberId = 1L;
+        String profileImageUrl = "https://example.com/profile-image.jpg";
+
+        // Mock Member 객체 생성
+        Member member = Member.builder()
+                .id(memberId)
+                .name("Test User")
+                .email("test@example.com")
+                .build();
+
+        MemberRequestDto.SelectMemberProfileImageDto requestDto = MemberRequestDto.SelectMemberProfileImageDto.builder()
+                .memberProfileImageURL(profileImageUrl)
+                .build();
+
+        // Mock MemberProfileImage 객체 (기본 이미지 설정)
+        MemberProfileImage savedProfileImage = MemberProfileImage.builder()
+                .id(1L) // 저장 후 ID가 생성된 상태를 가정
+                .member(member)
+                .memberImage(profileImageUrl)
+                .build();
+
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
+        when(memberProfileImageRepository.save(any(MemberProfileImage.class))).thenReturn(savedProfileImage);
+
+
+        // When
+        MemberProfileImage result = memberCommandService.selectMemberProfileImage(memberId, requestDto);
+
+        // Then
+        assertThat(result.getMemberImage()).isEqualTo(profileImageUrl); // 설정된 이미지 URL 검증
+        assertThat(result.getMember()).isEqualTo(member); // Member와 연관 관계 검증
+        verify(memberProfileImageRepository).deleteAllByMember(member); // 기존 데이터 삭제 확인
+        verify(memberProfileImageRepository).save(any(MemberProfileImage.class)); // 새 데이터 저장 확인
+    }
+
+    // 존재하지 않는 회원 ID를 전달한 경우
+    @Test
+    public void selectMemberProfileImage_withInvalidMemberId_shouldThrowException() {
+        // Given
+        Long memberId = 999L; // 존재하지 않는 ID
+        MemberRequestDto.SelectMemberProfileImageDto requestDto = MemberRequestDto.SelectMemberProfileImageDto.builder()
+                .memberProfileImageURL("https://example.com/profile-image.jpg")
+                .build();
+
+        when(memberRepository.findById(memberId)).thenReturn(Optional.empty()); // 회원이 조회되지 않음
+
+        // When & Then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            memberCommandService.selectMemberProfileImage(memberId, requestDto);
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("존재하지 않는 회원입니다."); // 예외 메시지 검증
+        verify(memberProfileImageRepository, never()).deleteAllByMember(any()); // 삭제 호출되지 않음
+        verify(memberProfileImageRepository, never()).save(any()); // 저장 호출되지 않음
+    }
 }
+
 
 

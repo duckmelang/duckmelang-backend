@@ -29,4 +29,10 @@ public class MemberRequestDto {
     public static class SelectLandminesDto {
         private List<String> landmineContents;
     }
+
+    @Builder
+    @Getter
+    public static class SelectMemberProfileImageDto {
+        private String memberProfileImageURL;
+    }
 }

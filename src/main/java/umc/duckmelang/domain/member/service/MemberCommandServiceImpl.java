@@ -17,6 +17,8 @@ import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberevent.repository.MemberEventRepository;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberidol.repository.MemberIdolRepository;
+import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
+import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRepository;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,6 +36,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     private final EventCategoryRepository eventCategoryRepository;
     private final MemberEventRepository memberEventRepository;
     private final LandmineRepository landmineRepository;
+    private final MemberProfileImageRepository memberProfileImageRepository;
 
 
     @Override
@@ -121,5 +124,29 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         return landmineRepository.saveAll(landmineList);
     }
 
+
+    @Override
+    @Transactional
+    public MemberProfileImage selectMemberProfileImage(Long memberId, MemberRequestDto.SelectMemberProfileImageDto request) {
+        // 회원 조회 및 유효성 검증
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        // 기존 데이터 존재 시 삭제
+        memberProfileImageRepository.deleteAllByMember(member);
+
+        String profileImageUrl = request.getMemberProfileImageURL();
+
+        // 프로필 사진을 선택하지 않은 경우, 기본 프로필 사진으로 설정
+        if (profileImageUrl == null || profileImageUrl.trim().isEmpty()) {
+            profileImageUrl = "default-profile-image-url"; // 기본 프로필 사진 URL 추후 설정
+        }
+
+        // 새 데이터 저장
+        MemberProfileImage memberProfileImage = MemberConverter.toMemberProfileImage(member, profileImageUrl);
+
+        return memberProfileImageRepository.save(memberProfileImage);
+
+    }
 
 }

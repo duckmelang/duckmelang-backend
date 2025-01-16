@@ -36,4 +36,13 @@ public class MemberResponseDto {
         private Long memberId;
         private List<String> landmineContents;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SelectMemberProfileImageResultDto{
+        private Long memberId;
+        private String memberProfileImageURL;
+    }
 }

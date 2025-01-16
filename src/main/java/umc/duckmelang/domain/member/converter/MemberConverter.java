@@ -7,6 +7,7 @@ import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
+import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,4 +78,20 @@ public class MemberConverter {
                 .build();
 
     }
+
+    public static MemberProfileImage toMemberProfileImage(Member member, String profileImageUrl) {
+        return MemberProfileImage.builder()
+                .member(member)
+                .memberImage(profileImageUrl)
+                .build();    }
+
+    public static MemberResponseDto.SelectMemberProfileImageResultDto toSelectMemberProfileImageResponseDto(MemberProfileImage memberProfileImage) {
+
+        return MemberResponseDto.SelectMemberProfileImageResultDto.builder()
+                .memberId(memberProfileImage.getMember().getId())
+                .memberProfileImageURL(memberProfileImage.getMemberImage())
+                .build();
+    }
+
+
 }
