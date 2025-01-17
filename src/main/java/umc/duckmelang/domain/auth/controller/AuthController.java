@@ -39,7 +39,6 @@ public class AuthController {
     @PostMapping("/login")
     public ApiResponse<AuthResponseDto.TokenResponse> login(@RequestBody AuthRequestDto.LoginDto request) {
 
-        // 이메일과 비밀번호로 인증 시도
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),

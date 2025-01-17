@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.global.apipayload.ApiResponse;
@@ -18,14 +20,20 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException, ServletException {
-        String message = "인증이 필요합니다.";
-        String code = "COMMON401";
 
-        // 요청 attribute에 토큰 상태가 있는 경우 메시지 변경
+        String message = "인증이 필요합니다.";
+        String code = "AUTH400";
+
         if (request.getAttribute("tokenError") != null) {
-            ErrorStatus errorStatus = (ErrorStatus) request.getAttribute("tokenError");
-            message = errorStatus.getMessage();
-            code = errorStatus.getCode();
+            ErrorStatus tokenErrorStatus = (ErrorStatus) request.getAttribute("tokenError");
+            message = tokenErrorStatus.getMessage();
+            code = tokenErrorStatus.getCode();
+        } else if (authException instanceof UsernameNotFoundException) {
+            message = authException.getMessage();
+            code = "AUTH404";
+        } else if (authException instanceof BadCredentialsException) {
+            message = "이메일 또는 비밀번호가 잘못되었습니다.";
+            code = "AUTH401";
         }
 
         ApiResponse<Object> errorResponse = ApiResponse.onFailure(code, message, null);

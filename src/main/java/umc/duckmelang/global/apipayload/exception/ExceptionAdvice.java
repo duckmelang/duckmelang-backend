@@ -7,6 +7,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -116,19 +118,28 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         );
     }
 
-    @ExceptionHandler(TokenException.class)
-    public ResponseEntity<Object> handleTokenException(TokenException e, HttpServletRequest request) {
-        // 예외에서 ErrorStatus 추출
-        ErrorStatus errorStatus = e.getErrorStatus();
+    @ExceptionHandler(value = UsernameNotFoundException.class)
+    public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException e, HttpServletRequest request) {
+        return buildErrorResponse(ErrorStatus.AUTH404, request);
+    }
 
-        // 클라이언트에 반환할 응답 객체 생성
+    @ExceptionHandler(value = BadCredentialsException.class)
+    public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException e, HttpServletRequest request) {
+        return buildErrorResponse(ErrorStatus.AUTH401, request);
+    }
+
+    @ExceptionHandler(value = TokenException.class)
+    public ResponseEntity<Object> handleTokenException(TokenException e, HttpServletRequest request) {
+        return buildErrorResponse(e.getErrorStatus(), request);
+    }
+
+    private ResponseEntity<Object> buildErrorResponse(ErrorStatus errorStatus, HttpServletRequest request) {
         ApiResponse<Object> response = ApiResponse.onFailure(
                 errorStatus.getCode(),
                 errorStatus.getMessage(),
                 null
         );
 
-        // 상태 코드와 응답 바디 반환
         return ResponseEntity
                 .status(errorStatus.getHttpStatus())
                 .body(response);
