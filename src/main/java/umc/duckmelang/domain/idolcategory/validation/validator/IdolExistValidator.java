@@ -6,16 +6,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.idolcategory.repository.IdolCategoryRepository;
+import umc.duckmelang.domain.idolcategory.service.IdolCategoryQueryService;
 import umc.duckmelang.domain.idolcategory.validation.annotation.ExistIdol;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class IdolExistValidator implements ConstraintValidator<ExistIdol, Long> {
 
-    private final IdolCategoryRepository idolCategoryRepository;
+    private final IdolCategoryQueryService idolCategoryQueryService;
 
     @Override
     public void initialize(ExistIdol constraintAnnotation) {
@@ -24,13 +26,14 @@ public class IdolExistValidator implements ConstraintValidator<ExistIdol, Long> 
 
     @Override
     public boolean isValid(Long idolId, ConstraintValidatorContext context) {
-        boolean isValid = idolCategoryRepository.existsById(idolId);
+        Optional<IdolCategory> target = idolCategoryQueryService.findIdolCategory(idolId);
 
-        if (!isValid) {
+        if (target.isEmpty()) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(ErrorStatus.IDOL_CATEGORY_NOT_FOUND.toString()).addConstraintViolation();
+            return false;
         }
 
-        return isValid;
+        return true;
     }
 }

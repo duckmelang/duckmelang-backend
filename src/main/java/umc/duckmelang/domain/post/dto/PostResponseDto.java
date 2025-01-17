@@ -8,12 +8,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class PostResponseDTO {
+public class PostResponseDto {
 
     @Getter
     @Builder
     @AllArgsConstructor
-    public static class PostPreviewDTO{
+    public static class PostPreviewDto{
         private String title;
         private String category;
         private LocalDate date;
@@ -24,8 +24,8 @@ public class PostResponseDTO {
     @Getter
     @Builder
     @AllArgsConstructor
-    public static class PostPreviewListDTO{
-        List<PostPreviewDTO> postList;
+    public static class PostPreviewListDto{
+        List<PostPreviewDto> postList;
         Integer listSize;
         Integer totalPage;
         Long totalElements;
@@ -36,7 +36,7 @@ public class PostResponseDTO {
     @Getter
     @Builder
     @AllArgsConstructor
-    public static class PostDetailDTO{
+    public static class PostDetailDto{
         private String name;
         private LocalDate birth;
         private Boolean gender;
