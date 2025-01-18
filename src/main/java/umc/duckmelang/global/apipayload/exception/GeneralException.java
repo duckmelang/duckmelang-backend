@@ -13,7 +13,6 @@ public class GeneralException extends RuntimeException {
     public ErrorReasonDTO getErrorReason() {
         return this.code.getReason();
     }
-
     public ErrorReasonDTO getErrorReasonHttpStatus(){
         return this.code.getReasonHttpStatus();
     }

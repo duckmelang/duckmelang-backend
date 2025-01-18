@@ -1,21 +1,28 @@
 package umc.duckmelang.global.common.jwt;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.stereotype.Component;
+import umc.duckmelang.domain.auth.dto.AuthResponseDto;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.TokenException;
+import umc.duckmelang.global.apipayload.exception.GeneralException;
 
+import java.security.Key;
 import java.util.Date;
 
 @Component
 @EnableWebSecurity
 public class JwtUtil {
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
+    private final Key key;
+    public JwtUtil(@Value("${jwt.secret-key}") String secretKey) {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
+    }
 
     @Value("${jwt.access-expiration}")
     private long accessTokenExpiration;
@@ -23,57 +30,65 @@ public class JwtUtil {
     @Value("${jwt.refresh-expiration}")
     private long refreshTokenExpiration;
 
-    // Access Token 생성
-    public String generateAccessToken(Long memberId){
-        return Jwts.builder()
+    // Member 정보를 가지고 AccessToken과 RefreshToken을 생성하는 메서드
+    public AuthResponseDto.TokenResponse generateToken(Long memberId, String email){
+        String accessToken = Jwts.builder()
                 .setSubject(String.valueOf(memberId))
+                .claim("email", email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
-    }
 
-    // Refresh Token 생성
-    public String generateRefreshToken(Long memberId){
-        return Jwts.builder()
+        String refreshToken = Jwts.builder()
                 .setSubject(String.valueOf(memberId))
+                .claim("email", email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+
+        return AuthResponseDto.TokenResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
-    // 토큰 검증
-    public ErrorStatus validateToken(String token) {
+
+    // 토큰 정보를 검증하는 메서드
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
+                    .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
-            return null; // 유효한 경우 null 반환
-        } catch (ExpiredJwtException e) {
-            return ErrorStatus.TOKEN_EXPIRED;
-        } catch (JwtException | IllegalArgumentException e) {
-            return ErrorStatus.INVALID_TOKEN;
+            return true;
+        } catch (JwtException  e) {
+            throw e;
         }
+    }
+
+        public Claims parseClaims(String accessToken) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(accessToken)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
+    }
+
+    // 토큰에서 email 추출
+    public String getEmailFromToken(String token) {
+        Claims claims = parseClaims(token);
+        return claims.get("email", String.class);
     }
 
     // 토큰에서 memberId 추출
     public Long getMemberIdFromToken(String token) {
-            return Long.parseLong(Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody()
-                    .getSubject());
-    }
-
-    // 요청 헤더에서 토큰 추출
-    public String resolveToken(HttpServletRequest request){
-        String bearerToken = request.getHeader("Authorization");
-        if(bearerToken != null && bearerToken.startsWith("Bearer ")){
-            return bearerToken.substring(7);
-        }
-        return null;
+        Claims claims = parseClaims(token);
+        return Long.valueOf(claims.getSubject());
     }
 }

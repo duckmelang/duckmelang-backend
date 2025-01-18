@@ -21,22 +21,22 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException, ServletException {
 
-        String message = "인증이 필요합니다.";
-        String code = "AUTH400";
+        // 기본값 설정
+        ErrorStatus errorStatus = ErrorStatus.AUTH400;
 
         if (request.getAttribute("tokenError") != null) {
-            ErrorStatus tokenErrorStatus = (ErrorStatus) request.getAttribute("tokenError");
-            message = tokenErrorStatus.getMessage();
-            code = tokenErrorStatus.getCode();
+            errorStatus = ErrorStatus.valueOf((String) request.getAttribute("tokenError"));
         } else if (authException instanceof UsernameNotFoundException) {
-            message = authException.getMessage();
-            code = "AUTH404";
+            errorStatus = ErrorStatus.AUTH404;
         } else if (authException instanceof BadCredentialsException) {
-            message = "이메일 또는 비밀번호가 잘못되었습니다.";
-            code = "AUTH401";
+            errorStatus = ErrorStatus.AUTH401;
         }
 
-        ApiResponse<Object> errorResponse = ApiResponse.onFailure(code, message, null);
+        ApiResponse<Object> errorResponse = ApiResponse.onFailure(
+                errorStatus.getCode(),
+                errorStatus.getMessage(),
+                null
+        );
 
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized

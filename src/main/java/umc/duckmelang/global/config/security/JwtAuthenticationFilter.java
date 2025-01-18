@@ -1,56 +1,66 @@
 package umc.duckmelang.global.config.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-import umc.duckmelang.domain.auth.service.CustomUserDetailsService;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.GenericFilterBean;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.GeneralException;
 import umc.duckmelang.global.common.jwt.JwtUtil;
 
 import java.io.IOException;
+import java.util.Collections;
 
 
 @Component
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private final JwtUtil jwtUtil;
-    private final CustomUserDetailsService customUserDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
-        String token = jwtUtil.resolveToken(request);
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+                                    throws IOException, ServletException {
+
+        String token = resolveToken((HttpServletRequest) request);
 
         if (token != null) {
-            ErrorStatus tokenStatus = jwtUtil.validateToken(token);
-
-            if (tokenStatus != null) {
-                // 토큰 상태를 요청 attribute에 저장
-                request.setAttribute("tokenError", tokenStatus);
-                // AuthenticationEntryPoint로 제어 넘김
-                throw new InsufficientAuthenticationException(tokenStatus.getMessage());
+            try {
+                jwtUtil.validateToken(token);
+                String email = jwtUtil.getEmailFromToken(token);
+                Long memberId = jwtUtil.getMemberIdFromToken(token);
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (ExpiredJwtException e) {
+                request.setAttribute("tokenError", "TOKEN_EXPIRED");
+            } catch (JwtException e) {
+                request.setAttribute("tokenError", "INVALID_TOKEN");
+            } catch (Exception e) {
+                request.setAttribute("tokenError", "TOKEN_NOT_FOUND");
             }
-
-            Long memberId  = jwtUtil.getMemberIdFromToken(token);
-            UserDetails userDetails = customUserDetailsService.loadUserById(memberId);
-
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } else {
+            request.setAttribute("tokenError", "TOKEN_NOT_FOUND");
         }
+        chain.doFilter(request, response);
+    }
 
-        filterChain.doFilter(request, response);
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }
+

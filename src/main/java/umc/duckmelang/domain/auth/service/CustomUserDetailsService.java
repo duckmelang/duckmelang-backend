@@ -20,10 +20,4 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(()-> new UsernameNotFoundException("이메일과 일치하는 사용자가 없습니다."));
         return new CustomUserDetails(member);
     }
-
-    public UserDetails loadUserById(Long memberId) throws UsernameNotFoundException {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new UsernameNotFoundException("ID와 일치하는 사용자가 없습니다."));
-        return new CustomUserDetails(member);
-    }
 }
