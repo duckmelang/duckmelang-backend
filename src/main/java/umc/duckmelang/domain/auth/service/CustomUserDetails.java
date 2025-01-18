@@ -12,8 +12,11 @@ import java.util.List;
 @Getter
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
-
     private final Member member;
+
+    public Long getMemberId() {
+        return member.getId();
+    }
 
     @Override
     public Collection<?extends GrantedAuthority> getAuthorities(){return List.of();}

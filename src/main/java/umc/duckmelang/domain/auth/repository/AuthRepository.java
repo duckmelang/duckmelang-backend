@@ -7,6 +7,4 @@ import umc.duckmelang.domain.member.domain.Member;
 import java.util.Optional;
 
 public interface AuthRepository extends JpaRepository<Auth, Long> {
-    Optional<Auth> findByMember(Member member);
-    Optional<Auth> findByMemberId(Long memberId);
 }

@@ -1,5 +1,6 @@
 package umc.duckmelang.global.apipayload.exception;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -120,12 +121,17 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = UsernameNotFoundException.class)
     public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException e, HttpServletRequest request) {
-        return buildErrorResponse(ErrorStatus.AUTH404, request);
+        return buildErrorResponse(ErrorStatus.AUTH_USER_NOT_FOUND, request);
     }
 
     @ExceptionHandler(value = BadCredentialsException.class)
     public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException e, HttpServletRequest request) {
-        return buildErrorResponse(ErrorStatus.AUTH401, request);
+        return buildErrorResponse(ErrorStatus.AUTH_INVALID_CREDENTIALS, request);
+    }
+
+    @ExceptionHandler(value = JwtException.class)
+    public ResponseEntity<Object> handleJwtException(JwtException e, HttpServletRequest request) {
+        return buildErrorResponse(ErrorStatus.INVALID_TOKEN, request);
     }
 
     private ResponseEntity<Object> buildErrorResponse(ErrorStatus errorStatus, HttpServletRequest request) {

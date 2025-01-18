@@ -8,18 +8,23 @@ import umc.duckmelang.domain.member.converter.MemberConverter;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.repository.MemberRepository;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.handler.MemberHandler;
 
 
 @Service
 @RequiredArgsConstructor
 public class MemberCommandServiceImpl implements MemberCommandService{
-
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public Member signupMember(MemberRequestDto.SignupDto request){
+
+        if(memberRepository.existsByEmail(request.getEmail())){
+            throw new MemberHandler(ErrorStatus.DUPLICATE_EMAIL);
+        }
         Member newMember = MemberConverter.toMember(request);
         newMember.encodePassword(passwordEncoder.encode(request.getPassword()));
         return memberRepository.save(newMember);

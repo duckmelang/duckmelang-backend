@@ -25,9 +25,13 @@ public enum ErrorStatus implements BaseErrorCode {
     TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "TOKEN4004", "토큰을 찾을 수 없습니다."),
 
     // 로그인 관련 응답
-    AUTH400(HttpStatus.UNAUTHORIZED, "AUTH4000", "인증 정보가 필요합니다."),
-    AUTH401(HttpStatus.UNAUTHORIZED, "AUTH4001", "이메일 또는 비밀번호가 잘못되었습니다."),
-    AUTH404(HttpStatus.NOT_FOUND, "AUTH4004", "이메일과 일치하는 사용자가 없습니다.");
+    AUTH_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH4000", "인증 정보가 필요합니다."),
+    AUTH_INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "AUTH4001", "이메일 또는 비밀번호가 잘못되었습니다."),
+    AUTH_USER_NOT_FOUND(HttpStatus.NOT_FOUND, "AUTH4004", "이메일과 일치하는 사용자가 없습니다."),
+
+    // 회원 관련 응답
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 존재하는 이메일입니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -22,14 +22,18 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             throws IOException, ServletException {
 
         // 기본값 설정
-        ErrorStatus errorStatus = ErrorStatus.AUTH400;
+        ErrorStatus errorStatus = ErrorStatus.AUTH_UNAUTHORIZED;
 
-        if (request.getAttribute("tokenError") != null) {
-            errorStatus = ErrorStatus.valueOf((String) request.getAttribute("tokenError"));
-        } else if (authException instanceof UsernameNotFoundException) {
-            errorStatus = ErrorStatus.AUTH404;
+        // JWT 관련 오류 확인
+        ErrorStatus tokenError = (ErrorStatus) request.getAttribute("tokenError");
+        if (tokenError != null) {
+            errorStatus = tokenError;
+        }
+
+        if (authException instanceof UsernameNotFoundException) {
+            errorStatus = ErrorStatus.AUTH_USER_NOT_FOUND;
         } else if (authException instanceof BadCredentialsException) {
-            errorStatus = ErrorStatus.AUTH401;
+            errorStatus = ErrorStatus.AUTH_INVALID_CREDENTIALS;
         }
 
         ApiResponse<Object> errorResponse = ApiResponse.onFailure(
