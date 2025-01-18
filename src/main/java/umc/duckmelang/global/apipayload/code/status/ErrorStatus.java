@@ -19,6 +19,9 @@ public enum ErrorStatus implements BaseErrorCode {
     // 테스트 응답
     TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트"),
 
+    //idolCategory Error
+    IDOL_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "IDOL_CATEGORY4001", "아이돌 카테고리가 없습니다."),
+
     // Member
     NO_SUCH_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4001", "존재하지 않는 멤버입니다."),
 
