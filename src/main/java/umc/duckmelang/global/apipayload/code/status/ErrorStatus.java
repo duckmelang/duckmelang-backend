@@ -30,7 +30,10 @@ public enum ErrorStatus implements BaseErrorCode {
     AUTH_USER_NOT_FOUND(HttpStatus.NOT_FOUND, "AUTH4004", "이메일과 일치하는 사용자가 없습니다."),
 
     // 회원 관련 응답
-    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 존재하는 이메일입니다.");
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 존재하는 이메일입니다."),
+
+    //idolCategory Error
+    IDOL_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "IDOL_CATEGORY4001", "아이돌 카테고리가 없습니다.");
 
 
     private final HttpStatus httpStatus;
