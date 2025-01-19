@@ -21,7 +21,6 @@ public class MemberCommandServiceImpl implements MemberCommandService{
     @Override
     @Transactional
     public Member signupMember(MemberRequestDto.SignupDto request){
-
         if(memberRepository.existsByEmail(request.getEmail())){
             throw new MemberHandler(ErrorStatus.DUPLICATE_EMAIL);
         }
