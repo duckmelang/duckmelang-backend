@@ -3,6 +3,12 @@ spring:
     url: jdbc:mysql://localhost:3306/duckmelang
     username: root
     password: 1102
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
   logging:
     level:
       org.springframework: DEBUG
@@ -24,9 +30,15 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
 jwt:
   secret-key: "duckmelangduckmelangduckmelangduckmelangduckmelang"
-  access-expiration: 60000       #1분
-  refresh-expiration: 604800000  #7일
+  access-expiration: 60000       # 1분
+  refresh-expiration: 604800000  # 7일
+
 server:
   port: 8080

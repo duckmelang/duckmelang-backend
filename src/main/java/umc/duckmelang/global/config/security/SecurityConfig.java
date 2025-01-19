@@ -29,11 +29,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .formLogin(formLogin -> formLogin.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
+                .logout(logout -> logout.logoutUrl("/spring-logout"))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/login", "/signup").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/login", "/signup", "/token/refresh", "/logout").permitAll()
                         .anyRequest().authenticated()
                 );
 

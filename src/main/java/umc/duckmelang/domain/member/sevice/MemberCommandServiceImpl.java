@@ -11,7 +11,6 @@ import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.handler.MemberHandler;
 
-
 @Service
 @RequiredArgsConstructor
 public class MemberCommandServiceImpl implements MemberCommandService{

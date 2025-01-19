@@ -83,6 +83,12 @@ public class JwtUtil {
 
     public Long getMemberIdFromToken(String token) {
         Claims claims = parseClaims(token);
+        System.out.println("Parsed Claims: " + claims);
         return Long.valueOf(claims.getSubject());
+    }
+
+    public Long getExpiration(String token) {
+        Claims claims = parseClaims(token);
+        return claims.getExpiration().getTime() - System.currentTimeMillis();
     }
 }

@@ -1,6 +1,7 @@
 package umc.duckmelang.domain.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import umc.duckmelang.domain.auth.dto.AuthRequestDto;
 import umc.duckmelang.domain.auth.dto.AuthResponseDto;
 import umc.duckmelang.domain.auth.service.AuthService;
+import umc.duckmelang.domain.refreshtoken.dto.RefreshTokenRequestDto;
 import umc.duckmelang.global.apipayload.ApiResponse;
 
 @RestController
@@ -27,5 +29,20 @@ public class AuthController {
     })
     public ApiResponse<AuthResponseDto.TokenResponse> login(@RequestBody AuthRequestDto.LoginDto request) {
         return ApiResponse.onSuccess(authService.login(request.getEmail(), request.getPassword()));
+    }
+
+    @PostMapping("/token/refresh")
+    @Operation(summary = "토큰 재발급 API", description = "유효한 refreshToken을 사용해 AccessToken을 재발급합니다.")
+    public ApiResponse<AuthResponseDto.TokenResponse> refreshToken(
+            @Parameter(description = "유효한 Refresh Token을 입력하세요", required = true, example = "Bearer {refreshToken}")
+            @RequestBody RefreshTokenRequestDto requestDto){
+        return ApiResponse.onSuccess(authService.reissue(requestDto.getRefreshToken()));
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "로그아웃 API", description = "AccessToken 블랙리스트 처리 및 RefreshToken 삭제")
+    public ApiResponse<String> logout(@RequestBody RefreshTokenRequestDto requestDto) {
+        authService.logout(requestDto.getRefreshToken());
+        return ApiResponse.onSuccess("로그아웃되었습니다.");
     }
 }

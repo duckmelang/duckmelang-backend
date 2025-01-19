@@ -9,6 +9,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtUtil jwtUtil;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -32,6 +34,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String token = resolveToken(httpRequest);
 
         if (token != null) {
+            if(isTokenBlacklisted(token)){
+                String isBlacklisted = redisTemplate.opsForValue().get("blacklist:" + token);
+                if (isBlacklisted != null) {
+                    throw new IllegalArgumentException("블랙리스트에 등록된 토큰입니다.");
+                }
+            }
             try {
                 jwtUtil.validateToken(token);
                 String email = jwtUtil.getEmailFromToken(token);
@@ -54,6 +62,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    private boolean isTokenBlacklisted(String token) {
+        Boolean isBlacklisted = redisTemplate.hasKey("blacklist:" + token);
+        return isBlacklisted != null && isBlacklisted;
     }
 }
 

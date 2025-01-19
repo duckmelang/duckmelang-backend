@@ -25,8 +25,6 @@ public class Auth extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(8)")
     private ProviderKind provider;
 
-    private String refreshToken;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -39,9 +37,5 @@ public class Auth extends BaseEntity {
         if (member != null) {
             member.getAuthList().add(this);
         }
-    }
-
-    public void setRefreshToken(String refreshToken){
-        this.refreshToken = refreshToken;
     }
 }
