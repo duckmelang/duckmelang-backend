@@ -1,5 +1,6 @@
 package umc.duckmelang.domain.member.service;
 
+import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,6 +21,8 @@ import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberidol.repository.MemberIdolRepository;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRepository;
+import umc.duckmelang.global.apipayload.code.ErrorReasonDTO;
+import umc.duckmelang.global.apipayload.exception.handler.TempHandler;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -313,12 +316,7 @@ class MemberCommandServiceTest {
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
 
-        // When & Then
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            memberCommandService.createLandmines(memberId, requestDto);
-        });
-
-        assertThat(exception.getMessage()).isEqualTo("중복된 키워드가 존재합니다: 지뢰1");
+        assertThrows(TempHandler.class, () -> memberCommandService.createLandmines(memberId, requestDto));
         verify(landmineRepository, never()).deleteAllByMember(any());
     }
 
@@ -417,12 +415,7 @@ class MemberCommandServiceTest {
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.empty()); // 회원이 조회되지 않음
 
-        // When & Then
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            memberCommandService.createMemberProfileImage(memberId, requestDto);
-        });
-
-        assertThat(exception.getMessage()).isEqualTo("존재하지 않는 회원입니다."); // 예외 메시지 검증
+        assertThrows(TempHandler.class, () -> memberCommandService.createMemberProfileImage(memberId, requestDto));
         verify(memberProfileImageRepository, never()).deleteAllByMember(any()); // 삭제 호출되지 않음
         verify(memberProfileImageRepository, never()).save(any()); // 저장 호출되지 않음
     }
