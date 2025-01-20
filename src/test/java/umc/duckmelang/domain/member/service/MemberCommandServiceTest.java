@@ -419,6 +419,110 @@ class MemberCommandServiceTest {
         verify(memberProfileImageRepository, never()).deleteAllByMember(any()); // 삭제 호출되지 않음
         verify(memberProfileImageRepository, never()).save(any()); // 저장 호출되지 않음
     }
+
+
+    // 유효한 자기소개 문구를 설정한 경우
+    @Test
+    void createIntroduction_withValidIntroduction_shouldSaveSuccessfully() {
+        // Given
+        Long memberId = 1L;
+        String introduction = "안녕하세요! 저는 새로운 회원입니다.";
+
+        // Mock Member 객체 생성
+        Member member = Member.builder()
+                .id(memberId)
+                .name("Test User")
+                .email("test@example.com")
+                .build();
+
+        MemberRequestDto.CreateIntroductionDto requestDto = MemberRequestDto.CreateIntroductionDto.builder()
+                .introduction(introduction)
+                .build();
+
+        // Mock Member 객체 (업데이트된 자기소개 포함)
+        Member updatedMember = Member.builder()
+                .id(memberId)
+                .name("Test User")
+                .email("test@example.com")
+                .introduction(introduction)
+                .build();
+
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
+        when(memberRepository.save(any(Member.class))).thenReturn(updatedMember);
+
+        // When
+        Member result = memberCommandService.createIntroduction(memberId, requestDto);
+
+        // Then
+        assertThat(result.getIntroduction()).isEqualTo(introduction); // 설정된 자기소개 검증
+        assertThat(result.getId()).isEqualTo(memberId); // Member ID 검증
+        verify(memberRepository).findById(memberId); // 회원 조회 확인
+        verify(memberRepository).save(any(Member.class)); // 새 데이터 저장 확인
+    }
+
+
+    // 회원이 존재하지 않는 경우
+    @Test
+    void createIntroduction_memberNotFound_shouldThrowException() {
+        // Given
+        Long memberId = 1L;
+        MemberRequestDto.CreateIntroductionDto requestDto = MemberRequestDto.CreateIntroductionDto.builder()
+                .introduction("안녕하세요!")
+                .build();
+
+        when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> {
+            memberCommandService.createIntroduction(memberId, requestDto);
+        });
+
+        verify(memberRepository).findById(memberId); // 회원 조회 확인
+        verify(memberRepository, never()).save(any(Member.class)); // 저장하지 않음 확인
+    }
+
+    // 공백만 입력한 경우
+    @Test
+    void createIntroduction_withOnlyWhitespace_shouldThrowException() {
+        // Given
+        Long memberId = 1L;
+        String introduction = "   "; // 공백만 입력
+
+        // Mock Member 객체 생성
+        Member member = Member.builder()
+                .id(memberId)
+                .name("Test User")
+                .email("test@example.com")
+                .build();
+
+        MemberRequestDto.CreateIntroductionDto requestDto = MemberRequestDto.CreateIntroductionDto.builder()
+                .introduction(introduction)
+                .build();
+
+        // Mock Member 객체 (업데이트된 자기소개 포함)
+        Member updatedMember = Member.builder()
+                .id(memberId)
+                .name("Test User")
+                .email("test@example.com")
+                .introduction(introduction)
+                .build();
+
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
+        when(memberRepository.save(any(Member.class))).thenReturn(updatedMember);
+
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> {
+            memberCommandService.createIntroduction(memberId, requestDto);
+        });
+
+        verify(memberRepository).findById(memberId); // 회원 조회 확인
+        verify(memberRepository, never()).save(any(Member.class)); // 저장하지 않음 확인
+    }
+
+
+
+
+
 }
 
 

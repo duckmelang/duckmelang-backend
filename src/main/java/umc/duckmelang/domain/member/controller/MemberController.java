@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import umc.duckmelang.domain.member.converter.MemberConverter;
+import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
 import umc.duckmelang.domain.member.service.MemberCommandService;
@@ -74,6 +75,17 @@ public class MemberController {
         MemberProfileImage updatedMemberProfileImage = memberCommandService.createMemberProfileImage(memberId, request);
 
         return ApiResponse.onSuccess(MemberConverter.toCreateMemberProfileImageResponseDto(updatedMemberProfileImage));
+    }
+
+    @Operation(summary = "자기소개 문구 설정 API", description = "회원이 최초로 자기소개 문구를 설정하는 API입니다. 빈 문자열과 공백을 허용하지 않습니다. 최대 500자 작성 가능합니다.")
+    @PostMapping("/{memberId}/profile-introduction")
+    public ApiResponse<MemberResponseDto.CreateIntroductionResultDto> createIntroduction (
+            @PathVariable(name = "memberId") Long memberId,
+            @RequestBody @Valid MemberRequestDto.CreateIntroductionDto request) {
+
+        Member updatedmember= memberCommandService.createIntroduction(memberId, request);
+
+        return ApiResponse.onSuccess(MemberConverter.toCreateIntroductionResponseDto(updatedmember));
     }
 
 

@@ -45,4 +45,13 @@ public class MemberResponseDto {
         private Long memberId;
         private String memberProfileImageURL;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CreateIntroductionResultDto {
+        private Long memberId;
+        private String introduction;
+    }
 }
