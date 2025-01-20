@@ -47,4 +47,12 @@ public class PostResponseDto {
         private LocalDate date;
         private LocalDateTime createdAt;
     }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class PostJoinResultDto{
+        private String title;
+
+    }
 }
