@@ -85,4 +85,8 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "secondMember", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MateRelationship> mateRelationshipinSecondList = new ArrayList<>();
+
+    public int getAge(){
+        return LocalDate.now().getYear() - birth.getYear();
+    }
 }

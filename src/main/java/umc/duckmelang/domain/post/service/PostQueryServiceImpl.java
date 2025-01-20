@@ -33,4 +33,9 @@ public class PostQueryServiceImpl implements PostQueryService{
         return postRepository.findById(postId);
     }
 
+    @Override
+    public Integer countByMemberId(Long memberId) {
+        return postRepository.countAllByMemberId(memberId);
+    }
+
 }

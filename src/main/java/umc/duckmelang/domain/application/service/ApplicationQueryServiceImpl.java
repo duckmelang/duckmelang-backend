@@ -57,4 +57,9 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
         return applicationRepository.findSentApplicationList(memberId, ApplicationStatus.PENDING, PageRequest.of(page,10));
     }
 
+    @Override
+    public int countMatchedApplications(Long memberId) {
+        return applicationRepository.countAllByMemberId(memberId);
+    }
+
 }

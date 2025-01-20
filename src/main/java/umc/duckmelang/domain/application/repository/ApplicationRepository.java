@@ -15,6 +15,7 @@ import umc.duckmelang.domain.application.domain.enums.ApplicationStatus;
 import umc.duckmelang.domain.application.dto.ReceivedApplicationDto;
 import umc.duckmelang.domain.application.dto.SentApplicationDto;
 
+
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     @EntityGraph(attributePaths = {"member","post", "post.member"})
     Optional<Application> findByIdAndPostMemberId(Long id, Long memberId);
@@ -58,4 +59,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
             @Param("status") ApplicationStatus status,
             Pageable pageable
     );
+
+    int countAllByMemberId(Long memberId);
 }
