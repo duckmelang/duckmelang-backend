@@ -15,8 +15,7 @@ import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.materelationship.repository.MateRelationshipRepository;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.post.domain.Post;
-import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.handler.ApplicationHandler;
+import umc.duckmelang.global.error.handler.ApplicationHandler;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

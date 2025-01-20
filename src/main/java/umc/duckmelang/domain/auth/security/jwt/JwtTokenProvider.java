@@ -1,25 +1,28 @@
-package umc.duckmelang.global.common.jwt;
+package umc.duckmelang.domain.auth.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import umc.duckmelang.domain.auth.dto.AuthResponseDto;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.error.exception.TokenException;
 
 import java.security.Key;
+import java.util.Collections;
 import java.util.Date;
 
 @Component
 @EnableWebSecurity
-public class JwtUtil {
+public class JwtTokenProvider {
     private final Key key;
     private final long accessTokenExpiration;
     private final long refreshTokenExpiration;
 
-    public JwtUtil(
+    public JwtTokenProvider(
             @Value("${jwt.secret-key}") String secretKey,
             @Value("${jwt.access-expiration}") long accessTokenExpiration,
             @Value("${jwt.refresh-expiration}") long refreshTokenExpiration
@@ -30,24 +33,22 @@ public class JwtUtil {
         this.refreshTokenExpiration = refreshTokenExpiration;
     }
 
-    public AuthResponseDto.TokenResponse generateToken(Long memberId, String email) {
-        String accessToken = createToken(memberId, email, accessTokenExpiration);
-        String refreshToken = createToken(memberId, email, refreshTokenExpiration);
-
-        return AuthResponseDto.TokenResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-    }
-
-    private String createToken(Long memberId, String email, long expirationTime) {
+    /* JWT 토큰 생성 메소드 */
+    public String createToken(Long memberId, long expiration) {
         return Jwts.builder()
                 .setSubject(String.valueOf(memberId))
-                .claim("email", email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public String generateAccessToken(Long memberId) {
+        return createToken(memberId, accessTokenExpiration);
+    }
+
+    public String generateRefreshToken(Long memberId) {
+        return createToken(memberId, refreshTokenExpiration);
     }
 
     public boolean validateToken(String token) {
@@ -64,31 +65,26 @@ public class JwtUtil {
         }
     }
 
-    public Claims parseClaims(String accessToken) {
+
+    public Claims parseClaims(String token) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(accessToken)
+                    .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
     }
 
-    public String getEmailFromToken(String token) {
-        Claims claims = parseClaims(token);
-        return claims.get("email", String.class);
-    }
-
     public Long getMemberIdFromToken(String token) {
         Claims claims = parseClaims(token);
-        System.out.println("Parsed Claims: " + claims);
         return Long.valueOf(claims.getSubject());
     }
 
-    public Long getExpiration(String token) {
-        Claims claims = parseClaims(token);
-        return claims.getExpiration().getTime() - System.currentTimeMillis();
+    public Authentication getAuthentication(String token){
+        Long memberId = getMemberIdFromToken(token);
+        return new UsernamePasswordAuthenticationToken(memberId, null, Collections.emptyList());
     }
 }

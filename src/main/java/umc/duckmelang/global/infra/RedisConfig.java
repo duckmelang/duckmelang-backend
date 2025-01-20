@@ -1,4 +1,4 @@
-package umc.duckmelang.global.config;
+package umc.duckmelang.global.infra;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

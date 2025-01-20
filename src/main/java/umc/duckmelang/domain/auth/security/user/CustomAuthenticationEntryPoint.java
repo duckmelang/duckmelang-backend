@@ -1,4 +1,4 @@
-package umc.duckmelang.global.config.security;
+package umc.duckmelang.domain.auth.security.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -21,10 +21,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException, ServletException {
 
-        // 기본값 설정
+        // 기본 예외 상태
         ErrorStatus errorStatus = ErrorStatus.AUTH_UNAUTHORIZED;
 
-        // JWT 관련 오류 확인
         ErrorStatus tokenError = (ErrorStatus) request.getAttribute("tokenError");
         if (tokenError != null) {
             errorStatus = tokenError;
@@ -35,7 +34,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         } else if (authException instanceof BadCredentialsException) {
             errorStatus = ErrorStatus.AUTH_INVALID_CREDENTIALS;
         }
-
         ApiResponse<Object> errorResponse = ApiResponse.onFailure(
                 errorStatus.getCode(),
                 errorStatus.getMessage(),
@@ -43,7 +41,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         );
 
         response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized
+        response.setStatus(errorStatus.getHttpStatus().value());
         response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
     }
 }

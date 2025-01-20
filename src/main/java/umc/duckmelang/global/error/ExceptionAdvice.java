@@ -1,6 +1,5 @@
-package umc.duckmelang.global.apipayload.exception;
+package umc.duckmelang.global.error;
 
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -8,8 +7,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.global.apipayload.code.ErrorReasonDTO;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.error.exception.TokenException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -117,32 +115,5 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 errorCommonStatus.getHttpStatus(),
                 request
         );
-    }
-
-    @ExceptionHandler(value = UsernameNotFoundException.class)
-    public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException e, HttpServletRequest request) {
-        return buildErrorResponse(ErrorStatus.AUTH_USER_NOT_FOUND, request);
-    }
-
-    @ExceptionHandler(value = BadCredentialsException.class)
-    public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException e, HttpServletRequest request) {
-        return buildErrorResponse(ErrorStatus.AUTH_INVALID_CREDENTIALS, request);
-    }
-
-    @ExceptionHandler(value = JwtException.class)
-    public ResponseEntity<Object> handleJwtException(JwtException e, HttpServletRequest request) {
-        return buildErrorResponse(ErrorStatus.INVALID_TOKEN, request);
-    }
-
-    private ResponseEntity<Object> buildErrorResponse(ErrorStatus errorStatus, HttpServletRequest request) {
-        ApiResponse<Object> response = ApiResponse.onFailure(
-                errorStatus.getCode(),
-                errorStatus.getMessage(),
-                null
-        );
-
-        return ResponseEntity
-                .status(errorStatus.getHttpStatus())
-                .body(response);
     }
 }

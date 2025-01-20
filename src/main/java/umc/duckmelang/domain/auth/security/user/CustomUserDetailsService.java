@@ -1,15 +1,12 @@
-package umc.duckmelang.domain.auth.service;
+package umc.duckmelang.domain.auth.security.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-
-import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor

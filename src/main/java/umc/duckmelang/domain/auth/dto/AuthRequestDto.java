@@ -1,6 +1,7 @@
 package umc.duckmelang.domain.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 public class AuthRequestDto {
@@ -11,5 +12,11 @@ public class AuthRequestDto {
         private String email;
         @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
         private String password;
+    }
+
+    @Getter
+    public static class RefreshTokenRequestDto{
+        @NotNull
+        private String refreshToken;
     }
 }
