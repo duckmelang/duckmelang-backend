@@ -5,15 +5,15 @@ import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.application.service.ApplicationQueryService;
-import umc.duckmelang.domain.application.validation.annotation.ExistApplication;
+import umc.duckmelang.domain.application.validation.annotation.ExistsApplication;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 
 @Component
 @RequiredArgsConstructor
-public class ApplicationExistValidator implements ConstraintValidator<ExistApplication, Long> {
+public class ApplicationExistsValidator implements ConstraintValidator<ExistsApplication, Long> {
     private final ApplicationQueryService applicationQueryService;
     @Override
-    public void initialize(ExistApplication constraintAnnotation) {
+    public void initialize(ExistsApplication constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 

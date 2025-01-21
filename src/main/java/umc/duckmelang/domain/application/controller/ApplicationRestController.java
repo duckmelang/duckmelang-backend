@@ -1,26 +1,17 @@
 package umc.duckmelang.domain.application.controller;
-import java.util.*;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.persistence.Tuple;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import umc.duckmelang.domain.application.converter.ApplicationConverter;
 import umc.duckmelang.domain.application.domain.Application;
-import umc.duckmelang.domain.application.domain.enums.ApplicationStatus;
-import umc.duckmelang.domain.application.repository.ApplicationRepository;
 import umc.duckmelang.domain.application.service.ApplicationCommandService;
 import umc.duckmelang.domain.application.service.ApplicationQueryService;
-import umc.duckmelang.domain.application.validation.annotation.ExistApplication;
+import umc.duckmelang.domain.application.validation.annotation.ExistsApplication;
 import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.domain.application.dto.*;
@@ -41,7 +32,7 @@ public class ApplicationRestController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "AUTH004", description = "acess 토큰 만료",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "AUTH006", description = "acess 토큰 모양이 이상함",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
-    public ApiResponse<ApplicationResponseDto.ApplicationStatusChangeResponseDto> failApplication(@PathVariable @ExistApplication Long applicationId,
+    public ApiResponse<ApplicationResponseDto.ApplicationStatusChangeResponseDto> failApplication(@PathVariable @ExistsApplication Long applicationId,
                                                                                                   @RequestParam Long memberId  // 임시로 사용. 나중에 JWT에서 추출할 예정
                                                                                                   ) {
         Application application = applicationCommandService.updateStatusToFailed(applicationId, memberId);
@@ -56,7 +47,7 @@ public class ApplicationRestController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "AUTH004", description = "acess 토큰 만료",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "AUTH006", description = "acess 토큰 모양이 이상함",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
-    public ApiResponse<ApplicationResponseDto.ApplicationStatusChangeResponseDto> cancelApplication(@PathVariable @ExistApplication Long applicationId,
+    public ApiResponse<ApplicationResponseDto.ApplicationStatusChangeResponseDto> cancelApplication(@PathVariable @ExistsApplication Long applicationId,
                                                                                                   @RequestParam Long memberId  // 임시로 사용. 나중에 JWT에서 추출할 예정
     ) {
         Application application = applicationCommandService.updateStatusToCanceled(applicationId, memberId);
@@ -71,7 +62,7 @@ public class ApplicationRestController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "AUTH004", description = "acess 토큰 만료",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "AUTH006", description = "acess 토큰 모양이 이상함",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
-    public ApiResponse<ApplicationResponseDto.MateRelationshipCreateResponseDto> succeedApplication(@PathVariable @ExistApplication Long applicationId,
+    public ApiResponse<ApplicationResponseDto.MateRelationshipCreateResponseDto> succeedApplication(@PathVariable @ExistsApplication Long applicationId,
                                                                                                   @RequestParam Long memberId  // 임시로 사용. 나중에 JWT에서 추출할 예정
     ) {
         MateRelationship mateRelationship = applicationCommandService.updateStatusToSucceed(applicationId, memberId);
