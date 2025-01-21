@@ -9,7 +9,7 @@ import umc.duckmelang.domain.application.repository.ApplicationRepository;
 import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.materelationship.repository.MateRelationshipRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.error.handler.ApplicationHandler;
+import umc.duckmelang.global.apipayload.exception.handler.ApplicationHandler;
 
 @Service
 @RequiredArgsConstructor

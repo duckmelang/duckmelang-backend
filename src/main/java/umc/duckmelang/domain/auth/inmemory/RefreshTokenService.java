@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.error.exception.TokenException;
+import umc.duckmelang.global.apipayload.exception.TokenException;
 
 import java.util.Optional;
 import java.util.stream.StreamSupport;

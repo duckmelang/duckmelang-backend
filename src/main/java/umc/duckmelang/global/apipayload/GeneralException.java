@@ -1,4 +1,4 @@
-package umc.duckmelang.global.error;
+package umc.duckmelang.global.apipayload;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

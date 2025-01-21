@@ -1,4 +1,4 @@
-package umc.duckmelang.global.error;
+package umc.duckmelang.global.apipayload;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.global.apipayload.code.ErrorReasonDTO;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.error.exception.TokenException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -9,7 +9,7 @@ import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.error.exception.MemberException;
+import umc.duckmelang.global.apipayload.exception.MemberException;
 
 @Service
 @RequiredArgsConstructor

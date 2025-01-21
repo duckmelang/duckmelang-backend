@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.global.apipayload.code.BaseErrorCode;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.error.exception.TokenException;
 
 import java.io.IOException;
 

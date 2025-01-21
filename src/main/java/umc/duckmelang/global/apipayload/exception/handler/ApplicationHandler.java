@@ -1,7 +1,7 @@
-package umc.duckmelang.global.error.handler;
+package umc.duckmelang.global.apipayload.exception.handler;
 
 import umc.duckmelang.global.apipayload.code.BaseErrorCode;
-import umc.duckmelang.global.error.GeneralException;
+import umc.duckmelang.global.apipayload.GeneralException;
 
 public class ApplicationHandler extends GeneralException {
     public ApplicationHandler(BaseErrorCode errorCode) {

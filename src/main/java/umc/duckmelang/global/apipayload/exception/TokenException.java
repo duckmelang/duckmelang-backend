@@ -1,8 +1,7 @@
-package umc.duckmelang.global.error.exception;
+package umc.duckmelang.global.apipayload.exception;
 
 import umc.duckmelang.global.apipayload.code.BaseErrorCode;
-import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.error.GeneralException;
+import umc.duckmelang.global.apipayload.GeneralException;
 
 public class TokenException extends GeneralException {
     public TokenException(BaseErrorCode errorCode){ super(errorCode); }

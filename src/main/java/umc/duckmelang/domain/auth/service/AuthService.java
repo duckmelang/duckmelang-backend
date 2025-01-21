@@ -5,7 +5,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ import umc.duckmelang.domain.auth.inmemory.RefreshTokenService;
 import umc.duckmelang.domain.auth.security.jwt.JwtTokenProvider;
 import umc.duckmelang.domain.auth.security.user.CustomUserDetails;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.error.exception.AuthException;
+import umc.duckmelang.global.apipayload.exception.AuthException;
 
 import java.util.concurrent.TimeUnit;
 
