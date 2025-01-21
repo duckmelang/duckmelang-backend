@@ -16,4 +16,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p FROM Post p JOIN p.postIdolList pi JOIN pi.idolCategory ic WHERE ic.id = :idolId")
     Page<Post> findByIdol(@Param("idolId") Long idolId, Pageable pageable);
+
+    @Query("SELECT p FROM Post p WHERE p.title LIKE %:searchKeyword%")
+    Page<Post> findByTitle(String searchKeyword, Pageable pageable);
 }

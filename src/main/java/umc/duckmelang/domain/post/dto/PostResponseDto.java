@@ -53,6 +53,6 @@ public class PostResponseDto {
     @AllArgsConstructor
     public static class PostJoinResultDto{
         private String title;
-
     }
+
 }

@@ -33,4 +33,10 @@ public class PostQueryServiceImpl implements PostQueryService{
         return postRepository.findById(postId);
     }
 
+    @Override
+    public Page<Post> getPostListByTitle(String searchKeyword, Integer page){
+        return postRepository.findByTitle(searchKeyword, PageRequest.of(page, 10));
+
+    }
+
 }

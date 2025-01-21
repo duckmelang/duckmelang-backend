@@ -61,9 +61,18 @@ public class PostController {
 
     @PostMapping("/")
     @Operation(summary = "게시글 작성 API", description = "게시글 쓰기 API입니다. ")
-    public ApiResponse<PostResponseDto.PostJoinResultDto> postJoin(@RequestParam(name="memberId") Long memberId, @RequestBody @Valid PostRequestDto.PostJoinDto request){
+    public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (@RequestParam(name="memberId") Long memberId, @RequestBody @Valid PostRequestDto.PostJoinDto request){
         Post post = postCommandService.joinPost(request, memberId);
         return ApiResponse.onSuccess(PostConverter.postJoinResultDto(post));
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "게시글 검색 API", description = "게시글 검색 API입니다. title 기준으로 검색합니다. 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
+    public ApiResponse<PostResponseDto.PostPreviewListDto> getPostListByTitle (@RequestParam(name = "page") Integer page, @RequestParam(name="searchKeyword") String searchKeyword){
+        Page<Post> postList = postQueryService.getPostListByTitle(searchKeyword, page);
+        return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
+
+
     }
 
 }
