@@ -22,6 +22,9 @@ import umc.duckmelang.domain.memberidol.repository.MemberIdolRepository;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRepository;
 import umc.duckmelang.global.apipayload.code.ErrorReasonDTO;
+import umc.duckmelang.global.apipayload.exception.handler.IdolCategoryHandler;
+import umc.duckmelang.global.apipayload.exception.handler.LandmineHandler;
+import umc.duckmelang.global.apipayload.exception.handler.MemberHandler;
 import umc.duckmelang.global.apipayload.exception.handler.TempHandler;
 
 import java.util.Arrays;
@@ -130,7 +133,7 @@ class MemberCommandServiceTest {
         when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(IllegalArgumentException.class, () -> memberCommandService.selectIdols(memberId, request));
+        assertThrows(MemberHandler.class, () -> memberCommandService.selectIdols(memberId, request));
         verify(memberRepository, times(1)).findById(memberId);
     }
 
@@ -150,7 +153,7 @@ class MemberCommandServiceTest {
         // Mock: 존재하는 아이돌 카테고리만 반환하도록 설정
         when(idolCategoryRepository.findAllById(idolCategoryIds)).thenReturn(List.of(IdolCategory.builder().id(1L).name("BTS").build()));
         // When & Then
-        assertThrows(IllegalArgumentException.class, () -> memberCommandService.selectIdols(memberId, request));
+        assertThrows(IdolCategoryHandler.class, () -> memberCommandService.selectIdols(memberId, request));
     }
 
 
@@ -316,7 +319,7 @@ class MemberCommandServiceTest {
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
 
-        assertThrows(TempHandler.class, () -> memberCommandService.createLandmines(memberId, requestDto));
+        assertThrows(LandmineHandler.class, () -> memberCommandService.createLandmines(memberId, requestDto));
         verify(landmineRepository, never()).deleteAllByMember(any());
     }
 
@@ -404,7 +407,7 @@ class MemberCommandServiceTest {
         verify(memberProfileImageRepository).save(any(MemberProfileImage.class)); // 새 데이터 저장 확인
     }
 
-    // 존재하지 않는 회원 ID를 전달한 경우
+    // 존재하지 않는 회원이 프로필 사진을 설정하려는 경우
     @Test
     public void createMemberProfileImage_withInvalidMemberId_shouldThrowException() {
         // Given
@@ -415,7 +418,7 @@ class MemberCommandServiceTest {
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.empty()); // 회원이 조회되지 않음
 
-        assertThrows(TempHandler.class, () -> memberCommandService.createMemberProfileImage(memberId, requestDto));
+        assertThrows(MemberHandler.class, () -> memberCommandService.createMemberProfileImage(memberId, requestDto));
         verify(memberProfileImageRepository, never()).deleteAllByMember(any()); // 삭제 호출되지 않음
         verify(memberProfileImageRepository, never()).save(any()); // 저장 호출되지 않음
     }
@@ -461,7 +464,7 @@ class MemberCommandServiceTest {
     }
 
 
-    // 회원이 존재하지 않는 경우
+    // 존재하지 않는 회원이 자기소개글을 설정하려는 경우
     @Test
     void createIntroduction_memberNotFound_shouldThrowException() {
         // Given
@@ -473,7 +476,7 @@ class MemberCommandServiceTest {
         when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(MemberHandler.class, () -> {
             memberCommandService.createIntroduction(memberId, requestDto);
         });
 
@@ -511,7 +514,7 @@ class MemberCommandServiceTest {
         when(memberRepository.save(any(Member.class))).thenReturn(updatedMember);
 
         // When & Then
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(MemberHandler.class, () -> {
             memberCommandService.createIntroduction(memberId, requestDto);
         });
 

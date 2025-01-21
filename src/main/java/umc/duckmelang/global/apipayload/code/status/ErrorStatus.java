@@ -18,6 +18,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 멤버 관련 에러
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "존재하지 않는 회원입니다."),
+    MEMBER_EMPTY_INTRODUCTION(HttpStatus.BAD_REQUEST, "MEMBER4002", "자기소개는 공란으로 비워둘 수 없습니다."),
 
     // 아이돌 카테고리 관련 에러
     INVALID_IDOLCATEGORY(HttpStatus.BAD_REQUEST, "IDOLCATEGORY4001", "선택한 아이돌 중 유효하지 않은 항목이 있습니다."),
