@@ -1,5 +1,6 @@
 package umc.duckmelang.domain.auth.service;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,12 +18,15 @@ import umc.duckmelang.domain.auth.security.user.CustomUserDetails;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.error.exception.AuthException;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService refreshTokenService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     /**
      * 사용자 로그인
@@ -64,9 +68,15 @@ public class AuthService {
     }
 
     @Transactional
-    public void logout(String refreshToken) {
+    public void logout(String accessToken, String refreshToken) {
         refreshTokenService.removeRefreshToken(refreshToken);
-        SecurityContextHolder.clearContext();
+        long expiration = jwtTokenProvider.getExpirationFromToken(accessToken);
+        redisTemplate.opsForValue().set(
+                "blacklist:accessToken:" + accessToken,
+                "true",
+                expiration,
+                TimeUnit.MILLISECONDS
+        );
     }
 
     /**

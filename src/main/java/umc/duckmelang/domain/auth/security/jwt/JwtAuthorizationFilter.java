@@ -27,25 +27,18 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter  {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
-        return  path.startsWith("/login") || path.startsWith("/signup") || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs");
-    }
-
-    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
         try {
             String token = extractToken(request);
-            if (jwtTokenProvider.validateToken(token)) {
+            if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (ExpiredJwtException e) {
-            request.setAttribute("tokenError", ErrorStatus.TOKEN_EXPIRED);
-        } catch (JwtException e) {
-            request.setAttribute("tokenError", ErrorStatus.INVALID_TOKEN);
+        } catch (TokenException e) {
+            request.setAttribute("tokenError", e.getCode());
+            SecurityContextHolder.clearContext();
         }
         chain.doFilter(request, response);
     }
@@ -61,6 +54,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter  {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-        throw new TokenException(ErrorStatus.INVALID_TOKEN);
+        return null;
     }
 }

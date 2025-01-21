@@ -1,10 +1,6 @@
 package umc.duckmelang.domain.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,8 +29,8 @@ public class AuthController {
 
     @PostMapping("/logout")
     @Operation(summary = "로그아웃 API", description = "RefreshToken 삭제를 통해 로그아웃을 합니다.")
-    public ApiResponse<String> logout(@RequestBody AuthRequestDto.RefreshTokenRequestDto requestDto) {
-        authService.logout(requestDto.getRefreshToken());
+    public ApiResponse<String> logout(@RequestBody AuthRequestDto.LogoutDto requestDto) {
+        authService.logout(requestDto.getAccessToken(), requestDto.getRefreshToken());
         return ApiResponse.onSuccess("로그아웃되었습니다.");
     }
 }

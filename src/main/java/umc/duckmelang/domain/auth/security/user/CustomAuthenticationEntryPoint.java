@@ -10,7 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.global.apipayload.ApiResponse;
+import umc.duckmelang.global.apipayload.code.BaseErrorCode;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.error.exception.TokenException;
 
 import java.io.IOException;
 
@@ -24,9 +26,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         // 기본 예외 상태
         ErrorStatus errorStatus = ErrorStatus.AUTH_UNAUTHORIZED;
 
-        ErrorStatus tokenError = (ErrorStatus) request.getAttribute("tokenError");
+        BaseErrorCode tokenError = (BaseErrorCode) request.getAttribute("tokenError");
         if (tokenError != null) {
-            errorStatus = tokenError;
+            errorStatus = (ErrorStatus) tokenError;
         }
 
         if (authException instanceof UsernameNotFoundException) {

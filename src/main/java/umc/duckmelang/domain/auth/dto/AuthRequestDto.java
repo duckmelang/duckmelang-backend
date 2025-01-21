@@ -19,4 +19,10 @@ public class AuthRequestDto {
         @NotNull
         private String refreshToken;
     }
+
+    @Getter
+    public static class LogoutDto {
+        private String accessToken;
+        private String refreshToken;
+    }
 }
