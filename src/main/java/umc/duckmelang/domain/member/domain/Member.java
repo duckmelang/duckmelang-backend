@@ -85,4 +85,15 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "secondMember", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MateRelationship> mateRelationshipinSecondList = new ArrayList<>();
+
+    // 복사 생성자
+    public Member(Member other) {
+        this.introduction = other.introduction;
+    }
+
+    public Member withIntroduction(String introduction) {
+        Member newMember = new Member(this);
+        newMember.introduction = introduction;
+        return newMember;
+    }
 }
