@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.repository.PostRepository;
+import umc.duckmelang.domain.postimage.dto.PostImageResponseDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class PostQueryServiceImpl implements PostQueryService{
     }
 
     @Override
-    public Integer countByMemberId(Long memberId) {
+    public int getPostCount(Long memberId) {
         return postRepository.countAllByMemberId(memberId);
     }
 

@@ -1,13 +1,12 @@
 package umc.duckmelang.domain.memberprofileimage.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import java.util.List;
 public interface MemberProfileImageRepository extends JpaRepository<MemberProfileImage, Long> {
-    @Query("SELECT m.memberImage FROM MemberProfileImage m WHERE m.member.id = :memberId")
-    Page<String> findImageUrlsByMemberId(@Param("memberId") Long memberId, Pageable pageable);
+    @Query(value = "SELECT m FROM MemberProfileImage m WHERE m.member.id = :memberId ORDER BY m.createdAt DESC LIMIT 1")
+    Optional<MemberProfileImage> findTopByMemberIdOrderByCreatedAtDesc(@Param("memberId") Long memberId);
 }

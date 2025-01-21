@@ -59,7 +59,7 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
 
     @Override
     public int countMatchedApplications(Long memberId) {
-        return applicationRepository.countAllByMemberId(memberId);
+        return applicationRepository.countByMemberIdOrPostMemberIdAndStatus(memberId, ApplicationStatus.SUCCEED);
     }
 
 }

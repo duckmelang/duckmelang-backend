@@ -1,10 +1,7 @@
 package umc.duckmelang.domain.member.dto;
 
 import lombok.*;
-import umc.duckmelang.domain.application.dto.SentApplicationDto;
-import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
-
-import java.util.List;
+import umc.duckmelang.domain.postimage.dto.PostImageResponseDto;
 
 public class MemberResponseDto {
     @Builder
@@ -16,15 +13,11 @@ public class MemberResponseDto {
         String gender;
         int age;
         String introduction;
+        String profileImageUrl;
 
         int postCnt;
         int matchCnt;
 
-        List<String> memberProfileImageList;
-        Integer listSize;
-        Integer totalPage;
-        Long totalElements;
-        Boolean isFirst;
-        Boolean isLast;
+        PostImageResponseDto.PostThumbnailListResponseDto postsThumbnail;
     }
 }

@@ -2,7 +2,6 @@ package umc.duckmelang.domain.member.Facade;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.domain.application.service.ApplicationQueryService;
@@ -13,40 +12,35 @@ import umc.duckmelang.domain.member.service.MemberQueryService;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 import umc.duckmelang.domain.post.service.PostQueryService;
-import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.handler.MemberHandler;
-import java.util.List;
+import umc.duckmelang.domain.postimage.dto.PostThumbnailResponseDto;
+import umc.duckmelang.domain.postimage.service.PostImageQueryService;
+
 @Service
 @RequiredArgsConstructor
 public class ProfileFacadeService {
     private final MemberQueryService memberQueryService;
     private final PostQueryService postQueryService;
+    private final PostImageQueryService postImageQueryService;
     private final ApplicationQueryService applicationService;
     private final MemberProfileImageQueryService profileImageService;
 
     @Transactional(readOnly = true)
     public MemberResponseDto.OtherProfileDto getOtherProfileByMemberId(Long memberId, int page) {
-        validateMember(memberId);
-
         // 회원 기본 정보 조회
         Member member = memberQueryService.getMemberById(memberId);
 
-        // 게시글 수 조회
-        int postCount = postQueryService.countByMemberId(memberId);
+        // 게시글들의 이미지 하나씩 조회
+        Page<PostThumbnailResponseDto> imagePage = postImageQueryService.getPostsImage(memberId,page);
+
+        // 포스트 수 조회
+        int postCount = postQueryService.getPostCount(memberId);
 
         // 매칭 수 조회
         int matchCount = applicationService.countMatchedApplications(memberId);
 
-        // 프로필 이미지 페이징 조회
-        Page<String> imagePage = profileImageService.getMemberImages(memberId, page);
+        // 프로필 이미지 1개 조회
+        MemberProfileImage image = profileImageService.findLatestOneByMemberId(memberId);
 
-        return MemberConverter.ToOtherProfileDto(member, postCount, matchCount, imagePage);
-    }
-
-    // 예외 처리
-    private void validateMember(Long memberId) {
-        if (!memberQueryService.existsById(memberId)) {
-            throw new MemberHandler(ErrorStatus.NO_SUCH_MEMBER);
-        }
+        return MemberConverter.ToOtherProfileDto(member, postCount, matchCount, image, imagePage);
     }
 }
