@@ -21,7 +21,8 @@ public enum ErrorStatus implements BaseErrorCode {
     MEMBER_EMPTY_INTRODUCTION(HttpStatus.BAD_REQUEST, "MEMBER4002", "자기소개는 공란으로 비워둘 수 없습니다."),
 
     // 아이돌 카테고리 관련 에러
-    INVALID_IDOLCATEGORY(HttpStatus.BAD_REQUEST, "IDOLCATEGORY4001", "선택한 아이돌 중 유효하지 않은 항목이 있습니다."),
+    IDOL_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "IDOL_CATEGORY4001", "아이돌 카테고리가 없습니다."),
+    INVALID_IDOLCATEGORY(HttpStatus.BAD_REQUEST, "IDOLCATEGORY4002", "선택한 아이돌 중 유효하지 않은 항목이 있습니다."),
 
     // 행사 카테고리 관련 에러
     INVALID_EVENTCATEGORY(HttpStatus.BAD_REQUEST, "EVENTCATEGORY4001", "선택한 행사 중 유효하지 않은 항목이 있습니다."),
@@ -29,12 +30,15 @@ public enum ErrorStatus implements BaseErrorCode {
     // 지뢰 관련 에러
     DUPLICATE_LANDMINE(HttpStatus.BAD_REQUEST, "LANDMINE4001", "중복된 키워드가 존재합니다."),
 
+    //동행요청 관련 에러 
+    ALREADY_PROCESSED_APPLICATION(HttpStatus.CONFLICT, "APPLICATION4001","이미 처리된 동행 요청입니다."),
+    NOT_POSSESSED_APPLICATION(HttpStatus.CONFLICT, "APPLICATION4002", "본인 소유의 동행 요청이 아닙니다."),
+    APPLICATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLICATION4003", "존재하지 않는 동행 요청입니다."),
+    
     // 테스트 응답
     TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트");
 
-
-
-
+   
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
