@@ -59,9 +59,9 @@ public class PostController {
         return ApiResponse.onSuccess(PostConverter.postDetailDto(post));
     }
 
-    @PostMapping("/")
+    @PostMapping("/{memberId}")
     @Operation(summary = "게시글 작성 API", description = "게시글 쓰기 API입니다. ")
-    public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (@RequestParam(name="memberId") Long memberId, @RequestBody @Valid PostRequestDto.PostJoinDto request){
+    public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (@PathVariable(name="memberId") Long memberId, @RequestBody @Valid PostRequestDto.PostJoinDto request){
         Post post = postCommandService.joinPost(request, memberId);
         return ApiResponse.onSuccess(PostConverter.postJoinResultDto(post));
     }

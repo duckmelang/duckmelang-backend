@@ -14,6 +14,7 @@ public class PostResponseDto {
     @Builder
     @AllArgsConstructor
     public static class PostPreviewDto{
+        private Long id;
         private String title;
         private String category;
         private LocalDate date;
@@ -52,6 +53,7 @@ public class PostResponseDto {
     @Builder
     @AllArgsConstructor
     public static class PostJoinResultDto{
+        private Long id;
         private String title;
     }
 

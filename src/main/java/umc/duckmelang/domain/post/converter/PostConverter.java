@@ -20,6 +20,7 @@ public class PostConverter {
 
     public static PostResponseDto.PostPreviewDto postPreviewDto(Post post) {
         return PostResponseDto.PostPreviewDto.builder()
+                .id(post.getId())
                 .title(post.getTitle())
                 .category(post.getEventCategory().getName())
                 .date(post.getEventDate())
@@ -64,6 +65,7 @@ public class PostConverter {
 
     public static PostResponseDto.PostJoinResultDto postJoinResultDto(Post post) {
         return PostResponseDto.PostJoinResultDto.builder()
+                .id(post.getId())
                 .title(post.getTitle())
                 .build();
     }
