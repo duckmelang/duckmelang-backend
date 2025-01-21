@@ -18,4 +18,9 @@ public class PostImageQueryServiceImpl implements PostImageQueryService {
     public Page<PostThumbnailResponseDto> getPostsImage(Long memberId, int page) {
         return postImageRepository.findLatestPostImagesForMemberPosts(memberId, PageRequest.of(page, 10));
     }
+
+    @Override
+    public Page<PostThumbnailResponseDto> getMyPostsImage(Long memberId, int page) {
+        return postImageRepository.findLatestPostImagesForMemberPosts(memberId, PageRequest.of(page, 10));
+    }
 }
