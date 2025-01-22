@@ -19,6 +19,9 @@ public class Review extends BaseEntity {
     @Column(nullable = false, columnDefinition = "BIT(4) CHECK (score >= 0 AND score <= 5)")
     private Short score;
 
+    @Column(nullable = false, length = 500)
+    private String content;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", referencedColumnName = "member_id")
     private Member sender; // 리뷰 보내는 회원
