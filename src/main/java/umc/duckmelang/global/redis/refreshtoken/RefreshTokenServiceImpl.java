@@ -1,4 +1,4 @@
-package umc.duckmelang.global.redis;
+package umc.duckmelang.global.redis.refreshtoken;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -7,12 +7,10 @@ import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.TokenException;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
-public class RefreshTokenService {
+public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     /**
@@ -22,16 +20,12 @@ public class RefreshTokenService {
      */
     @Transactional
     public void saveRefreshToken(String refreshToken, Long memberId){
-        StreamSupport.stream(refreshTokenRepository.findAll().spliterator(), false)
-                .filter(token -> token.getMemberId().equals(memberId))
-                .forEach(token -> refreshTokenRepository.deleteById(token.getToken()));
-        if (refreshTokenRepository.existsById("refreshToken")) {
-            System.out.println("Deleting unnecessary 'refreshToken' key");
-            refreshTokenRepository.deleteById("refreshToken");
-        }
+        refreshTokenRepository.findByMemberId(memberId)
+                .ifPresent(token -> refreshTokenRepository.deleteById(token.getToken()));
         RefreshToken token = RefreshToken.builder()
                 .token(refreshToken)
                 .memberId(memberId)
+                .expiryDate(LocalDateTime.now().plusDays(7))
                 .build();
         refreshTokenRepository.save(token);
     }
@@ -43,15 +37,12 @@ public class RefreshTokenService {
      */
     @Transactional(readOnly = true)
     public RefreshToken validateAndGetRefreshToken(String refreshToken) {
-        Optional<RefreshToken> storedToken = refreshTokenRepository.findById(refreshToken);
-        if (storedToken.isEmpty()) {
-            throw new TokenException(ErrorStatus.MISSING_TOKEN);
-        }
-        RefreshToken token = storedToken.get();
+        RefreshToken token = refreshTokenRepository.findById(refreshToken)
+                .orElseThrow(() -> new TokenException(ErrorStatus.MISSING_TOKEN));
         if (token.getExpiryDate().isBefore(LocalDateTime.now())) {
             throw new TokenException(ErrorStatus.TOKEN_EXPIRED);
         }
-        return storedToken.get();
+        return token;
     }
 
     /**

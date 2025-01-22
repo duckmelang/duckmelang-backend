@@ -1,6 +1,5 @@
 package umc.duckmelang.domain.auth.service;
 
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,22 +10,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import umc.duckmelang.domain.auth.dto.AuthResponseDto;
 import umc.duckmelang.global.apipayload.exception.TokenException;
-import umc.duckmelang.global.redis.RefreshToken;
-import umc.duckmelang.global.redis.RefreshTokenService;
+import umc.duckmelang.global.redis.blacklist.BlacklistServiceImpl;
+import umc.duckmelang.global.redis.refreshtoken.RefreshToken;
+import umc.duckmelang.global.redis.refreshtoken.RefreshTokenServiceImpl;
 import umc.duckmelang.global.security.jwt.JwtTokenProvider;
+import umc.duckmelang.global.security.jwt.JwtUtil;
 import umc.duckmelang.global.security.user.CustomUserDetails;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.AuthException;
-
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
-    private final RefreshTokenService refreshTokenService;
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RefreshTokenServiceImpl refreshTokenService;
+    private final BlacklistServiceImpl blacklistService;
+    private final JwtUtil jwtUtil;
 
     /**
      * 사용자 로그인
@@ -69,17 +69,17 @@ public class AuthService {
 
     @Transactional
     public void logout(String accessToken) {
-        if (jwtTokenProvider.isTokenExpired(accessToken)) {
+        // Access Token 유효성 검증
+        if (jwtUtil.isTokenExpired(accessToken)) {
             throw new TokenException(ErrorStatus.INVALID_TOKEN);
         }
-
-        long expiration = jwtTokenProvider.getExpirationFromToken(accessToken);
-        redisTemplate.opsForValue().set(
-                "blacklist:accessToken:" + accessToken,
-                "true",
-                expiration,
-                TimeUnit.MILLISECONDS
-        );
+        // 만료 시간 확인 및 블랙리스트 등록
+        long expiration = jwtUtil.getExpirationFromToken(accessToken);
+        if (expiration > 0) {
+            blacklistService.addToBlacklist(accessToken, expiration);
+        } else {
+            throw new TokenException(ErrorStatus.INVALID_TOKEN);
+        }
     }
 
     /**

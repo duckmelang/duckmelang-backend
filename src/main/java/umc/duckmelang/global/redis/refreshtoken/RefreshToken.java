@@ -1,4 +1,4 @@
-package umc.duckmelang.global.redis;
+package umc.duckmelang.global.redis.refreshtoken;
 
 import org.springframework.data.annotation.Id;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package umc.duckmelang.global.security.jwt;
+package umc.duckmelang.global.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
@@ -11,7 +11,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import umc.duckmelang.global.apipayload.ApiResponse;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.TokenException;
+import umc.duckmelang.global.redis.blacklist.BlacklistServiceImpl;
+import umc.duckmelang.global.security.jwt.JwtTokenProvider;
+import umc.duckmelang.global.security.jwt.JwtUtil;
 
 import java.io.IOException;
 
@@ -23,6 +27,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
+    private final BlacklistServiceImpl blacklistService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -30,8 +36,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         try {
             String token = extractToken(request);
-            if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+            if (StringUtils.hasText(token) && jwtUtil.validateToken(token)) {
+                if (blacklistService.isTokenBlacklisted(token)) {
+                    throw new TokenException(ErrorStatus.INVALID_TOKEN);
+                }
+                Authentication authentication = jwtUtil.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             chain.doFilter(request, response);

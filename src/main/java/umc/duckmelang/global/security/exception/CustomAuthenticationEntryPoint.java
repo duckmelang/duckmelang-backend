@@ -1,4 +1,4 @@
-package umc.duckmelang.global.security.user;
+package umc.duckmelang.global.security.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.global.apipayload.ApiResponse;
-import umc.duckmelang.global.apipayload.code.BaseErrorCode;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 
 import java.io.IOException;

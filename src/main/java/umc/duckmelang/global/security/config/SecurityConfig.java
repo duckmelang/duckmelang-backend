@@ -13,16 +13,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import umc.duckmelang.global.security.jwt.JwtAuthorizationFilter;
-import umc.duckmelang.global.security.jwt.JwtTokenProvider;
-import umc.duckmelang.global.security.user.CustomAuthenticationEntryPoint;
+import umc.duckmelang.global.security.filter.JwtAuthorizationFilter;
+import umc.duckmelang.global.security.exception.CustomAuthenticationEntryPoint;
 import umc.duckmelang.global.security.user.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
     private final CustomUserDetailsService customUserDetailsService;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
@@ -44,7 +43,7 @@ public class SecurityConfig {
                                         , "/login/oauth2/code/kakao").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(httpSecurityExceptionHandlingCustomizer -> {
                     httpSecurityExceptionHandlingCustomizer.authenticationEntryPoint(customAuthenticationEntryPoint);
                 });

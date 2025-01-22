@@ -5,24 +5,21 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.TokenException;
 
 import java.security.Key;
-import java.util.Collections;
 import java.util.Date;
 
+/**
+ * JWT 생성 및 기본 정보 제공 클래스
+ */
 @Component
 @EnableWebSecurity
 public class JwtTokenProvider {
     private final Key key;
     private final long accessTokenExpiration;
     private final long refreshTokenExpiration;
-    private final RedisTemplate<String, String> redisTemplate;
 
     public JwtTokenProvider(
             @Value("${jwt.secret-key}") String secretKey,
@@ -34,9 +31,9 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.accessTokenExpiration = accessTokenExpiration;
         this.refreshTokenExpiration = refreshTokenExpiration;
-        this.redisTemplate = redisTemplate;
     }
 
+    // JWT 토큰 생성
     public String createToken(Long memberId, long expiration) {
         return Jwts.builder()
                 .setSubject(String.valueOf(memberId))
@@ -46,88 +43,33 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    // Access Token 생성
     public String generateAccessToken(Long memberId) {
         return createToken(memberId, accessTokenExpiration);
     }
 
+    // RefreshToken 생성
     public String generateRefreshToken(Long memberId) {
         return createToken(memberId, refreshTokenExpiration);
     }
 
-    public boolean validateToken(String token) {
-        // 블랙리스트 확인
-        if (isTokenBlacklisted(token)) {
-            throw new TokenException(ErrorStatus.INVALID_TOKEN);
-        }
-
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (ExpiredJwtException e) {
-            throw new TokenException(ErrorStatus.TOKEN_EXPIRED);
-        } catch (JwtException e) {
-            throw new TokenException(ErrorStatus.INVALID_TOKEN);
-        }
-    }
-
+    // JWT에서 Claims 파싱
     public Claims parseClaims(String token) {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
+    // JWT에서 사용자 ID 추출
     public Long getMemberIdFromToken(String token) {
         Claims claims = parseClaims(token);
         return Long.valueOf(claims.getSubject());
     }
 
-    public Authentication getAuthentication(String token){
-        Long memberId = getMemberIdFromToken(token);
-        return new UsernamePasswordAuthenticationToken(memberId, null, Collections.emptyList());
+    // JwtUtil에서 사용하기 위한 키 반환
+    public Key getKey() {
+        return this.key;
     }
-
-    private boolean isTokenBlacklisted(String token) {
-        return redisTemplate.hasKey("blacklist:accessToken:" + token);
-    }
-
-    public long getExpirationFromToken(String token) {
-        try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            return claims.getExpiration().getTime() - System.currentTimeMillis(); // 남은 유효시간 반환
-        } catch (JwtException e) {
-            throw new TokenException(ErrorStatus.INVALID_TOKEN);
-        }
-    }
-
-    public boolean isTokenExpired(String token) {
-        try {
-            // Claims에서 만료 시간 추출
-            Date expiration = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody()
-                    .getExpiration();
-            return expiration.before(new Date());
-        } catch (ExpiredJwtException e) {
-            return true;
-        } catch (JwtException e) {
-            throw new TokenException(ErrorStatus.INVALID_TOKEN);
-        }
-    }
-
 }
