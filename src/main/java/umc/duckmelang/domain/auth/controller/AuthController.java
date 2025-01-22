@@ -26,7 +26,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    @Operation(summary = "로그아웃 API", description = "RefreshToken 삭제를 통해 로그아웃을 합니다.")
+    @Operation(summary = "로그아웃 API", description = "블랙리스트를 사용하여 로그아웃을 합니다.")
     public ApiResponse<String> logout(@RequestBody AuthRequestDto.LogoutDto requestDto) {
         authService.logout(requestDto.getAccessToken(), requestDto.getRefreshToken());
         return ApiResponse.onSuccess("로그아웃되었습니다.");

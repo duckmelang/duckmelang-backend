@@ -23,6 +23,6 @@ public class RefreshToken{
     public RefreshToken(String token, Long memberId, LocalDateTime expiryDate) {
         this.token = token;
         this.memberId = memberId;
-        this.expiryDate = expiryDate;
+        this.expiryDate = (expiryDate != null) ? expiryDate : LocalDateTime.now().plusDays(7);
     }
 }
