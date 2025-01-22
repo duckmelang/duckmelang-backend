@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.auth.security.user;
+package umc.duckmelang.global.security.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.auth.security.jwt;
+package umc.duckmelang.global.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

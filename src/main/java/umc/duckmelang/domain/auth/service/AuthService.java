@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import umc.duckmelang.domain.auth.dto.AuthResponseDto;
-import umc.duckmelang.domain.auth.inmemory.RefreshToken;
-import umc.duckmelang.domain.auth.inmemory.RefreshTokenService;
-import umc.duckmelang.domain.auth.security.jwt.JwtTokenProvider;
-import umc.duckmelang.domain.auth.security.user.CustomUserDetails;
+import umc.duckmelang.global.redis.RefreshToken;
+import umc.duckmelang.global.redis.RefreshTokenService;
+import umc.duckmelang.global.security.jwt.JwtTokenProvider;
+import umc.duckmelang.global.security.user.CustomUserDetails;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.AuthException;
 

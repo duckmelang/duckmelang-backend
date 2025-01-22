@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.auth.security.jwt;
+package umc.duckmelang.global.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;

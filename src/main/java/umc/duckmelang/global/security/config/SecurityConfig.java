@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.auth.security.config;
+package umc.duckmelang.global.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,10 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import umc.duckmelang.domain.auth.security.jwt.JwtAuthorizationFilter;
-import umc.duckmelang.domain.auth.security.jwt.JwtTokenProvider;
-import umc.duckmelang.domain.auth.security.user.CustomAuthenticationEntryPoint;
-import umc.duckmelang.domain.auth.security.user.CustomUserDetailsService;
+import umc.duckmelang.global.security.jwt.JwtAuthorizationFilter;
+import umc.duckmelang.global.security.jwt.JwtTokenProvider;
+import umc.duckmelang.global.security.user.CustomAuthenticationEntryPoint;
+import umc.duckmelang.global.security.user.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -40,7 +40,8 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/swagger-ui.html",
                                 "/webjars/**",
-                                "/login", "/signup", "/token/refresh", "/logout").permitAll()
+                                "/login", "/signup", "/token/refresh", "/logout"
+                                        , "/login/oauth2/code/kakao").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)

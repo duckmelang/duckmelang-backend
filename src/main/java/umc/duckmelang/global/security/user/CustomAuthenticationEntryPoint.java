@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.auth.security.user;
+package umc.duckmelang.global.security.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

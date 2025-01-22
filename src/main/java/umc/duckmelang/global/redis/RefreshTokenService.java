@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.auth.inmemory;
+package umc.duckmelang.global.redis;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
