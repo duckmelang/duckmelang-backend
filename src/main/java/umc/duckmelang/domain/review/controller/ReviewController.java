@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import umc.duckmelang.domain.member.validation.annotation.ExistMember;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.validation.annotation.ValidPageNumber;
@@ -37,11 +38,20 @@ public class ReviewController {
         return ApiResponse.onSuccess(ReviewConverter.reviewJoinResultDto(review));
     }
 
-    @GetMapping("/mypage/{memberId}")
+    @GetMapping("/my-profile/{memberId}")
     @CommonApiResponses
     @Operation(summary = "나와의 동행 후기 조회 API", description = "내 프로필에서 나와의 동행 후기 볼 때 이용하는 API 입니다. 성별은 true일때 남자, false일때 여자입니다. memberId는 추후 JWT 변경 예정")
     public ApiResponse<ReviewResponseDto.ReviewListDto> getMyReviewList(@PathVariable(name="memberId") Long memberId){
         List<Review> reviewList = reviewQueryService.getReviewList(memberId);
         return ApiResponse.onSuccess(ReviewConverter.reviewListDto(reviewList));
     }
+
+    @GetMapping("/other-profile/{memberId}")
+    @CommonApiResponses
+    @Operation(summary = "다른 사람의 동행 후기 조회 API", description = "다른 사람의 프로필에서 동행 후기 볼 때 이용하는 API 입니다. 성별은 true일때 남자, false일때 여자입니다.")
+    public ApiResponse<ReviewResponseDto.ReviewListDto> getOtherReviewList(@ExistMember @PathVariable(name="memberId") Long memberId){
+        List<Review> reviewList = reviewQueryService.getReviewList(memberId);
+        return ApiResponse.onSuccess(ReviewConverter.reviewListDto(reviewList));
+    }
+
 }
