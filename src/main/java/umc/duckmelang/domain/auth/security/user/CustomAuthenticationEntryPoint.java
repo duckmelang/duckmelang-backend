@@ -25,16 +25,12 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         // 기본 예외 상태
         ErrorStatus errorStatus = ErrorStatus.AUTH_UNAUTHORIZED;
 
-        BaseErrorCode tokenError = (BaseErrorCode) request.getAttribute("tokenError");
-        if (tokenError != null) {
-            errorStatus = (ErrorStatus) tokenError;
-        }
-
         if (authException instanceof UsernameNotFoundException) {
             errorStatus = ErrorStatus.AUTH_USER_NOT_FOUND;
         } else if (authException instanceof BadCredentialsException) {
             errorStatus = ErrorStatus.AUTH_INVALID_CREDENTIALS;
         }
+
         ApiResponse<Object> errorResponse = ApiResponse.onFailure(
                 errorStatus.getCode(),
                 errorStatus.getMessage(),

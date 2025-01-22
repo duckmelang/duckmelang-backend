@@ -1,8 +1,15 @@
 package umc.duckmelang.global.apipayload.exception;
 
+import lombok.Getter;
 import umc.duckmelang.global.apipayload.code.BaseErrorCode;
-import umc.duckmelang.global.apipayload.GeneralException;
 
-public class TokenException extends GeneralException {
-    public TokenException(BaseErrorCode errorCode){ super(errorCode); }
+@Getter
+public class TokenException extends RuntimeException {
+    private final BaseErrorCode errorCode;
+
+    public TokenException(BaseErrorCode errorCode) {
+        super(errorCode.getReasonHttpStatus().getMessage());
+        this.errorCode = errorCode;
+    }
 }
+

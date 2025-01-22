@@ -1,5 +1,6 @@
 package umc.duckmelang.domain.auth.security.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.global.apipayload.exception.TokenException;
 
 import java.io.IOException;
@@ -19,7 +21,7 @@ import java.io.IOException;
  */
 @Component
 @RequiredArgsConstructor
-public class JwtAuthorizationFilter extends OncePerRequestFilter  {
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -32,24 +34,38 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter  {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+            chain.doFilter(request, response);
         } catch (TokenException e) {
-            request.setAttribute("tokenError", e.getCode());
-            SecurityContextHolder.clearContext();
+            handleTokenException(response, e);
         }
-        chain.doFilter(request, response);
     }
-
 
     /**
      * Authorization 헤더에서 JWT 토큰을 추출합니다.
      * @param request 클라이언트 요청 객체
      * @return JWT 토큰 -> Bearer 제거 후 반환
      */
-    private String extractToken(HttpServletRequest request){
+    private String extractToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    /**
+     * 토큰 관련 예외를 처리하는 함수.
+     * @param response 클라이언트 응답 객체
+     * @param e 발생한 TokenException
+     */
+    private void handleTokenException(HttpServletResponse response, TokenException e) throws IOException {
+        response.setStatus(e.getErrorCode().getReasonHttpStatus().getHttpStatus().value());
+        response.setContentType("application/json;charset=UTF-8");
+        ApiResponse<Object> errorResponse = ApiResponse.onFailure(
+                e.getErrorCode().getReasonHttpStatus().getCode(),
+                e.getErrorCode().getReasonHttpStatus().getMessage(),
+                null
+        );
+        response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
     }
 }

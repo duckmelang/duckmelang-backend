@@ -1,4 +1,4 @@
-package umc.duckmelang.global.apipayload;
+package umc.duckmelang.global.apipayload.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,12 +8,12 @@ import umc.duckmelang.global.apipayload.code.ErrorReasonDTO;
 @Getter
 @AllArgsConstructor
 public class GeneralException extends RuntimeException {
-    private BaseErrorCode code;
+    private BaseErrorCode errorCode;
 
-    public ErrorReasonDTO getErrorReason() {
-        return this.code.getReason();
+    public ErrorReasonDTO getReason() {
+        return this.errorCode.getReason();
     }
-    public ErrorReasonDTO getErrorReasonHttpStatus(){
-        return this.code.getReasonHttpStatus();
+    public ErrorReasonDTO getReasonHttpStatus(){
+        return this.errorCode.getReasonHttpStatus();
     }
 }

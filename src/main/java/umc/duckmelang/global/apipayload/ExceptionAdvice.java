@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import umc.duckmelang.global.apipayload.code.BaseErrorCode;
 import umc.duckmelang.global.apipayload.code.ErrorReasonDTO;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.GeneralException;
+import umc.duckmelang.global.apipayload.exception.TokenException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -59,7 +62,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = GeneralException.class)
     public ResponseEntity onThrowException(GeneralException generalException, HttpServletRequest request) {
-        ErrorReasonDTO errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
+        ErrorReasonDTO errorReasonHttpStatus = generalException.getReasonHttpStatus();
         return handleExceptionInternal(generalException, errorReasonHttpStatus, null, request);
     }
 
@@ -113,5 +116,17 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 errorCommonStatus.getHttpStatus(),
                 request
         );
+    }
+
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<ApiResponse<Object>> handleTokenException(TokenException ex) {
+        BaseErrorCode errorCode = ex.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getReasonHttpStatus().getHttpStatus())
+                .body(ApiResponse.onFailure(
+                        errorCode.getReasonHttpStatus().getCode(),
+                        errorCode.getReasonHttpStatus().getMessage(),
+                        null
+                ));
     }
 }

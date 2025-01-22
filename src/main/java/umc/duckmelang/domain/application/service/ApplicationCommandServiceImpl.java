@@ -9,7 +9,7 @@ import umc.duckmelang.domain.application.repository.ApplicationRepository;
 import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.materelationship.repository.MateRelationshipRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.handler.ApplicationHandler;
+import umc.duckmelang.global.apipayload.exception.ApplicationException;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +24,10 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
 
         Application application = applicationRepository
                 .findByIdAndPostMemberId(applicationId, memberId)
-                .orElseThrow(() -> new ApplicationHandler(ErrorStatus.APPLICATION_NOT_FOUND));
+                .orElseThrow(() -> new ApplicationException(ErrorStatus.APPLICATION_NOT_FOUND));
 
         if (!application.updateStatus(ApplicationStatus.FAILED)) {
-            throw new ApplicationHandler(ErrorStatus.ALREADY_PROCESSED_APPLICATION);
+            throw new ApplicationException(ErrorStatus.ALREADY_PROCESSED_APPLICATION);
         }
 
         applicationRepository.save(application);
@@ -41,10 +41,10 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
 
         Application application = applicationRepository
                 .findByIdAndMemberId(applicationId, memberId)
-                .orElseThrow(() -> new ApplicationHandler(ErrorStatus.APPLICATION_NOT_FOUND));
+                .orElseThrow(() -> new ApplicationException(ErrorStatus.APPLICATION_NOT_FOUND));
 
         if (!application.updateStatus(ApplicationStatus.CANCELED)) {
-            throw new ApplicationHandler(ErrorStatus.ALREADY_PROCESSED_APPLICATION);
+            throw new ApplicationException(ErrorStatus.ALREADY_PROCESSED_APPLICATION);
         }
 
         applicationRepository.save(application);
@@ -58,10 +58,10 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
 
         Application application = applicationRepository
                 .findByIdAndPostMemberId(applicationId, memberId)
-                .orElseThrow(() -> new ApplicationHandler(ErrorStatus.APPLICATION_NOT_FOUND));
+                .orElseThrow(() -> new ApplicationException(ErrorStatus.APPLICATION_NOT_FOUND));
 
         if (!application.updateStatus(ApplicationStatus.SUCCEED)) {
-            throw new ApplicationHandler(ErrorStatus.ALREADY_PROCESSED_APPLICATION);
+            throw new ApplicationException(ErrorStatus.ALREADY_PROCESSED_APPLICATION);
         }
 
         MateRelationship newRelationship = MateRelationship.builder()
