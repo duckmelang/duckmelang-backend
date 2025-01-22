@@ -1,11 +1,8 @@
 package umc.duckmelang.domain.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import umc.duckmelang.domain.auth.converter.AuthConverter;
-import umc.duckmelang.domain.auth.domain.Auth;
 import umc.duckmelang.domain.auth.dto.AuthRequestDto;
 import umc.duckmelang.domain.auth.dto.AuthResponseDto;
 import umc.duckmelang.domain.auth.service.AuthService;

@@ -16,24 +16,6 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
-  security:
-    oauth2:
-      client:
-        registration:
-          kakao:
-            client-authentication-method: client_secret_post
-            client-id: c140eab964d51277a8ff3719ed0dac58
-            client-secret: e4tBzLjocojZFGujsD7FDxT6boWlHguR
-            redirect-url: http://localhost:8080/login/oauth/kakao
-            authorization-grant-type: authorization_code
-            scope: profile_nickname, account_email # 닉네임과 이메일
-            client-name: kakao
-      provider:
-        kakao:
-          authorization-uri: https://kauth.kakao.com/oauth/authorize
-          token-uri: https://kauth.kakao.com/oauth/token
-          user-info-uri: https://kapi.kakao.com/v2/user/me
-          user-name-attribute: id
 
 jwt:
   secret-key: "duckmelangduckmelangduckmelangduckmelangduckmelang"
