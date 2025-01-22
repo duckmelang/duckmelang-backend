@@ -3,10 +3,12 @@ package umc.duckmelang.global.security.jwt;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.TokenException;
 import umc.duckmelang.global.redis.blacklist.BlacklistService;
@@ -65,5 +67,14 @@ public class JwtUtil {
     public Authentication getAuthentication(String token) {
         Long memberId = jwtTokenProvider.getMemberIdFromToken(token);
         return new UsernamePasswordAuthenticationToken(memberId, null, Collections.emptyList());
+    }
+
+    // 헤더에서 JWT 토큰을 추출
+    public String extractToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }

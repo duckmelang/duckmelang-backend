@@ -6,5 +6,4 @@ import org.springframework.stereotype.Service;
 public interface BlacklistService {
     void addToBlacklist(String token, long expiration);
     boolean isTokenBlacklisted(String token);
-    void removeFromBlacklist(String token);
 }

@@ -19,6 +19,8 @@ import umc.duckmelang.global.security.user.CustomUserDetails;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.AuthException;
 
+import java.util.Collections;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -28,12 +30,7 @@ public class AuthService {
     private final BlacklistServiceImpl blacklistService;
     private final JwtUtil jwtUtil;
 
-    /**
-     * 사용자 로그인
-     * @param email    이메일
-     * @param password 비밀번호
-     * @return AccessToken과 RefreshToken
-     */
+   // 사용자 로그인
     @Transactional
     public AuthResponseDto.TokenResponse login(String email, String password){
         try{
@@ -51,11 +48,7 @@ public class AuthService {
         }
     }
 
-    /**
-     * 토큰 재발급
-     * @param refreshToken 유효한 RefreshToken
-     * @return 새로 생성된 AccessToken과 RefreshToken
-     */
+    // 토큰 재발급
     @Transactional
     public AuthResponseDto.TokenResponse reissue(String refreshToken) {
         RefreshToken storedToken = refreshTokenService.validateAndGetRefreshToken(refreshToken);
@@ -67,6 +60,7 @@ public class AuthService {
         return new AuthResponseDto.TokenResponse(newAccessToken, newRefreshToken);
     }
 
+    // 사용자 로그아웃
     @Transactional
     public void logout(String accessToken) {
         // Access Token 유효성 검증
@@ -82,12 +76,7 @@ public class AuthService {
         }
     }
 
-    /**
-     * 사용자 인증
-     * @param email    이메일
-     * @param password 비밀번호
-     * @return Authentication 객체
-     */
+    // 사용자 인증
     private Authentication authenticate(String email, String password) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
         return authenticationManager.authenticate(authenticationToken);

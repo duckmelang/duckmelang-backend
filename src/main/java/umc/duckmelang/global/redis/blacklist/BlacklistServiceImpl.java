@@ -32,14 +32,4 @@ public class BlacklistServiceImpl implements BlacklistService {
         String key = BLACKLIST_PREFIX + token;
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
-
-    /**
-     * 블랙리스트에서 토큰 제거
-     * @param token 삭제할 토큰
-     */
-    @Override
-    public void removeFromBlacklist(String token) {
-        String key = BLACKLIST_PREFIX + token;
-        redisTemplate.delete(key);
-    }
 }

@@ -68,5 +68,4 @@ public class SecurityConfig {
         provider.setHideUserNotFoundExceptions(false); // UsernameNotFoundException 노출
         return provider;
     }
-
 }

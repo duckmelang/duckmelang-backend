@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import umc.duckmelang.domain.auth.service.AuthService;
 import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.TokenException;
@@ -21,12 +22,11 @@ import java.io.IOException;
 
 /**
  * JWT 인증 필터
- * 클라이언트 요청 헤더에 포함된 JWT 토큰을 검증하고 인증 정보를 설정한다.
+ *  요청 헤더에 포함된 JWT 토큰을 검증하고 인증 정보를 설정
  */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
-    private final JwtTokenProvider jwtTokenProvider;
     private final JwtUtil jwtUtil;
     private final BlacklistServiceImpl blacklistService;
 
@@ -35,7 +35,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         try {
-            String token = extractToken(request);
+            String token = jwtUtil.extractToken(request);
             if (StringUtils.hasText(token) && jwtUtil.validateToken(token)) {
                 if (blacklistService.isTokenBlacklisted(token)) {
                     throw new TokenException(ErrorStatus.INVALID_TOKEN);
@@ -50,20 +50,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Authorization 헤더에서 JWT 토큰을 추출합니다.
-     * @param request 클라이언트 요청 객체
-     * @return JWT 토큰 -> Bearer 제거 후 반환
-     */
-    public String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }
-
-    /**
-     * 토큰 관련 예외를 처리하는 함수.
+     * 토큰 관련 예외를 처리하는 함수
      * @param response 클라이언트 응답 객체
      * @param e 발생한 TokenException
      */

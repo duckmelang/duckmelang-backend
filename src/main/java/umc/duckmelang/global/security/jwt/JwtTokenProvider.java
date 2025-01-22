@@ -68,7 +68,7 @@ public class JwtTokenProvider {
         return Long.valueOf(claims.getSubject());
     }
 
-    // JwtUtil에서 사용하기 위한 키 반환
+    // JWT 서명 키 반환
     public Key getKey() {
         return this.key;
     }
