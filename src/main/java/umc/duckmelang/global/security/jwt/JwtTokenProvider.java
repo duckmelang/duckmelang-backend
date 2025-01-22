@@ -113,4 +113,21 @@ public class JwtTokenProvider {
         }
     }
 
+    public boolean isTokenExpired(String token) {
+        try {
+            // Claims에서 만료 시간 추출
+            Date expiration = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getExpiration();
+            return expiration.before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        } catch (JwtException e) {
+            throw new TokenException(ErrorStatus.INVALID_TOKEN);
+        }
+    }
+
 }

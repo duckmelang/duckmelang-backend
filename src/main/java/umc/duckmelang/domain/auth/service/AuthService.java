@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import umc.duckmelang.domain.auth.dto.AuthResponseDto;
+import umc.duckmelang.global.apipayload.exception.TokenException;
 import umc.duckmelang.global.redis.RefreshToken;
 import umc.duckmelang.global.redis.RefreshTokenService;
 import umc.duckmelang.global.security.jwt.JwtTokenProvider;
@@ -67,8 +68,11 @@ public class AuthService {
     }
 
     @Transactional
-    public void logout(String accessToken, String refreshToken) {
-        refreshTokenService.removeRefreshToken(refreshToken);
+    public void logout(String accessToken) {
+        if (jwtTokenProvider.isTokenExpired(accessToken)) {
+            throw new TokenException(ErrorStatus.INVALID_TOKEN);
+        }
+
         long expiration = jwtTokenProvider.getExpirationFromToken(accessToken);
         redisTemplate.opsForValue().set(
                 "blacklist:accessToken:" + accessToken,

@@ -45,7 +45,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
      * @param request 클라이언트 요청 객체
      * @return JWT 토큰 -> Bearer 제거 후 반환
      */
-    private String extractToken(HttpServletRequest request) {
+    public String extractToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
