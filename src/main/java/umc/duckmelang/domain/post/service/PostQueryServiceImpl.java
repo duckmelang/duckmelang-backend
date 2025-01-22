@@ -39,4 +39,9 @@ public class PostQueryServiceImpl implements PostQueryService{
 
     }
 
+    @Override
+    public Optional<Post> findById(Long postId){
+        return postRepository.findById(postId);
+    }
+
 }

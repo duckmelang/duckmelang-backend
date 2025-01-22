@@ -20,7 +20,7 @@ public class PostConverter {
 
     public static PostResponseDto.PostPreviewDto postPreviewDto(Post post) {
         return PostResponseDto.PostPreviewDto.builder()
-                .id(post.getId())
+                .postId(post.getId())
                 .title(post.getTitle())
                 .category(post.getEventCategory().getName())
                 .date(post.getEventDate())

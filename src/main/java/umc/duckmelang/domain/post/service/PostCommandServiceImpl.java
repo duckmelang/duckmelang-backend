@@ -13,6 +13,10 @@ import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostRequestDto;
 import umc.duckmelang.domain.post.repository.PostRepository;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.handler.EventCategoryHandler;
+import umc.duckmelang.global.apipayload.exception.handler.IdolCategoryHandler;
+import umc.duckmelang.global.apipayload.exception.handler.MemberHandler;
 
 import java.util.List;
 
@@ -30,14 +34,17 @@ public class PostCommandServiceImpl implements PostCommandService {
     public Post joinPost(PostRequestDto.PostJoinDto request , Long memberId){
 //        Member 엔티티 조회
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다"));
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
 //        EventCategory 엔티티 조회
         EventCategory eventCategory = eventCategoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다"));
+                .orElseThrow(() -> new EventCategoryHandler(ErrorStatus.EVENT_CATEGORY_NOT_FOUND));
 
 //        IdolCategory 엔티티 리스트 조회
         List<IdolCategory> idolCategories = idolCategoryRepository.findAllById(request.getIdolIds());
+        if (idolCategories.isEmpty()) {
+            throw new IdolCategoryHandler(ErrorStatus.IDOL_CATEGORY_NOT_FOUND);
+        }
 
         Post newPost =PostConverter.toPost(request, member, eventCategory, idolCategories );
         return postRepository.save(newPost);
