@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 @RedisHash(value= "RefreshToken",timeToLive = 60 * 60 * 24 * 7)
@@ -15,10 +17,12 @@ public class RefreshToken{
     private String token;
 
     private Long memberId;
+    private LocalDateTime expiryDate;
 
     @Builder
-    public RefreshToken(String token, Long memberId) {
+    public RefreshToken(String token, Long memberId, LocalDateTime expiryDate) {
         this.token = token;
         this.memberId = memberId;
+        this.expiryDate = expiryDate;
     }
 }

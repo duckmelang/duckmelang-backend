@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.TokenException;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -45,6 +46,10 @@ public class RefreshTokenService {
         Optional<RefreshToken> storedToken = refreshTokenRepository.findById(refreshToken);
         if (storedToken.isEmpty()) {
             throw new TokenException(ErrorStatus.MISSING_TOKEN);
+        }
+        RefreshToken token = storedToken.get();
+        if (token.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new TokenException(ErrorStatus.TOKEN_EXPIRED);
         }
         return storedToken.get();
     }
