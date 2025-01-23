@@ -1,5 +1,6 @@
 package umc.duckmelang.domain.memberprofileimage.converter;
 
+import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
@@ -8,6 +9,7 @@ import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageResponseDt
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class MemberProfileImageConverter {
 
     public static MemberProfileImageResponseDto.GetAllProfileImageResultDto toGetAllProfileImageResultDto(List<MemberProfileImage> memberProfileImageList) {

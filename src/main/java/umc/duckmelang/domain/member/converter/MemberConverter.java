@@ -1,5 +1,6 @@
 package umc.duckmelang.domain.member.converter;
 
+import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.eventcategory.domain.EventCategory;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.landmine.domain.Landmine;
@@ -14,6 +15,7 @@ import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryS
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class MemberConverter {
 
 
