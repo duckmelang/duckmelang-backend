@@ -33,4 +33,15 @@ public class PostQueryServiceImpl implements PostQueryService{
         return postRepository.findById(postId);
     }
 
+    /**
+     * 특정 멤버가 작성한 게시물 수 조회: 프로필 조회 시 사용
+     *
+     * @param memberId 멤버 ID
+     * @return 게시물 수
+     */
+    @Override
+    public long getPostCountByMemberId(Long memberId) {
+        return postRepository.countByMemberId(memberId);
+    }
+
 }
