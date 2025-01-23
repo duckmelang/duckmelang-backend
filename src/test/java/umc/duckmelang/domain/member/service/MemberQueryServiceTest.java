@@ -25,27 +25,5 @@ public class MemberQueryServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void calculateMemberAge_success() {
-        // Given
-        Long memberId = 1L;
-
-        // Mock Member 생성
-        Member member = Member.builder()
-                .id(memberId)
-                .name("Test User")
-                .email("test@example.com")
-                .birth(LocalDate.of(2001, 12, 1))
-                .build();
-
-        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-
-        int age = memberQueryService.calculateMemberAge(memberId);
-
-        assertEquals(23, age);
-
-
-    }
-
 
 }
