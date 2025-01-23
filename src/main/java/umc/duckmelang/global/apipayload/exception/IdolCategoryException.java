@@ -1,10 +1,9 @@
-package umc.duckmelang.global.apipayload.exception.handler;
+package umc.duckmelang.global.apipayload.exception;
 
 import umc.duckmelang.global.apipayload.code.BaseErrorCode;
-import umc.duckmelang.global.apipayload.exception.GeneralException;
 
-public class IdolCategoryHandler extends GeneralException {
+public class IdolCategoryException extends GeneralException {
 
-    public IdolCategoryHandler(BaseErrorCode errorCode) {super(errorCode);}
+    public IdolCategoryException(BaseErrorCode errorCode) {super(errorCode);}
 
 }

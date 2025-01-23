@@ -51,7 +51,6 @@ public enum ErrorStatus implements BaseErrorCode {
     // 테스트 응답
     TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트");
 
-
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

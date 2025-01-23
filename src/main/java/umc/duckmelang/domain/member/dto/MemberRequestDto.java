@@ -11,6 +11,15 @@ import java.util.List;
 
 public class MemberRequestDto {
 
+    @Getter
+    public static class SignupDto {
+        @NotBlank(message = "이메일은 필수 입력 항목입니다.")
+        @Email(message = "올바른 이메일 형식이어야 합니다.")
+        private String email;
+        @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
+        private String password;
+    }
+
     @Builder
     @Getter
     public static class SelectIdolsDto {
@@ -32,7 +41,7 @@ public class MemberRequestDto {
     }
 
     @Builder
-
+    @Getter
     public static class CreateMemberProfileImageDto {
         private String memberProfileImageURL;
     }
@@ -43,14 +52,5 @@ public class MemberRequestDto {
         @NotBlank(message = "자기소개를 비워둘 수 없습니다.")
         @Size(max = 500, message = "자기소개는 500자를 초과할 수 없습니다.")
         private String introduction;
-    }
-
-    @Getter
-    public static class SignupDto {
-        @NotBlank(message = "이메일은 필수 입력 항목입니다.")
-        @Email(message = "올바른 이메일 형식이어야 합니다.")
-        private String email;
-        @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
-        private String password;
     }
 }

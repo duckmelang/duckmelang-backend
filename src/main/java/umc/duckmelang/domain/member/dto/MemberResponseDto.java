@@ -14,7 +14,7 @@ public class MemberResponseDto {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SignupResultDto{
+    public static class SignupResultDto {
         Long memberId;
         LocalDateTime createdAt;
     }

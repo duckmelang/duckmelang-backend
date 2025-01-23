@@ -22,7 +22,6 @@ import umc.duckmelang.domain.member.service.MemberCommandService;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
-import umc.duckmelang.domain.member.sevice.MemberCommandService;
 import umc.duckmelang.global.apipayload.ApiResponse;
 
 import java.util.List;
@@ -36,11 +35,6 @@ public class MemberController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입 API", description = "사용자 정보를 받아 회원가입을 처리하는 API입니다.")
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON400", description = "잘못된 요청입니다."),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4001", description = "이미 존재하는 이메일입니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-    })
     public ApiResponse<MemberResponseDto.SignupResultDto> signup(@RequestBody @Valid MemberRequestDto.SignupDto request){
         Member member = memberCommandService.signupMember(request);
         return ApiResponse.onSuccess(MemberConverter.toSignupResultDto(member));
