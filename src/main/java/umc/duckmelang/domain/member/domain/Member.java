@@ -40,6 +40,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private LocalDate birth;
 
+    // true = 남성, false = 여성
     private Boolean gender;
 
     @Column(columnDefinition = "TINYTEXT")
