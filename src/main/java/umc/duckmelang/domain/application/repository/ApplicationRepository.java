@@ -58,4 +58,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
             @Param("status") ApplicationStatus status,
             Pageable pageable
     );
+
+    long countByMemberIdAndStatus(Long memberId, ApplicationStatus status);
 }
