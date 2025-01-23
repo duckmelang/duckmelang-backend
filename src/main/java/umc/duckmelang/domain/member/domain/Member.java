@@ -97,4 +97,21 @@ public class Member extends BaseEntity {
         newMember.introduction = introduction;
         return newMember;
     }
+
+    // 회원의 만 나이를 계산하는 메서드
+    public int calculateAge(){
+        // 생년월일 가져오기
+        LocalDate birth = this.birth;
+        // 현재 날짜 가져오기
+        LocalDate today = LocalDate.now();
+
+        // 현재 연도와 태어난 연도의 차이를 계산
+        int age = today.getYear() - birth.getYear();
+
+        // 생일이 올해 아직 지나지 않았다면 나이를 1 줄임
+        if (today.isBefore(birth.withYear(today.getYear()))) {
+            age--;
+        }
+        return age;
+    }
 }
