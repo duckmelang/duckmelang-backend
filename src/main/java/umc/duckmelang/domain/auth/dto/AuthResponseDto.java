@@ -1,9 +1,7 @@
 package umc.duckmelang.domain.auth.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import umc.duckmelang.domain.member.domain.Member;
 
 public class AuthResponseDto {
 
@@ -14,5 +12,25 @@ public class AuthResponseDto {
     public static class TokenResponse {
         private String accessToken;
         private String refreshToken;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class LoginResponse {
+        private Long memberId;
+        private String email;
+        private String provider;
+        private String accessToken;
+        private String refreshToken;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public static class ServiceLoginResult {
+        private final Member member;
+        private final String accessToken;
+        private final String refreshToken;
     }
 }

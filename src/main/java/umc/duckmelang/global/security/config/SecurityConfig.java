@@ -40,7 +40,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/webjars/**",
                                 "/login", "/signup", "/token/refresh", "/logout"
-                                        , "/login/oauth2/code/kakao").permitAll()
+                                        , "/login/oauth/kakao").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
