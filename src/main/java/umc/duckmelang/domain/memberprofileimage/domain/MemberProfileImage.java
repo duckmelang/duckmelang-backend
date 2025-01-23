@@ -37,4 +37,6 @@ public class MemberProfileImage extends BaseEntity {
         if (member != null)
             member.getMemberProfileImageList().add(this);
     }
+
+
 }

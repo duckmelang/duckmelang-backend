@@ -5,7 +5,10 @@ import org.springframework.stereotype.Repository;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 
+import java.util.Optional;
+
 @Repository
 public interface MemberProfileImageRepository extends JpaRepository<MemberProfileImage, Long> {
     void deleteAllByMember(Member member);
+    Optional<MemberProfileImage> findFirstByMemberIdAndIsPublicTrueOrderByCreatedAtDesc(Member member);
 }
