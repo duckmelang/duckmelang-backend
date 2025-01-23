@@ -121,4 +121,19 @@ public class MemberConverter {
                 .latestPublicMemberProfileImage(memberProfileImage.getMemberImage())
                 .build();
     }
+
+    public static MemberResponseDto.GetMypageMemberProfileResultDto toGetMemberProfileResponseDto(Member member, MemberProfileImage memberProfileImage,
+                                                                                                  long postCount, long succeedApplicationCount) {
+        return  MemberResponseDto.GetMypageMemberProfileResultDto.builder()
+                .memberId(member.getId())
+                .nickname(member.getNickname())
+                .gender(member.getGender())
+                .age(member.calculateAge())
+                .latestPublicMemberProfileImage(memberProfileImage.getMemberImage())
+                .introduction(member.getIntroduction())
+                .postCount(postCount)
+                .succeedApplicationCount(succeedApplicationCount)
+                .build();
+
+    }
 }

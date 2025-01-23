@@ -67,4 +67,19 @@ public class MemberResponseDto {
         private int age;
         private String latestPublicMemberProfileImage;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetMypageMemberProfileResultDto {
+        private Long memberId;
+        private String nickname;
+        private boolean gender;
+        private int age;
+        private String latestPublicMemberProfileImage;
+        private String introduction;
+        private long postCount;
+        private long succeedApplicationCount;
+    }
 }
