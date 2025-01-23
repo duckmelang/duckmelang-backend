@@ -10,6 +10,7 @@ import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRep
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.handler.MemberHandler;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +30,16 @@ public class MemberProfileImageQueryServiceImpl implements MemberProfileImageQue
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         return memberProfileImageRepository.findFirstByMemberIdAndIsPublicTrueOrderByCreatedAtDesc(member);
+    }
+
+    @Override
+    @Transactional
+    public List<MemberProfileImage> getAllMemberProfileImageByMemberId(Long memberId) {
+        // 회원 조회 및 유효성 검증
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        return memberProfileImageRepository.findAllByMember(member);
     }
 
 

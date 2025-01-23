@@ -21,7 +21,6 @@ public class MemberProfileImage extends BaseEntity {
     @Column(nullable = false, length = 1024)
     private String memberImage; // S3 URL을 저장할 필드
 
-
     @Column(nullable = false)
     private boolean isPublic; // true이면 전체 공개, false이면 나만 보기
 
