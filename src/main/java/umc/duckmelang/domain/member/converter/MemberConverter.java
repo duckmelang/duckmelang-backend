@@ -5,14 +5,17 @@ import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
+import umc.duckmelang.domain.member.service.MemberQueryService;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
+import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class MemberConverter {
+
 
     public static MemberIdol toMemberIdol(Member member, IdolCategory idolCategory) {
         return MemberIdol.builder()
@@ -106,5 +109,16 @@ public class MemberConverter {
                 .introduction(member.getIntroduction())
                 .build();
 
+    }
+
+    public static MemberResponseDto.GetMypageMemberPreviewResultDto toGetMemberPreviewResponseDto(Member member, MemberProfileImage memberProfileImage) {
+
+        return MemberResponseDto.GetMypageMemberPreviewResultDto.builder()
+                .memberId(member.getId())
+                .nickname(member.getNickname())
+                .gender(member.getGender())
+                .age(member.calculateAge())
+                .latestPublicMemberProfileImage(memberProfileImage.getMemberImage())
+                .build();
     }
 }

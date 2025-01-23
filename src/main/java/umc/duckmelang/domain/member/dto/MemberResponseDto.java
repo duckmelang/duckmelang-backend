@@ -55,4 +55,16 @@ public class MemberResponseDto {
         private Long memberId;
         private String introduction;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetMypageMemberPreviewResultDto {
+        private Long memberId;
+        private String nickname;
+        private boolean gender;
+        private int age;
+        private String latestPublicMemberProfileImage;
+    }
 }

@@ -5,4 +5,5 @@ import umc.duckmelang.domain.member.domain.Member;
 import java.util.Optional;
 
 public interface MemberQueryService {
+    public Optional<Member> getMemberById(Long memberId);
 }
