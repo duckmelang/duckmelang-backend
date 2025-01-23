@@ -17,6 +17,9 @@ public class Landmine extends BaseEntity {
     @Column(name = "landmine_id")
     private Long id;
 
+    @Column(name = "content", columnDefinition = "TINYTEXT", nullable = false)
+    private String content;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
     private Member member;
