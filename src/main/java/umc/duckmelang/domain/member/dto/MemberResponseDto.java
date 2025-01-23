@@ -44,6 +44,7 @@ public class MemberResponseDto {
     public static class CreateMemberProfileImageResultDto {
         private Long memberId;
         private String memberProfileImageURL;
+        private boolean isPublic;
     }
 
     @Builder
