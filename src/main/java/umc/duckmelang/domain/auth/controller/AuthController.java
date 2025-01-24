@@ -9,7 +9,6 @@ import umc.duckmelang.domain.auth.dto.AuthResponseDto;
 import umc.duckmelang.domain.auth.service.AuthService;
 import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.global.redis.blacklist.BlacklistService;
-import umc.duckmelang.global.security.filter.JwtAuthorizationFilter;
 import umc.duckmelang.global.security.jwt.JwtUtil;
 
 @RestController
@@ -27,8 +26,8 @@ public class AuthController {
 
     @PostMapping("/token/refresh")
     @Operation(summary = "토큰 재발급 API", description = "유효한 refreshToken을 사용해 AccessToken을 재발급합니다.")
-    public ApiResponse<AuthResponseDto.TokenResponse> refreshToken(@RequestBody AuthRequestDto.RefreshTokenRequestDto requestDto){
-        return ApiResponse.onSuccess(authService.reissue(requestDto.getRefreshToken()));
+    public ApiResponse<AuthResponseDto.TokenResponse> refreshToken(@RequestBody AuthRequestDto.RefreshTokenRequestDto request) {
+        return ApiResponse.onSuccess(authService.reissue(request.getRefreshToken()));
     }
 
     @PostMapping("/logout")
