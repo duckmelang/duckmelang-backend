@@ -63,11 +63,9 @@ public class AuthService {
     // 사용자 로그아웃
     @Transactional
     public void logout(String accessToken) {
-        // Access Token 유효성 검증
         if (jwtUtil.isTokenExpired(accessToken)) {
             throw new TokenException(ErrorStatus.INVALID_TOKEN);
         }
-        // 만료 시간 확인 및 블랙리스트 등록
         long expiration = jwtUtil.getExpirationFromToken(accessToken);
         if (expiration > 0) {
             blacklistService.addToBlacklist(accessToken, expiration);
