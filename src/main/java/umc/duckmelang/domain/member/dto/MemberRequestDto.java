@@ -43,4 +43,13 @@ public class MemberRequestDto {
         @Size(max = 500, message = "자기소개는 500자를 초과할 수 없습니다.")
         private String introduction;
     }
+
+    @Builder
+    @Getter
+    public static class UpdateMemberProfileDto {
+        private String memberProfileImageURL;
+        private String nickname;
+        @Size(max = 500, message = "자기소개는 500자를 초과할 수 없습니다.")
+        private String introduction;
+    }
 }

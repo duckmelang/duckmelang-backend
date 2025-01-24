@@ -12,6 +12,8 @@ import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.bookmark.domain.Bookmark;
 import umc.duckmelang.domain.landmine.domain.Landmine;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.handler.MemberHandler;
 import umc.duckmelang.global.common.BaseEntity;
 
 import java.time.LocalDate;
@@ -113,5 +115,17 @@ public class Member extends BaseEntity {
             age--;
         }
         return age;
+    }
+
+    // 프로필 업데이트 메서드
+    public void updateProfile(String nickname, String introduction) {
+        if (nickname == null || nickname.isBlank()) {
+            throw new MemberHandler(ErrorStatus.MEMBER_EMPTY_NICKNAME);
+        }
+        if (introduction == null || introduction.isBlank()) {
+            throw new MemberHandler(ErrorStatus.MEMBER_EMPTY_INTRODUCTION);
+        }
+        this.nickname = nickname;
+        this.introduction = introduction;
     }
 }

@@ -82,4 +82,27 @@ public class MemberResponseDto {
         private long postCount;
         private long succeedApplicationCount;
     }
+
+//    @Builder
+//    @Getter
+//    @NoArgsConstructor
+//    @AllArgsConstructor
+//    public static class GetMypageMemberProfileBeforeEditResultDto {
+//        private Long memberId;
+//        private String nickname;
+//        private String latestPublicMemberProfileImage;
+//        private String introduction;
+//    }
+
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetMypageMemberProfileEditResultDto {
+        private Long memberId;
+        private String nickname;
+        private String latestPublicMemberProfileImage;
+        private String introduction;
+    }
 }

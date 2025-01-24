@@ -1,5 +1,6 @@
 package umc.duckmelang.domain.member.converter;
 
+import jakarta.validation.constraints.Size;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.eventcategory.domain.EventCategory;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
@@ -137,5 +138,15 @@ public class MemberConverter {
                 .succeedApplicationCount(succeedApplicationCount)
                 .build();
 
+    }
+
+
+    public static MemberResponseDto.GetMypageMemberProfileEditResultDto toUpdateMemberProfileDto(Member updatedMember, MemberProfileImage latestPublicMemberProfileImage) {
+        return MemberResponseDto.GetMypageMemberProfileEditResultDto.builder()
+                .memberId(updatedMember.getId())
+                .nickname(updatedMember.getNickname())
+                .introduction(updatedMember.getIntroduction())
+                .latestPublicMemberProfileImage(latestPublicMemberProfileImage.getMemberImage())
+                .build();
     }
 }

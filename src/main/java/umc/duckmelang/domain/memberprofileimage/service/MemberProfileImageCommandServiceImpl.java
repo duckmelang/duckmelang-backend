@@ -51,5 +51,17 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
         return memberProfileImageRepository.save(updatedProfileImage);
     }
 
+    @Override
+    @Transactional
+    public MemberProfileImage createMemberProfile(Long memberId, String memberProfileImageURL) {
+        // 회원 조회 및 유효성 검증
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        // 프로필 이미지 생성
+        MemberProfileImage createdProfileImage = MemberProfileImageConverter.toCreateMemberProfileImage(member, memberProfileImageURL);
+        return memberProfileImageRepository.save(createdProfileImage);
+    }
+
 
 }

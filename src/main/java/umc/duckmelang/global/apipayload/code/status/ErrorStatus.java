@@ -18,13 +18,14 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 멤버 관련 에러
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "존재하지 않는 회원입니다."),
-    MEMBER_EMPTY_INTRODUCTION(HttpStatus.BAD_REQUEST, "MEMBER4002", "자기소개는 공란으로 비워둘 수 없습니다."),
+    MEMBER_EMPTY_NICKNAME(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 공란으로 비워둘 수 없습니다."),
+    MEMBER_EMPTY_INTRODUCTION(HttpStatus.BAD_REQUEST, "MEMBER4003", "자기소개는 공란으로 비워둘 수 없습니다."),
 
     // 멤버 프로필 사진 관련 에러
     MEMBERPROFILEIMAGE_NOT_FOUND(HttpStatus.NOT_FOUND,"MEMBERPROFILEIMAGE4001", "프로필 이미지가 존재하지 않습니다."),
 
     // 아이돌 카테고리 관련 에러
-    IDOL_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "IDOL_CATEGORY4001", "아이돌 카테고리가 없습니다."),
+    IDOL_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "IDOLCATEGORY4001", "아이돌 카테고리가 없습니다."),
     INVALID_IDOLCATEGORY(HttpStatus.BAD_REQUEST, "IDOLCATEGORY4002", "선택한 아이돌 중 유효하지 않은 항목이 있습니다."),
 
     // 행사 카테고리 관련 에러
