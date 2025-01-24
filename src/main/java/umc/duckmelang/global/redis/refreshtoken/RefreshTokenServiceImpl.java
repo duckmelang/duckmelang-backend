@@ -13,11 +13,7 @@ import java.time.LocalDateTime;
 public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
-    /**
-     * RefreshToken 저장
-     * @param refreshToken 저장할 RefreshToken
-     * @param memberId 회원 ID
-     */
+    // RefreshToken 저장
     @Transactional
     @Override
     public void saveRefreshToken(String refreshToken, Long memberId) {
@@ -31,13 +27,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         refreshTokenRepository.save(token);
     }
 
-
-    /**
-     * RefreshToken 유효성 검증 및 조회
-     * @param refreshToken 조회할 RefreshToken
-     * @return 유효한 RefreshToken 객체
-     */
-    @Transactional
+    // RefreshToken 유효성 검증 및 조회
+    @Transactional(readOnly = true)
     @Override
     public RefreshToken validateAndGetRefreshToken(String refreshToken) {
         RefreshToken token = refreshTokenRepository.findById(refreshToken)
@@ -48,10 +39,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return token;
     }
 
-    /**
-     * RefreshToken 삭제
-     * @param refreshToken 삭제할 RefreshToken
-     */
+    // RefreshToken 삭제
     @Transactional
     @Override
     public void removeRefreshToken(String refreshToken) {

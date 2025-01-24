@@ -34,8 +34,7 @@ public class AuthController {
     @Operation(summary = "로그아웃 API", description = "토큰을 블랙리스트에 추가합니다.")
     public ApiResponse<String> logout(HttpServletRequest request) {
         String token = jwtUtil.extractToken(request);
-        long expiration = jwtUtil.getExpirationFromToken(token);
-        blacklistService.addToBlacklist(token, expiration);
+        authService.logout(token);
         return ApiResponse.onSuccess("로그아웃되었습니다.");
     }
 }
