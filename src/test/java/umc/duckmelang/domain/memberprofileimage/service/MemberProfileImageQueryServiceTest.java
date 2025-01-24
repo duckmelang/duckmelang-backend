@@ -59,7 +59,7 @@ class MemberProfileImageQueryServiceTest {
                 .build();
 
 
-        when(memberProfileImageRepository.findFirstByMemberIdAndIsPublicTrueOrderByCreatedAtDesc(member))
+        when(memberProfileImageRepository.findFirstByMemberIdAndIsPublicTrueOrderByCreatedAtDesc(member.getId()))
                 .thenReturn(Optional.of(latestProfileImage));
 
         // When
