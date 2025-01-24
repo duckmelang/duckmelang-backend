@@ -29,7 +29,7 @@ public class MemberProfileImageQueryServiceImpl implements MemberProfileImageQue
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        return memberProfileImageRepository.findFirstByMemberIdAndIsPublicTrueOrderByCreatedAtDesc(member);
+        return memberProfileImageRepository.findFirstByMemberIdAndIsPublicTrueOrderByCreatedAtDesc(memberId);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class MemberProfileImageQueryServiceImpl implements MemberProfileImageQue
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        return memberProfileImageRepository.findAllByMember(member);
+        return memberProfileImageRepository.findAllByMemberId(memberId);
     }
 
 

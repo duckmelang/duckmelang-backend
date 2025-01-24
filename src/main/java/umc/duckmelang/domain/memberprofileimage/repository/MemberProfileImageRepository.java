@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface MemberProfileImageRepository extends JpaRepository<MemberProfileImage, Long> {
     void deleteAllByMember(Member member);
-    Optional<MemberProfileImage> findFirstByMemberIdAndIsPublicTrueOrderByCreatedAtDesc(Member member);
-    List<MemberProfileImage> findAllByMember(Member member);
+    Optional<MemberProfileImage> findFirstByMemberIdAndIsPublicTrueOrderByCreatedAtDesc(Long memberId);
+    List<MemberProfileImage> findAllByMemberId(long memberId);
 }
