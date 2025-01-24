@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.repository.MemberRepository;
+import umc.duckmelang.domain.memberprofileimage.converter.MemberProfileImageConverter;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageRequestDto;
 import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRepository;
@@ -21,7 +22,7 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
 
     @Override
     @Transactional
-    public void deleteProfileImage(Long memberId, MemberProfileImageRequestDto.DeleteMemberProfileImageDto request) {
+    public void deleteProfileImage(Long memberId, MemberProfileImageRequestDto.MemberProfileImageDto request) {
         // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
@@ -32,5 +33,23 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
 
         memberProfileImageRepository.delete(profileImage);
     }
+
+    @Override
+    @Transactional
+    public MemberProfileImage updateProfileImageStatus(Long memberId, MemberProfileImageRequestDto.MemberProfileImageDto request) {
+        // 회원 조회 및 유효성 검증
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        // 프로필 이미지 조회 및 유효성 검증
+        MemberProfileImage profileImage = memberProfileImageRepository.findById(request.getImageId())
+                .orElseThrow(() -> new MemberProfileImageHandler(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
+
+        //프로필 이미지 공개 범위 변경
+        MemberProfileImage updatedProfileImage = MemberProfileImageConverter.toMemberProfileImageWithChangedStatus(request.getImageId(), request.isPublic());
+
+        return memberProfileImageRepository.save(updatedProfileImage);
+    }
+
 
 }

@@ -25,4 +25,12 @@ public class MemberProfileImageResponseDto {
     public static class DeleteProfileImageResultDto {
         private String succeedMessage;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateProfileImageStatusResultDto {
+        private String changedStatus;
+    }
 }

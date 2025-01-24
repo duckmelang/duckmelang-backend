@@ -7,7 +7,8 @@ public class MemberProfileImageRequestDto {
 
     @Builder
     @Getter
-    public static class DeleteMemberProfileImageDto {
+    public static class MemberProfileImageDto {
         private Long ImageId;
+        private boolean isPublic;
     }
 }

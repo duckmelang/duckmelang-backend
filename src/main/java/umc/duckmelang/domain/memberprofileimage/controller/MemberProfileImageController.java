@@ -43,13 +43,22 @@ public class MemberProfileImageController {
     @DeleteMapping("/")
     public ApiResponse<MemberProfileImageResponseDto.DeleteProfileImageResultDto> deleteProfileImage (
             @RequestParam Long memberId,  // 임시로 사용. 나중에 JWT에서 추출할 예정
-            @RequestBody @Valid MemberProfileImageRequestDto.DeleteMemberProfileImageDto request) {
+            @RequestBody @Valid MemberProfileImageRequestDto.MemberProfileImageDto request) {
 
         memberProfileImageCommandService.deleteProfileImage(memberId, request);
 
         return ApiResponse.onSuccess(MemberProfileImageConverter.toDeleteProfileImageResultDto());
     }
 
+    @Operation(summary = "내 프로필 사진 공개 범위 전환 API", description = "특정 회원 본인의 프로필 사진 중 하나를 공개로 전환하거나 비공개로 전환하는 API입니다.")
+    @PatchMapping("/status")
+    public ApiResponse<MemberProfileImageResponseDto.UpdateProfileImageStatusResultDto> updateProfileImageStatus(
+            @RequestParam Long memberId,  // 임시로 사용. 나중에 JWT에서 추출할 예정
+            @RequestBody @Valid MemberProfileImageRequestDto.MemberProfileImageDto request) {
 
+        MemberProfileImage updatedMemberProfileImage = memberProfileImageCommandService.updateProfileImageStatus(memberId, request);
+
+        return ApiResponse.onSuccess(MemberProfileImageConverter.toUpdateProfileImageStatusResultDto(updatedMemberProfileImage));
+    }
 
 }
