@@ -23,8 +23,6 @@ public class MemberProfileImageResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class DeleteProfileImageResultDto {
-        private Long memberId;
-        private Long deletedMemberProfileImageId;
         private String succeedMessage;
     }
 }

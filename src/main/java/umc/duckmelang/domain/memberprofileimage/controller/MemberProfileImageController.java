@@ -1,10 +1,13 @@
 package umc.duckmelang.domain.memberprofileimage.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.memberprofileimage.converter.MemberProfileImageConverter;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
+import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageRequestDto;
 import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageResponseDto;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageCommandService;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
@@ -40,11 +43,11 @@ public class MemberProfileImageController {
     @DeleteMapping("/")
     public ApiResponse<MemberProfileImageResponseDto.DeleteProfileImageResultDto> deleteProfileImage (
             @RequestParam Long memberId,  // 임시로 사용. 나중에 JWT에서 추출할 예정
-            @RequestParam Long userProfileImageId) {
+            @RequestBody @Valid MemberProfileImageRequestDto.DeleteMemberProfileImageDto request) {
 
-        memberProfileImageCommandService.deleteProfileImage(memberId, userProfileImageId);
+        memberProfileImageCommandService.deleteProfileImage(memberId, request);
 
-        return ApiResponse.onSuccess(MemberProfileImageConverter.toDeleteProfileImageResultDto(memberId, userProfileImageId));
+        return ApiResponse.onSuccess(MemberProfileImageConverter.toDeleteProfileImageResultDto());
     }
 
 

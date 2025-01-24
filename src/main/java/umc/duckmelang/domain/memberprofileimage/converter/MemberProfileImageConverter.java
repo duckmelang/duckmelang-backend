@@ -25,10 +25,8 @@ public class MemberProfileImageConverter {
                 .build();
     }
 
-    public static MemberProfileImageResponseDto.DeleteProfileImageResultDto toDeleteProfileImageResultDto(Long memberId, Long userProfileImageId) {
+    public static MemberProfileImageResponseDto.DeleteProfileImageResultDto toDeleteProfileImageResultDto() {
         return MemberProfileImageResponseDto.DeleteProfileImageResultDto.builder()
-                .memberId(memberId)
-                .deletedMemberProfileImageId(userProfileImageId)
                 .succeedMessage("프로필 사진이 성공적으로 삭제되었습니다.")
                 .build();
     }
