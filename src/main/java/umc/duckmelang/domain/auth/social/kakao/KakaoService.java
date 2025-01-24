@@ -10,6 +10,8 @@ import umc.duckmelang.domain.auth.enums.ProviderKind;
 import umc.duckmelang.domain.auth.repository.AuthRepository;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.repository.MemberRepository;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.MemberException;
 import umc.duckmelang.global.redis.refreshtoken.RefreshTokenService;
 import umc.duckmelang.global.security.jwt.JwtTokenProvider;
 
@@ -23,19 +25,19 @@ public class KakaoService {
     private final RefreshTokenService refreshTokenService;
 
     public AuthResponseDto.ServiceLoginResult login(String accessCode, HttpServletResponse httpServletResponse) {
-        // 1. Access Token 요청
+        // Access Token 요청
         KakaoDto.OAuthToken oAuthToken = kakaoUtil.requestToken(accessCode);
 
-        // 2. 사용자 이메일 요청
+        // 사용자 이메일 요청
         KakaoDto.KakaoProfile kakaoProfile = kakaoUtil.requestProfile(oAuthToken.getAccess_token());
 
-        // 3. 사용자 이메일 확인
+        // 사용자 이메일 확인
         String email = kakaoProfile.getKakao_account().getEmail();
         if (email == null || email.isEmpty()) {
-            throw new RuntimeException("이메일 정보가 없습니다.");
+            throw new MemberException(ErrorStatus.MEMBER_NOT_FOUND);
         }
 
-        // 4. DB에서 사용자 검색 또는 생성
+        // DB에서 사용자 검색 또는 생성
         Member member = memberRepository.findByEmail(email)
                 .orElseGet(() -> memberRepository.save(
                         Member.builder()
@@ -45,7 +47,7 @@ public class KakaoService {
                                 .build()
                 ));
 
-        // 5. Auth 테이블에 해당 사용자의 인증 정보 저장
+        // Auth 테이블에 해당 사용자의 인증 정보 저장
         authRepository.findByTextIdAndProvider(email, ProviderKind.KAKAO)
                 .orElseGet(() -> authRepository.save(
                         Auth.builder()
@@ -55,14 +57,14 @@ public class KakaoService {
                                 .build()
                 ));
 
-        // 6. Access Token 및 Refresh Token 생성
+        // Access Token 및 Refresh Token 생성
         String accessToken = jwtTokenProvider.generateAccessToken(member.getId());
         String refreshToken = jwtTokenProvider.generateRefreshToken(member.getId());
 
-        // 7. Refresh Token을 Redis에 저장
+        // Refresh Token을 Redis에 저장
         refreshTokenService.saveRefreshToken(refreshToken, member.getId());
 
-        // 8. HTTP 응답 헤더에 Access Token추가
+        // HTTP 응답 헤더에 Access Token추가
         httpServletResponse.addHeader("Authorization", "Bearer " + accessToken);
 
         return new AuthResponseDto.ServiceLoginResult(member, accessToken, refreshToken);

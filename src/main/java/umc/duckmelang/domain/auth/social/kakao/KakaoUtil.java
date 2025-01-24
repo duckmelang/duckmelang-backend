@@ -14,7 +14,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-@Slf4j
 public class KakaoUtil {
     @Value("${kakao.auth.client}")
     private String client;
@@ -45,7 +44,6 @@ public class KakaoUtil {
         try {
             return objectMapper.readValue(response.getBody(), KakaoDto.OAuthToken.class);
         } catch (JsonProcessingException e) {
-            log.error("토큰 요청 실패: {}", e.getMessage());
             throw new RuntimeException("카카오 토큰 요청 실패");
         }
     }
@@ -69,7 +67,6 @@ public class KakaoUtil {
         try {
             return objectMapper.readValue(response.getBody(), KakaoDto.KakaoProfile.class);
         } catch (JsonProcessingException e) {
-            log.error("JSON 파싱 오류: {}", e.getMessage());
             throw new RuntimeException("카카오 사용자 정보 요청 실패");
         }
     }
