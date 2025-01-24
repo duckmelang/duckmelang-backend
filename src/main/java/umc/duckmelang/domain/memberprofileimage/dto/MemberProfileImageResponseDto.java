@@ -17,4 +17,14 @@ public class MemberProfileImageResponseDto {
         private Long memberId;
         private List<String> profileImageUrls;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DeleteProfileImageResultDto {
+        private Long memberId;
+        private Long deletedMemberProfileImageId;
+        private String succeedMessage;
+    }
 }

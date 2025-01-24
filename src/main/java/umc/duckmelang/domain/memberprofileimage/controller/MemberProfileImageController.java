@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import umc.duckmelang.domain.memberprofileimage.converter.MemberProfileImageConverter;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageResponseDto;
+import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageCommandService;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
@@ -19,10 +20,11 @@ import java.util.List;
 public class MemberProfileImageController {
 
     private final MemberProfileImageQueryService memberProfileImageQueryService;
+    private final MemberProfileImageCommandService memberProfileImageCommandService;
 
     @Operation(summary = "내 프로필 사진 전체 조회 API", description = "특정 회원 본인의 프로필 사진을 모두 조회하는 API입니다. 비공개된 사진과 공개된 사진 모두 확인 가능합니다.")
     @GetMapping("/")
-    public ApiResponse<MemberProfileImageResponseDto.GetAllProfileImageResultDto> getAllProfileImage (@PathVariable(name = "memberId") Long memberId) {
+    public ApiResponse<MemberProfileImageResponseDto.GetAllProfileImageResultDto> getAllProfileImages (@RequestParam Long memberId ) {
 
         List<MemberProfileImage> updatedMemberProfileImageList = memberProfileImageQueryService.getAllMemberProfileImageByMemberId(memberId);
 
@@ -33,6 +35,18 @@ public class MemberProfileImageController {
 
         return ApiResponse.onSuccess(MemberProfileImageConverter.toGetAllProfileImageResultDto(updatedMemberProfileImageList));
     }
+
+    @Operation(summary = "내 프로필 사진 삭제 API", description = "특정 회원 본인의 프로필 사진 중 하나를 삭제하는 API입니다.")
+    @DeleteMapping("/")
+    public ApiResponse<MemberProfileImageResponseDto.DeleteProfileImageResultDto> deleteProfileImage (
+            @RequestParam Long memberId,  // 임시로 사용. 나중에 JWT에서 추출할 예정
+            @RequestParam Long userProfileImageId) {
+
+        memberProfileImageCommandService.deleteProfileImage(memberId, userProfileImageId);
+
+        return ApiResponse.onSuccess(MemberProfileImageConverter.toDeleteProfileImageResultDto(memberId, userProfileImageId));
+    }
+
 
 
 }
