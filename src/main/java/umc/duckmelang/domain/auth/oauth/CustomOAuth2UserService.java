@@ -1,7 +1,6 @@
 package umc.duckmelang.domain.auth.oauth;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -18,7 +17,6 @@ import umc.duckmelang.domain.auth.domain.Auth;
 import java.util.Collections;
 import java.util.Map;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -42,35 +40,38 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private Member saveOrUpdate(OAuthAttributes attributes, String providerId) {
+        ProviderKind providerKind = ProviderKind.valueOf(providerId.toUpperCase());
+
         Member existingMember = memberRepository.findByEmail(attributes.getEmail()).orElse(null);
         if (existingMember != null) {
-            if (attributes.getNickname() != null && !attributes.getNickname().isEmpty()) {
-                existingMember.setName(attributes.getNickname());}
-            if (!existingMember.getEmail().equals(attributes.getEmail())) {
-                existingMember.setEmail(attributes.getEmail());}
+            updateMemberInfo(existingMember, attributes);
             return memberRepository.save(existingMember);
         }
 
-        Auth existingAuth = authRepository.findByTextIdAndProvider(attributes.getEmail(), ProviderKind.valueOf(providerId.toUpperCase())).orElse(null);
+        Auth existingAuth = authRepository.findByTextIdAndProvider(attributes.getEmail(), providerKind).orElse(null);
         if (existingAuth != null) {
-            authRepository.save(existingAuth);
-            return existingAuth.getMember();}
+            return existingAuth.getMember();
+        }
 
-        Auth auth = authRepository.findByTextIdAndProvider(attributes.getEmail(), ProviderKind.valueOf(providerId.toUpperCase()))
-                .orElseGet(() -> {
-                    Member newMember = attributes.toEntity(providerId);
-                    Member savedMember = memberRepository.save(newMember);
+        Member newMember = attributes.toEntity(providerId);
+        Member savedMember = memberRepository.save(newMember);
+        Auth newAuth = Auth.builder()
+                .textId(attributes.getEmail())
+                .provider(providerKind)
+                .member(savedMember)
+                .build();
+        authRepository.save(newAuth);
 
-                    Auth newAuth = Auth.builder()
-                            .textId(attributes.getEmail())
-                            .provider(ProviderKind.valueOf(providerId.toUpperCase()))
-                            .member(savedMember)
-                            .build();
-                    authRepository.save(newAuth);
-                    return newAuth;
-                });
-        Member member = auth.getMember();
-        return member;
+        return savedMember;
+    }
+
+    private void updateMemberInfo(Member member, OAuthAttributes attributes) {
+        if (attributes.getNickname() != null && !attributes.getNickname().isEmpty()) {
+            member.setName(attributes.getNickname());
+        }
+        if (!member.getEmail().equals(attributes.getEmail())) {
+            member.setEmail(attributes.getEmail());
+        }
     }
 }
 

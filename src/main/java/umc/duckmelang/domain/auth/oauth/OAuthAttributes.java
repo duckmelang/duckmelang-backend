@@ -43,6 +43,7 @@ public class OAuthAttributes {
         return OAuthAttributes.builder()
                 .nameAttributeKey(userNameAttributeName)
                 .email((String) attributes.get("email"))
+                .nickname((String) attributes.get("name"))
                 .build();
     }
 
