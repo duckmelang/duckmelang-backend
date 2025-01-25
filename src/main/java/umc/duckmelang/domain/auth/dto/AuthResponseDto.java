@@ -25,12 +25,4 @@ public class AuthResponseDto {
         private String accessToken;
         private String refreshToken;
     }
-
-    @Getter
-    @RequiredArgsConstructor
-    public static class ServiceLoginResult {
-        private final Member member;
-        private final String accessToken;
-        private final String refreshToken;
-    }
 }

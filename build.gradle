@@ -50,8 +50,6 @@ dependencies {
 	// oauth2
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.security:spring-security-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-
 
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
