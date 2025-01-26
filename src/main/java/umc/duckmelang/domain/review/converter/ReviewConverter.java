@@ -1,6 +1,7 @@
 package umc.duckmelang.domain.review.converter;
 
 import org.springframework.stereotype.Component;
+import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
@@ -14,12 +15,13 @@ import java.util.stream.Collectors;
 @Component
 public class ReviewConverter {
 
-    public static Review toReview(ReviewRequestDto.ReviewJoinDto request, Member sender, Member receiver) {
+    public static Review toReview(ReviewRequestDto.ReviewJoinDto request, Member sender, Member receiver, Application application) {
         return Review.builder()
                 .score(request.getScore())
                 .content(request.getContent())
                 .sender(sender)
                 .receiver(receiver)
+                .application(application)
                 .build();
 
     }

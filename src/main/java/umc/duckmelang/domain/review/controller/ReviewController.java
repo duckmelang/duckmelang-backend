@@ -31,7 +31,7 @@ public class ReviewController {
 
     @PostMapping("/reviews")
     @CommonApiResponses
-    @Operation(summary = "후기글 작성 API", description = "후기글 작성 API입니다. Sender(memberId), Receiver(receiverId)를 써주세요")
+    @Operation(summary = "후기글 작성 API", description = "후기글 작성 API입니다. Sender(memberId), Receiver(receiverId)를 써주세요. applicationId는 후기글 작성 페이지 내 관련 정보 조회 API에서 얻어오면 됩니다")
     public ApiResponse<ReviewResponseDto.ReviewJoinResultDto> joinReview (@RequestParam(name="memberId") Long memberId, @RequestBody @Valid ReviewRequestDto.ReviewJoinDto request){
         Review review = reviewCommandService.joinReview(request, memberId);
         return ApiResponse.onSuccess(ReviewConverter.reviewJoinResultDto(review));
