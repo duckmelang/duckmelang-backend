@@ -2,11 +2,17 @@ package umc.duckmelang.domain.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import umc.duckmelang.domain.auth.dto.AuthRequestDto;
 import umc.duckmelang.domain.auth.dto.AuthResponseDto;
 import umc.duckmelang.domain.auth.service.AuthService;
+import umc.duckmelang.domain.member.converter.MemberConverter;
+import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.member.dto.MemberRequestDto;
+import umc.duckmelang.domain.member.dto.MemberResponseDto;
+import umc.duckmelang.domain.member.sevice.MemberCommandService;
 import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.global.redis.blacklist.BlacklistService;
 import umc.duckmelang.global.security.filter.JwtAuthorizationFilter;
@@ -17,11 +23,11 @@ import umc.duckmelang.global.security.jwt.JwtUtil;
 public class AuthController {
     private final AuthService authService;
     private final JwtUtil jwtUtil;
-    private final BlacklistService blacklistService;
+    private final MemberCommandService memberCommandService;
 
     @PostMapping("/login")
     @Operation(summary = "로그인 API", description = "RefreshToken과 AccessToken을 발급합니다.")
-    public ApiResponse<AuthResponseDto.TokenResponse> login(@RequestBody AuthRequestDto.LoginDto request) {
+    public ApiResponse<AuthResponseDto.TokenResponse> login(@Valid @RequestBody AuthRequestDto.LoginDto request) {
         return ApiResponse.onSuccess(authService.login(request.getEmail(), request.getPassword()));
     }
 
