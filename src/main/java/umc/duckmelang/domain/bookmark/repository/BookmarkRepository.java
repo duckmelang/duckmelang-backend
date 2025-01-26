@@ -10,7 +10,7 @@ import umc.duckmelang.domain.post.domain.Post;
 
 @Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
-    @Query("SELECT b.post FROM Bookmark b WHERE b.member.id = :memberId")
+    @Query("SELECT b.post FROM Bookmark b JOIN FETCH b.post WHERE b.member.id = :memberId")
     Page<Post> findBookmarks(Long memberId, Pageable pageable);
 
 }
