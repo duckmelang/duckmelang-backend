@@ -11,8 +11,9 @@ import umc.duckmelang.domain.post.domain.Post;
 
 @Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
-    @EntityGraph(attributePaths = {"post"})
-    @Query("SELECT b.post FROM Bookmark b WHERE b.member.id = :memberId")
+
+    @EntityGraph(attributePaths = "post")
+    @Query("SELECT b.post FROM Bookmark b JOIN b.post WHERE b.member.id = :memberId")
     Page<Post> findBookmarks(Long memberId, Pageable pageable);
 
 }
