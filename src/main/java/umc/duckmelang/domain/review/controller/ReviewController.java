@@ -23,30 +23,29 @@ import umc.duckmelang.global.apipayload.ApiResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("/reviews")
 @RequiredArgsConstructor
 @Validated
 public class ReviewController {
     private final ReviewCommandService reviewCommandService;
     private final ReviewQueryService reviewQueryService;
 
-    @PostMapping("/{memberId}")
+    @PostMapping("/reviews")
     @CommonApiResponses
     @Operation(summary = "후기글 작성 API", description = "후기글 작성 API입니다. Sender(memberId), Receiver(receiverId)를 써주세요")
-    public ApiResponse<ReviewResponseDto.ReviewJoinResultDto> joinReview (@PathVariable(name="memberId") Long memberId, @RequestBody @Valid ReviewRequestDto.ReviewJoinDto request){
+    public ApiResponse<ReviewResponseDto.ReviewJoinResultDto> joinReview (@RequestParam(name="memberId") Long memberId, @RequestBody @Valid ReviewRequestDto.ReviewJoinDto request){
         Review review = reviewCommandService.joinReview(request, memberId);
         return ApiResponse.onSuccess(ReviewConverter.reviewJoinResultDto(review));
     }
 
-    @GetMapping("/my-profile/{memberId}")
+    @GetMapping("/profile/reviews")
     @CommonApiResponses
     @Operation(summary = "나와의 동행 후기 조회 API", description = "내 프로필에서 나와의 동행 후기 볼 때 이용하는 API 입니다. 성별은 true일때 남자, false일때 여자입니다. memberId는 추후 JWT 변경 예정")
-    public ApiResponse<ReviewResponseDto.ReviewListDto> getMyReviewList(@PathVariable(name="memberId") Long memberId){
+    public ApiResponse<ReviewResponseDto.ReviewListDto> getMyReviewList(@RequestParam(name="memberId") Long memberId){
         List<Review> reviewList = reviewQueryService.getReviewList(memberId);
         return ApiResponse.onSuccess(ReviewConverter.reviewListDto(reviewList));
     }
 
-    @GetMapping("/other-profile/{memberId}")
+    @GetMapping("/profile/{memberId}/reviews/")
     @CommonApiResponses
     @Operation(summary = "다른 사람의 동행 후기 조회 API", description = "다른 사람의 프로필에서 동행 후기 볼 때 이용하는 API 입니다. 성별은 true일때 남자, false일때 여자입니다.")
     public ApiResponse<ReviewResponseDto.ReviewListDto> getOtherReviewList(@ExistMember @PathVariable(name="memberId") Long memberId){
