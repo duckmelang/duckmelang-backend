@@ -56,15 +56,7 @@ public class PostCommandServiceImpl implements PostCommandService {
     public Post patchPostStatus(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(ErrorStatus.POST_NOT_FOUND));
-
-//        모집 완료라면 모집중으로 변경
-        if (post.getWanted() == 0) {
-            post.setWanted((short) 1);
-        } else if (post.getWanted() == 1) {
-            post.setWanted((short) 0);
-        } else {
-            throw new PostException(ErrorStatus.INVALID_WANTED);
-        }
+        post.toggleWanted();
 
         return postRepository.save(post);
     }
