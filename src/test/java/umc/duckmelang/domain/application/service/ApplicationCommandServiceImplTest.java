@@ -15,8 +15,7 @@ import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.materelationship.repository.MateRelationshipRepository;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.post.domain.Post;
-import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.handler.ApplicationHandler;
+import umc.duckmelang.global.apipayload.exception.ApplicationException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -118,8 +117,8 @@ class ApplicationCommandServiceImplTest {
 
             // When & Then
             assertThatThrownBy(() -> applicationCommandService.updateStatusToFailed(999L, 1L))
-                    .isInstanceOf(ApplicationHandler.class)
-                    .matches(ex -> ((ApplicationHandler) ex).getErrorReason().getCode().equals("APPLICATION4003"));
+                    .isInstanceOf(ApplicationException.class)
+                    .matches(ex -> ((ApplicationException) ex).getErrorReason().getCode().equals("APPLICATION4003"));
 
             verify(applicationRepository, never()).save(any(Application.class));
         }
@@ -140,10 +139,10 @@ class ApplicationCommandServiceImplTest {
 
             // When & Then
             assertThatThrownBy(() -> applicationCommandService.updateStatusToFailed(1L, 1L))
-                    .isInstanceOf(ApplicationHandler.class)
+                    .isInstanceOf(ApplicationException.class)
                     .matches(
                             ex -> {
-                                ApplicationHandler appEx = (ApplicationHandler) ex;
+                                ApplicationException appEx = (ApplicationException) ex;
                                 System.out.println("Error code: " + appEx.getErrorReason());
                                 return appEx.getErrorReason() != null &&
                                         appEx.getErrorReason().getCode() != null &&
@@ -188,8 +187,8 @@ class ApplicationCommandServiceImplTest {
 
             // When & Then
             assertThatThrownBy(() -> applicationCommandService.updateStatusToCanceled(1L, 999L))
-                    .isInstanceOf(ApplicationHandler.class)
-                    .matches(ex -> ((ApplicationHandler) ex).getErrorReason().getCode().equals("APPLICATION4003"));
+                    .isInstanceOf(ApplicationException.class)
+                    .matches(ex -> ((ApplicationException) ex).getErrorReason().getCode().equals("APPLICATION4003"));
 
             verify(applicationRepository, never()).save(any(Application.class));
         }
@@ -233,8 +232,8 @@ class ApplicationCommandServiceImplTest {
 
             // When & Then
             assertThatThrownBy(() -> applicationCommandService.updateStatusToSucceed(1L, 999L))
-                    .isInstanceOf(ApplicationHandler.class)
-                    .matches(ex -> ((ApplicationHandler) ex).getErrorReason().getCode().equals("APPLICATION4003"));
+                    .isInstanceOf(ApplicationException.class)
+                    .matches(ex -> ((ApplicationException) ex).getErrorReason().getCode().equals("APPLICATION4003"));
 
             verify(mateRelationshipRepository, never()).save(any(MateRelationship.class));
             verify(applicationRepository, never()).save(any(Application.class));
@@ -256,8 +255,8 @@ class ApplicationCommandServiceImplTest {
 
             // When & Then
             assertThatThrownBy(() -> applicationCommandService.updateStatusToSucceed(1L, 1L))
-                    .isInstanceOf(ApplicationHandler.class)
-                    .matches(ex -> ((ApplicationHandler) ex).getErrorReason().getCode().equals("APPLICATION4001"));
+                    .isInstanceOf(ApplicationException.class)
+                    .matches(ex -> ((ApplicationException) ex).getErrorReason().getCode().equals("APPLICATION4001"));
 
             verify(mateRelationshipRepository, never()).save(any(MateRelationship.class));
             verify(applicationRepository, never()).save(any(Application.class));

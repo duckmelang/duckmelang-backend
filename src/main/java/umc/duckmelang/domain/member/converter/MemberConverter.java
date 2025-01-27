@@ -4,7 +4,14 @@ import umc.duckmelang.domain.eventcategory.domain.EventCategory;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
+import umc.duckmelang.domain.memberevent.domain.MemberEvent;
+import umc.duckmelang.domain.memberidol.domain.MemberIdol;
+import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
+
+import java.util.List;
+import java.util.stream.Collectors;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
@@ -13,6 +20,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MemberConverter {
+
+    public static Member toMember(MemberRequestDto.SignupDto request){
+        return Member.builder()
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .build();
+    }
+
+    public static MemberResponseDto.SignupResultDto toSignupResultDto(Member member){
+        return MemberResponseDto.SignupResultDto.builder()
+                .memberId(member.getId())
+                .createdAt(member.getCreatedAt())
+                .build();
+
+    }
 
     public static MemberIdol toMemberIdol(Member member, IdolCategory idolCategory) {
         return MemberIdol.builder()
@@ -83,7 +105,8 @@ public class MemberConverter {
         return MemberProfileImage.builder()
                 .member(member)
                 .memberImage(profileImageUrl)
-                .build();    }
+                .build();
+    }
 
     public static MemberResponseDto.CreateMemberProfileImageResultDto toCreateMemberProfileImageResponseDto(MemberProfileImage memberProfileImage) {
 

@@ -2,7 +2,7 @@ package umc.duckmelang.domain.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import umc.duckmelang.domain.authprovider.domain.AuthProvider;
+import umc.duckmelang.domain.auth.domain.Auth;
 import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
@@ -37,7 +37,7 @@ public class Member extends BaseEntity {
     @Column(length = 500)
     private String introduction;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate birth;
 
     private Boolean gender;
@@ -52,7 +52,7 @@ public class Member extends BaseEntity {
     private List<MemberProfileImage> memberProfileImageList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AuthProvider> authProviderList = new ArrayList<>();
+    private List<Auth> authList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberIdol> memberIdolList = new ArrayList<>();
@@ -85,6 +85,11 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "secondMember", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MateRelationship> mateRelationshipinSecondList = new ArrayList<>();
+
+    // 비밀번호 설정 함수
+    public void encodePassword(String password){
+        this.password=password;
+    }
 
     // 복사 생성자
     public Member(Member other) {
