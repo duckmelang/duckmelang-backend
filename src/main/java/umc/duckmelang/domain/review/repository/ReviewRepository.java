@@ -18,6 +18,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             "JOIN FETCH a.post p " +
             "JOIN FETCH p.member pm " +
             "WHERE (pm.id = :memberId AND a.member.id = :myId) " +
-            "OR (a.member.id = :memberId AND pm.id = : myId)")
+            "OR (a.member.id = :memberId AND pm.id = :myId)")
     Optional<Application> findReviewInformation(Long myId, Long memberId);
 }

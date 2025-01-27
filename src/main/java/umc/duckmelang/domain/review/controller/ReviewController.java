@@ -59,7 +59,7 @@ public class ReviewController {
 
     @GetMapping("/reviews/information")
     @CommonApiResponses
-    @Operation(summary = "후기글 작성 페이지 내 관련 정보 조회 API", description = "후기글 작성 페이지에서 applicationId 외에 유저네임, 게시글 제목, 행사 날짜 등 정보를 보여주는 API 입니다. memberId를 requestParam으로 넣어주세요")
+    @Operation(summary = "후기글 작성 페이지 내 관련 정보 조회 API", description = "후기글 작성 페이지에서 applicationId 외에 유저네임, 게시글 제목, 행사 날짜 등 정보를 보여주는 API 입니다. memberId를 requestParam으로 넣어주세요. myId는 추후 JWT 추출 예정")
     public ApiResponse<ReviewResponseDto.ReviewInformationDto> getReviewInformation(@ExistMember @RequestParam(name="memberId") Long memberId, @RequestParam(name="myId") Long myId){
         Application application = reviewQueryService.getReviewInformation(myId, memberId)
                 .orElseThrow(()-> new ApplicationException(ErrorStatus.APPLICATION_NOT_FOUND));
