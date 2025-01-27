@@ -15,5 +15,5 @@ public interface MemberCommandService {
     List<Landmine> createLandmines(Long memberId, MemberRequestDto.CreateLandminesDto request);
     MemberProfileImage createMemberProfileImage(Long memberId, MemberRequestDto.CreateMemberProfileImageDto request);
     Member createIntroduction(Long memberId, MemberRequestDto.CreateIntroductionDto request);
-
+    Member updateMemberProfile(Long memberId, MemberRequestDto.UpdateMemberProfileDto request);
 }
