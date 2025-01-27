@@ -8,14 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import umc.duckmelang.domain.auth.dto.AuthRequestDto;
 import umc.duckmelang.domain.auth.dto.AuthResponseDto;
 import umc.duckmelang.domain.auth.service.AuthService;
-import umc.duckmelang.domain.member.converter.MemberConverter;
-import umc.duckmelang.domain.member.domain.Member;
-import umc.duckmelang.domain.member.dto.MemberRequestDto;
-import umc.duckmelang.domain.member.dto.MemberResponseDto;
-import umc.duckmelang.domain.member.sevice.MemberCommandService;
+import umc.duckmelang.domain.member.service.MemberCommandService;
 import umc.duckmelang.global.apipayload.ApiResponse;
-import umc.duckmelang.global.redis.blacklist.BlacklistService;
-import umc.duckmelang.global.security.filter.JwtAuthorizationFilter;
 import umc.duckmelang.global.security.jwt.JwtUtil;
 
 @RestController

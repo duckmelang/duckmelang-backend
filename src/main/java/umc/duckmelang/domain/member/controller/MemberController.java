@@ -21,8 +21,14 @@ import java.util.List;
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
-
     private final MemberCommandService memberCommandService;
+
+    @PostMapping("/signup")
+    @Operation(summary = "회원가입 API", description = "사용자 정보를 받아 회원가입을 처리하는 API입니다.")
+    public ApiResponse<MemberResponseDto.SignupResultDto> signup(@RequestBody @Valid MemberRequestDto.SignupDto request){
+        Member member = memberCommandService.signupMember(request);
+        return ApiResponse.onSuccess(MemberConverter.toSignupResultDto(member));
+    }
 
     @Operation(summary = "덕질하는 아이돌 선택 API", description = "회원이 덕질하는 아이돌(들)을 선택하는 API입니다. 최소 하나의 아이돌은 선택해야 합니다.")
     @PostMapping("/{memberId}/interesting-idol")
@@ -87,8 +93,4 @@ public class MemberController {
 
         return ApiResponse.onSuccess(MemberConverter.toCreateIntroductionResponseDto(updatedmember));
     }
-
-
-
-
-    }
+}

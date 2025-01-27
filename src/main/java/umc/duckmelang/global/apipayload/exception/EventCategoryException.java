@@ -1,9 +1,8 @@
-package umc.duckmelang.global.apipayload.exception.handler;
+package umc.duckmelang.global.apipayload.exception;
 
 import umc.duckmelang.global.apipayload.code.BaseErrorCode;
-import umc.duckmelang.global.apipayload.exception.GeneralException;
 
-public class EventCategoryHandler extends GeneralException {
+public class EventCategoryException extends GeneralException {
 
-    public EventCategoryHandler(BaseErrorCode errorCode) {super(errorCode);}
+    public EventCategoryException(BaseErrorCode errorCode) {super(errorCode);}
 }
