@@ -19,11 +19,11 @@ public class PostRequestDto {
         private String title;
         @NotBlank
         private String content;
-        @NotBlank
+        @NotNull
         private List<Long> idolIds;
-        @NotBlank
+        @NotNull
         private Long categoryId;
-        @NotBlank
+        @NotNull
         private LocalDate date;
     }
 }
