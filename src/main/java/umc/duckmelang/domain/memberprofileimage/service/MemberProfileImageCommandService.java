@@ -5,7 +5,7 @@ import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageRequestDto;
 
 public interface MemberProfileImageCommandService {
-    public void deleteProfileImage(Long memberId, MemberProfileImageRequestDto.MemberProfileImageDto request);
-    public MemberProfileImage updateProfileImageStatus(Long memberId, MemberProfileImageRequestDto.MemberProfileImageDto request);
-    public MemberProfileImage createMemberProfile(Long memberId, String memberProfileImageURL);
+    void deleteProfileImage(Long memberId, MemberProfileImageRequestDto.MemberProfileImageDto request);
+    MemberProfileImage updateProfileImageStatus(Long memberId, MemberProfileImageRequestDto.MemberProfileImageDto request);
+    MemberProfileImage createMemberProfile(Long memberId, String memberProfileImageURL);
 }

@@ -6,6 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberProfileImageQueryService {
-    public Optional<MemberProfileImage> getLatestPublicMemberProfileImage(Long userId);
-    public List<MemberProfileImage> getAllMemberProfileImageByMemberId(Long userId);
+    Optional<MemberProfileImage> getLatestPublicMemberProfileImage(Long userId);
+    List<MemberProfileImage> getAllMemberProfileImageByMemberId(Long userId);
 }
