@@ -25,4 +25,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @EntityGraph(attributePaths = {"member"})
     @Query("SELECT p FROM Post p WHERE p.member.id = :memberId")
     Page<Post> findMyPost(Long memberId, Pageable pageable);
+
+    int countAllByMemberId(Long memberId);
+
 }

@@ -6,5 +6,6 @@ import umc.duckmelang.domain.post.domain.Post;
 import java.util.Optional;
 
 public interface MemberQueryService {
+
     Optional<Member> findById(Long memberId);
 }

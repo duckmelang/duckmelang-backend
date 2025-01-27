@@ -130,7 +130,7 @@ class MemberCommandServiceTest {
         when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(MemberHandler.class, () -> memberCommandService.selectIdols(memberId, request));
+        assertThrows(MemberException.class, () -> memberCommandService.selectIdols(memberId, request));
         verify(memberRepository, times(1)).findById(memberId);
     }
 
@@ -415,7 +415,7 @@ class MemberCommandServiceTest {
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.empty()); // 회원이 조회되지 않음
 
-        assertThrows(MemberHandler.class, () -> memberCommandService.createMemberProfileImage(memberId, requestDto));
+        assertThrows(MemberException.class, () -> memberCommandService.createMemberProfileImage(memberId, requestDto));
         verify(memberProfileImageRepository, never()).deleteAllByMember(any()); // 삭제 호출되지 않음
         verify(memberProfileImageRepository, never()).save(any()); // 저장 호출되지 않음
     }
@@ -473,7 +473,7 @@ class MemberCommandServiceTest {
         when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(MemberHandler.class, () -> {
+        assertThrows(MemberException.class, () -> {
             memberCommandService.createIntroduction(memberId, requestDto);
         });
 
@@ -511,7 +511,7 @@ class MemberCommandServiceTest {
         when(memberRepository.save(any(Member.class))).thenReturn(updatedMember);
 
         // When & Then
-        assertThrows(MemberHandler.class, () -> {
+        assertThrows(MemberException.class, () -> {
             memberCommandService.createIntroduction(memberId, requestDto);
         });
 

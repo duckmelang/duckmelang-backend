@@ -1,19 +1,25 @@
 package umc.duckmelang.domain.member.converter;
 
+import jakarta.validation.constraints.Size;
+import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.eventcategory.domain.EventCategory;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
+import umc.duckmelang.domain.member.service.MemberQueryService;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
+import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class MemberConverter {
+
 
     public static Member toMember(MemberRequestDto.SignupDto request){
         return Member.builder()
@@ -99,6 +105,7 @@ public class MemberConverter {
         return MemberProfileImage.builder()
                 .member(member)
                 .memberImage(profileImageUrl)
+                .isPublic(true)  // 새로운 프로필 이미지 등록 시에는 항상 전체공개 속성으로 생성됨
                 .build();
     }
 
@@ -107,6 +114,7 @@ public class MemberConverter {
         return MemberResponseDto.CreateMemberProfileImageResultDto.builder()
                 .memberId(memberProfileImage.getMember().getId())
                 .memberProfileImageURL(memberProfileImage.getMemberImage())
+                .isPublic(memberProfileImage.isPublic())
                 .build();
     }
 
@@ -121,5 +129,41 @@ public class MemberConverter {
                 .introduction(member.getIntroduction())
                 .build();
 
+    }
+
+    public static MemberResponseDto.GetMypageMemberPreviewResultDto toGetMemberPreviewResponseDto(Member member, MemberProfileImage memberProfileImage) {
+
+        return MemberResponseDto.GetMypageMemberPreviewResultDto.builder()
+                .memberId(member.getId())
+                .nickname(member.getNickname())
+                .gender(member.getGender())
+                .age(member.calculateAge())
+                .latestPublicMemberProfileImage(memberProfileImage.getMemberImage())
+                .build();
+    }
+
+    public static MemberResponseDto.GetMypageMemberProfileResultDto toGetMemberProfileResponseDto(Member member, MemberProfileImage memberProfileImage,
+                                                                                                  long postCount, long succeedApplicationCount) {
+        return  MemberResponseDto.GetMypageMemberProfileResultDto.builder()
+                .memberId(member.getId())
+                .nickname(member.getNickname())
+                .gender(member.getGender())
+                .age(member.calculateAge())
+                .latestPublicMemberProfileImage(memberProfileImage.getMemberImage())
+                .introduction(member.getIntroduction())
+                .postCount(postCount)
+                .succeedApplicationCount(succeedApplicationCount)
+                .build();
+
+    }
+
+
+    public static MemberResponseDto.GetMypageMemberProfileEditResultDto toUpdateMemberProfileDto(Member updatedMember, MemberProfileImage latestPublicMemberProfileImage) {
+        return MemberResponseDto.GetMypageMemberProfileEditResultDto.builder()
+                .memberId(updatedMember.getId())
+                .nickname(updatedMember.getNickname())
+                .introduction(updatedMember.getIntroduction())
+                .latestPublicMemberProfileImage(latestPublicMemberProfileImage.getMemberImage())
+                .build();
     }
 }

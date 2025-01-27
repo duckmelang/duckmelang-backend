@@ -40,7 +40,7 @@ public class PostQueryServiceImpl implements PostQueryService{
     }
 
     @Override
-    public Optional<Post> findById(Long postId){
+    public Optional<Post> findById(Long postId) {
         return postRepository.findById(postId);
     }
 
@@ -48,6 +48,19 @@ public class PostQueryServiceImpl implements PostQueryService{
     public Page<Post> getMyPostList(Long memberId, Integer page){
         return postRepository.findMyPost(memberId, PageRequest.of(page, 10));
     }
+    
+    /**
+     * 특정 멤버가 작성한 게시물 수 조회: 프로필 조회 시 사용
+     *
+     * @param memberId 멤버 ID
+     * @return 게시물 수
+     */
+    @Override
+    public int getPostCount(Long memberId) {
+        return postRepository.countAllByMemberId(memberId);
+    }
+
+
 
 
 }
