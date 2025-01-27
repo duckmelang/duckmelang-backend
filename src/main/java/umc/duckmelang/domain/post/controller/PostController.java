@@ -8,6 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import umc.duckmelang.domain.bookmark.converter.BookmarkConverter;
+import umc.duckmelang.domain.bookmark.domain.Bookmark;
+import umc.duckmelang.domain.bookmark.dto.BookmarkResponseDto;
+import umc.duckmelang.domain.bookmark.service.BookmarkCommandService;
 import umc.duckmelang.domain.idolcategory.validation.annotation.ExistIdol;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
@@ -29,6 +33,7 @@ public class PostController {
 
     private final PostQueryService postQueryService;
     private final PostCommandService postCommandService;
+    private final BookmarkCommandService bookmarkCommandService;
 
     @GetMapping("/")
     @CommonApiResponses
@@ -74,7 +79,14 @@ public class PostController {
         Page<Post> postList = postQueryService.getPostListByTitle(searchKeyword, page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
 
+    }
 
+    @PostMapping("/{postId}/bookmarks")
+    @CommonApiResponses
+    @Operation(summary = "게시글 스크랩 API", description = "게시글 스크랩하는 API 입니다. 우선 memberId를 받습니다(추후 JWT로 변경 예정)")
+    public ApiResponse<BookmarkResponseDto.BookmarkJoinResultDto>joinBookmark (@PathVariable(name="postId") Long postId, @RequestParam(name="memberId") Long memberId){
+        Bookmark bookmark = bookmarkCommandService.joinBookmark(postId, memberId);
+        return ApiResponse.onSuccess(BookmarkConverter.bookmarkJoinResultDto(bookmark));
     }
 
 }
