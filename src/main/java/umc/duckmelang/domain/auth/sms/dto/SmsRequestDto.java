@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.auth.sms;
+package umc.duckmelang.domain.auth.sms.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;

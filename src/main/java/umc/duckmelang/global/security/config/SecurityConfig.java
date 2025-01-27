@@ -39,8 +39,7 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/swagger-ui.html",
                                 "/webjars/**",
-                                "/login", "/members/signup", "/token/refresh", "/logout"
-                                        , "/login/oauth2/code/kakao", "/sms/send").permitAll()
+                                "/login", "/members/signup", "/token/refresh", "/logout", "/sms/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
