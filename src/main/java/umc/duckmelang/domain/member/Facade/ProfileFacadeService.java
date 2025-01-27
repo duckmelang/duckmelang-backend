@@ -29,9 +29,6 @@ public class ProfileFacadeService {
         // 회원 기본 정보 조회
         Member member = memberQueryService.getMemberById(memberId);
 
-        // 게시글들의 이미지 하나씩 조회
-        Page<PostThumbnailResponseDto> imagePage = postImageQueryService.getPostsImage(memberId,page);
-
         // 포스트 수 조회
         int postCount = postQueryService.getPostCount(memberId);
 
@@ -41,6 +38,6 @@ public class ProfileFacadeService {
         // 프로필 이미지 1개 조회
         MemberProfileImage image = profileImageService.findLatestOneByMemberId(memberId);
 
-        return MemberConverter.ToOtherProfileDto(member, postCount, matchCount, image, imagePage);
+        return MemberConverter.ToOtherProfileDto(member, postCount, matchCount, image);
     }
 }

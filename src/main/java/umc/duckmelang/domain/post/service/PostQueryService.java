@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface PostQueryService {
     Page<Post> getPostList(Integer page);
     Page<Post> getPostListByIdol(Long idolId, Integer page);
+    Page<Post> getPostListByMember(Long memberId, Integer page);
     Optional<Post> getPostDetail(Long postId);
 
     int getPostCount(Long memberId);

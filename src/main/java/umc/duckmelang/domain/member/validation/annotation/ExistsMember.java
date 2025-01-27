@@ -3,11 +3,12 @@ package umc.duckmelang.domain.member.validation.annotation;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import umc.duckmelang.domain.application.validation.validator.ApplicationExistsValidator;
+import umc.duckmelang.domain.member.validation.validator.MemberExistsValidator;
 
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = ApplicationExistsValidator.class)
+@Constraint(validatedBy = MemberExistsValidator.class)
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExistsMember {

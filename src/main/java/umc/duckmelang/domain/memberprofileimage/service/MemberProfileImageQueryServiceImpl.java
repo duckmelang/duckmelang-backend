@@ -17,7 +17,7 @@ public class MemberProfileImageQueryServiceImpl implements MemberProfileImageQue
     @Override
     public MemberProfileImage findLatestOneByMemberId(Long id) {
 
-        return memberProfileImageRepository.findTopByMemberIdOrderByCreatedAtDesc(id)
+        return memberProfileImageRepository.findFirstByMemberIdOrderByCreatedAtDesc(id)
                 .orElseThrow(()->new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND.getCode()));
     }
 

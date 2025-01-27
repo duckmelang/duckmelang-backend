@@ -30,6 +30,11 @@ public class PostQueryServiceImpl implements PostQueryService{
     }
 
     @Override
+    public Page<Post> getPostListByMember(Long memberId, Integer page) {
+        return postRepository.findByMember(memberId, PageRequest.of(page,10));
+    }
+
+    @Override
     public Optional<Post> getPostDetail(Long postId){
         return postRepository.findById(postId);
     }

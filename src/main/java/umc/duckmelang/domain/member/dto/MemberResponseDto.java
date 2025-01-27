@@ -17,7 +17,5 @@ public class MemberResponseDto {
 
         int postCnt;
         int matchCnt;
-
-        PostImageResponseDto.PostThumbnailListResponseDto postsThumbnail;
     }
 }

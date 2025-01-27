@@ -13,8 +13,7 @@ public class MemberConverter {
     public static MemberResponseDto.OtherProfileDto ToOtherProfileDto(Member member,
                                                                       int postCnt,
                                                                       int matchCnt,
-                                                                      MemberProfileImage image,
-                                                                      Page<PostThumbnailResponseDto> imagePage){
+                                                                      MemberProfileImage image){
         return MemberResponseDto.OtherProfileDto.builder()
                 .nickname(member.getNickname())
                 .gender(member.getGender()?"Female":"Male")
@@ -23,7 +22,6 @@ public class MemberConverter {
                 .profileImageUrl(image.getMemberImage())
                 .postCnt(postCnt)
                 .matchCnt(matchCnt)
-                .postsThumbnail(PostImageConverter.toPostThumbnailListResponseDto(imagePage))
                 .build();
     }
 }
