@@ -1,6 +1,5 @@
 package umc.duckmelang.domain.member.service;
 
-import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -21,10 +20,8 @@ import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberidol.repository.MemberIdolRepository;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRepository;
-import umc.duckmelang.global.apipayload.code.ErrorReasonDTO;
-import umc.duckmelang.global.apipayload.exception.handler.IdolCategoryHandler;
-import umc.duckmelang.global.apipayload.exception.handler.LandmineHandler;
-import umc.duckmelang.global.apipayload.exception.handler.MemberHandler;
+import umc.duckmelang.global.apipayload.exception.IdolCategoryException;
+import umc.duckmelang.global.apipayload.exception.LandmineException;
 import umc.duckmelang.global.apipayload.exception.handler.TempHandler;
 
 import java.util.Arrays;
@@ -153,7 +150,7 @@ class MemberCommandServiceTest {
         // Mock: 존재하는 아이돌 카테고리만 반환하도록 설정
         when(idolCategoryRepository.findAllById(idolCategoryIds)).thenReturn(List.of(IdolCategory.builder().id(1L).name("BTS").build()));
         // When & Then
-        assertThrows(IdolCategoryHandler.class, () -> memberCommandService.selectIdols(memberId, request));
+        assertThrows(IdolCategoryException.class, () -> memberCommandService.selectIdols(memberId, request));
     }
 
 
@@ -319,7 +316,7 @@ class MemberCommandServiceTest {
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
 
-        assertThrows(LandmineHandler.class, () -> memberCommandService.createLandmines(memberId, requestDto));
+        assertThrows(LandmineException.class, () -> memberCommandService.createLandmines(memberId, requestDto));
         verify(landmineRepository, never()).deleteAllByMember(any());
     }
 

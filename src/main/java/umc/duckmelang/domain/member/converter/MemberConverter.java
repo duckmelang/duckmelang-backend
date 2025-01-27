@@ -12,12 +12,6 @@ import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import umc.duckmelang.domain.memberevent.domain.MemberEvent;
-import umc.duckmelang.domain.memberidol.domain.MemberIdol;
-import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class MemberConverter {
 
