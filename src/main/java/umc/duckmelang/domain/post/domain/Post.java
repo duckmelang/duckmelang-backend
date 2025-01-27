@@ -40,6 +40,7 @@ public class Post extends BaseEntity {
     @Column(name = "event_date", columnDefinition = "DATE", nullable = false)
     private LocalDate eventDate;
 
+    @Setter
     @Column(name = "wanted", columnDefinition = "BIT", nullable = false)
     private Short wanted;
 
@@ -90,6 +91,7 @@ public class Post extends BaseEntity {
         if (postIdolList != null) {
             postIdolList.forEach(postIdol -> postIdol.setPost(this));
         }
+
     }
 
 }

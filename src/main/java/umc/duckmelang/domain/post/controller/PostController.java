@@ -92,9 +92,17 @@ public class PostController {
     @GetMapping("/my")
     @CommonApiResponses
     @Operation(summary = "내 게시글 조회 API", description = "나의 동행에서 내 게시글을 확인하는 API입니다. memberId를 받고, 추후 JWT로 변경예정, 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
-    public ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@RequestParam("memberId") Long memberId, @RequestParam(name ="page", defaultValue = "0") Integer page){
+    public ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@RequestParam("memberId") Long memberId, @ValidPageNumber @RequestParam(name ="page", defaultValue = "0") Integer page){
         Page<Post> postList = postQueryService.getMyPostList(memberId, page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
+    }
+
+    @PatchMapping("/{postId}/status")
+    @CommonApiResponses
+    @Operation(summary = "게시글 상태 변경 API", description = "게시글을 상태를 모집 중 -> 모집 완료/ 또는 모집 완료 -> 모집 중으로 바꿉니다. 모집 중은 wanted가 1, 모집 완료는 0입니다.")
+    public ApiResponse<PostResponseDto.PostStatusDto> patchPostStatus(@ExistPost @PathVariable("postId") Long postId){
+        Post post = postCommandService.patchPostStatus(postId);
+        return ApiResponse.onSuccess(PostConverter.postStatusDto(post));
     }
 
 }

@@ -62,4 +62,14 @@ public class PostResponseDto {
         private String title;
     }
 
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PostStatusDto{
+        private Long id;
+        private String title;
+        private Short wanted;
+    }
+
 }
