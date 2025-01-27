@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class MemberProfileImageResponseDto {
@@ -14,8 +15,21 @@ public class MemberProfileImageResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetAllProfileImageResultDto{
-        private Long memberId;
-        private List<String> profileImageUrls;
+        List<MemberProfileImageDto> profileImageList;
+        Integer listSize;
+        Integer totalPage;
+        Long totalElements;
+        Boolean isFirst;
+        Boolean isLast;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MemberProfileImageDto{
+        String memberProfileImageUrl;
+        LocalDateTime createdAt;
     }
 
     @Builder

@@ -3,6 +3,7 @@ package umc.duckmelang.domain.memberprofileimage.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.memberprofileimage.converter.MemberProfileImageConverter;
@@ -27,16 +28,11 @@ public class MemberProfileImageController {
 
     @Operation(summary = "내 프로필 사진 전체 조회 API", description = "특정 회원 본인의 프로필 사진을 모두 조회하는 API입니다. 비공개된 사진과 공개된 사진 모두 확인 가능합니다.")
     @GetMapping("/")
-    public ApiResponse<MemberProfileImageResponseDto.GetAllProfileImageResultDto> getAllProfileImages (@RequestParam Long memberId ) {
+    public ApiResponse<MemberProfileImageResponseDto.GetAllProfileImageResultDto> getAllProfileImages (@RequestParam Long memberId, int page) {
 
-        List<MemberProfileImage> updatedMemberProfileImageList = memberProfileImageQueryService.getAllMemberProfileImageByMemberId(memberId);
+        Page<MemberProfileImage> updatedMemberProfileImagePage = memberProfileImageQueryService.getAllMemberProfileImageByMemberId(memberId, page);
 
-        // 리스트가 비어 있는 경우 예외 처리
-        if (updatedMemberProfileImageList.isEmpty()) {
-            throw new MemberProfileImageHandler(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND);
-        }
-
-        return ApiResponse.onSuccess(MemberProfileImageConverter.toGetAllProfileImageResultDto(updatedMemberProfileImageList));
+        return ApiResponse.onSuccess(MemberProfileImageConverter.toGetAllProfileImageResultDto(updatedMemberProfileImagePage));
     }
 
     @Operation(summary = "내 프로필 사진 삭제 API", description = "특정 회원 본인의 프로필 사진 중 하나를 삭제하는 API입니다.")

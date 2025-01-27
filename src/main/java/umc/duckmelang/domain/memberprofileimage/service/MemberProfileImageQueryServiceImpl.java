@@ -2,6 +2,8 @@ package umc.duckmelang.domain.memberprofileimage.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.repository.MemberRepository;
@@ -34,12 +36,12 @@ public class MemberProfileImageQueryServiceImpl implements MemberProfileImageQue
 
     @Override
     @Transactional
-    public List<MemberProfileImage> getAllMemberProfileImageByMemberId(Long memberId) {
+    public Page<MemberProfileImage> getAllMemberProfileImageByMemberId(Long memberId, int page) {
         // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        return memberProfileImageRepository.findAllByMemberId(memberId);
+        return memberProfileImageRepository.findAllByMemberId(memberId, PageRequest.of(page,10));
     }
 
 

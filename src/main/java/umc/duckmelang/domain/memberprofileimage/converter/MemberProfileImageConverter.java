@@ -1,5 +1,6 @@
 package umc.duckmelang.domain.memberprofileimage.converter;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import umc.duckmelang.domain.member.domain.Member;
@@ -13,16 +14,27 @@ import java.util.stream.Collectors;
 @Component
 public class MemberProfileImageConverter {
 
-    public static MemberProfileImageResponseDto.GetAllProfileImageResultDto toGetAllProfileImageResultDto(List<MemberProfileImage> memberProfileImageList) {
-        Member member = memberProfileImageList.get(0).getMember(); // 반환된 리스트 내 모든 프로필 사진은 같은 Member를 참조하고 있음을 전제
+    public static MemberProfileImageResponseDto.GetAllProfileImageResultDto toGetAllProfileImageResultDto(Page<MemberProfileImage> page) {
 
-        List<String> profileImageUrls = memberProfileImageList.stream()
-                .map(MemberProfileImage::getMemberImage)
+        List<MemberProfileImageResponseDto.MemberProfileImageDto> list = page.stream()
+                .map(MemberProfileImageConverter::toMemberProfileImageDto)
                 .collect(Collectors.toList());
 
         return MemberProfileImageResponseDto.GetAllProfileImageResultDto.builder()
-                .memberId(member.getId())
-                .profileImageUrls(profileImageUrls)
+                .profileImageList(list)
+                .totalPage(page.getTotalPages())
+                .totalElements(page.getTotalElements())
+                .listSize(list.size())
+                .isFirst(page.isFirst())
+                .isLast(page.isLast())
+                .build();
+    }
+
+
+    public static MemberProfileImageResponseDto.MemberProfileImageDto toMemberProfileImageDto(MemberProfileImage memberProfileImage){
+        return MemberProfileImageResponseDto.MemberProfileImageDto.builder()
+                .memberProfileImageUrl(memberProfileImage.getMemberImage())
+                .createdAt(memberProfileImage.getCreatedAt())
                 .build();
     }
 
