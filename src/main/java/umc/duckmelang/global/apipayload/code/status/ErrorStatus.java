@@ -16,13 +16,18 @@ public enum ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
-    // 테스트 응답
-    TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트"),
+    // 멤버 관련 에러
+    MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "존재하지 않는 회원입니다."),
+    MEMBER_EMPTY_INTRODUCTION(HttpStatus.BAD_REQUEST, "MEMBER4002", "자기소개는 공란으로 비워둘 수 없습니다."),
 
     // 토큰 관련 응답
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN4000", "토큰이 만료되었습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4001", "유효하지 않은 토큰입니다."),
     MISSING_TOKEN(HttpStatus.NOT_FOUND, "TOKEN4004", "토큰을 찾을 수 없습니다."),
+
+    //게시글 관련 에러
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST4001", "해당하는 게시글이 없습니다"),
+    PAGE_MUST_LEAST_ZERO(HttpStatus.BAD_REQUEST, "POST4002", "페이지는 0 이상이어야 합니다"),
 
     // 로그인 관련 응답
     AUTH_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH4000", "인증 정보가 필요합니다."),
@@ -32,17 +37,29 @@ public enum ErrorStatus implements BaseErrorCode {
     // 회원 관련 응답
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 존재하는 이메일입니다."),
 
-    // idolCategory Error
+    // 아이돌 카테고리 관련 에러
     IDOL_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "IDOL_CATEGORY4001", "아이돌 카테고리가 없습니다."),
+    INVALID_IDOLCATEGORY(HttpStatus.BAD_REQUEST, "IDOLCATEGORY4002", "선택한 아이돌 중 유효하지 않은 항목이 있습니다."),
 
     // Member
     NO_SUCH_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4001", "존재하지 않는 멤버입니다."),
 
-    // 동행요청
+    // 지뢰 관련 에러
+    DUPLICATE_LANDMINE(HttpStatus.BAD_REQUEST, "LANDMINE4001", "중복된 키워드가 존재합니다."),
+
+    // 행사 카테고리 관련 에러
+    INVALID_EVENTCATEGORY(HttpStatus.BAD_REQUEST, "EVENTCATEGORY4001", "선택한 행사 중 유효하지 않은 항목이 있습니다."),
+    EVENT_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "EVENT_CATEGORY4002", "이번트 카테고리가 없습니다."),
+
+    //동행요청 관련 에러
     ALREADY_PROCESSED_APPLICATION(HttpStatus.CONFLICT, "APPLICATION4001","이미 처리된 동행 요청입니다."),
     NOT_POSSESSED_APPLICATION(HttpStatus.CONFLICT, "APPLICATION4002", "본인 소유의 동행 요청이 아닙니다."),
-    APPLICATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLICATION4003", "존재하지 않는 동행 요청입니다.")
-    ;
+    APPLICATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLICATION4003", "존재하지 않는 동행 요청입니다."),
+
+    // 테스트 응답
+    TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트");
+
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

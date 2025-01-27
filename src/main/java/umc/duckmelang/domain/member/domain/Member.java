@@ -90,4 +90,15 @@ public class Member extends BaseEntity {
     public void encodePassword(String password){
         this.password=password;
     }
+
+    // 복사 생성자
+    public Member(Member other) {
+        this.introduction = other.introduction;
+    }
+
+    public Member withIntroduction(String introduction) {
+        Member newMember = new Member(this);
+        newMember.introduction = introduction;
+        return newMember;
+    }
 }
