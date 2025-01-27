@@ -52,6 +52,9 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
+	// coolsms
+	implementation 'net.nurigo:sdk:4.3.0'
+
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
