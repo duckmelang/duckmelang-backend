@@ -40,8 +40,8 @@ public class PostQueryServiceImpl implements PostQueryService{
      * @return 게시물 수
      */
     @Override
-    public long getPostCountByMemberId(Long memberId) {
-        return postRepository.countByMemberId(memberId);
+    public int getPostCount(Long memberId) {
+        return postRepository.countAllByMemberId(memberId);
     }
 
 }

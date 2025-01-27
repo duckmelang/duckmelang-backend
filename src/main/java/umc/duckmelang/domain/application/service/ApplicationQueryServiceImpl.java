@@ -66,8 +66,8 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
      */
     @Override
     @Transactional(readOnly = true)
-    public long getSucceedApplicationCountByMemberId(Long memberId) {
-        return applicationRepository.countByMemberIdAndStatus(memberId, ApplicationStatus.SUCCEED);
+    public int countMatchedApplications(Long memberId) {
+        return applicationRepository.countByMemberIdOrPostMemberIdAndStatus(memberId, ApplicationStatus.SUCCEED);
     }
 
 }

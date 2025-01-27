@@ -83,6 +83,10 @@ public class MemberResponseDto {
         private long succeedApplicationCount;
     }
 
+
+
+//    //member의 프로필을 수정하는 화면에 진입하면, 기존 프로필 정보들을 보여주는 추가 API가 필요할 듯하다.
+
 //    @Builder
 //    @Getter
 //    @NoArgsConstructor

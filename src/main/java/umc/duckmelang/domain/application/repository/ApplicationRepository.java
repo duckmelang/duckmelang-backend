@@ -59,5 +59,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
             Pageable pageable
     );
 
-    long countByMemberIdAndStatus(Long memberId, ApplicationStatus status);
-}
+    @Query("SELECT COUNT(a) FROM Application a " +
+            "WHERE (a.member.id = :memberId OR a.post.member.id = :memberId) " +
+            "AND a.status = :status")
+    int countByMemberIdOrPostMemberIdAndStatus(@Param("memberId") Long memberId,
+                                               @Param("status") ApplicationStatus status);}
