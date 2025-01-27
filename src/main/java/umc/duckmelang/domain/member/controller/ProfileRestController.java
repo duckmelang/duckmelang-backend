@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import umc.duckmelang.domain.member.Facade.ProfileFacadeService;
+import umc.duckmelang.domain.member.facade.ProfileFacadeService;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
 import umc.duckmelang.domain.member.validation.annotation.ExistsMember;
 import umc.duckmelang.domain.memberprofileimage.converter.MemberProfileImageConverter;
@@ -18,10 +18,6 @@ import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
 import umc.duckmelang.domain.post.service.PostQueryService;
-import umc.duckmelang.domain.postimage.converter.PostImageConverter;
-import umc.duckmelang.domain.postimage.dto.PostImageResponseDto;
-import umc.duckmelang.domain.postimage.dto.PostThumbnailResponseDto;
-import umc.duckmelang.domain.postimage.service.PostImageQueryService;
 import umc.duckmelang.global.apipayload.ApiResponse;
 
 @RestController

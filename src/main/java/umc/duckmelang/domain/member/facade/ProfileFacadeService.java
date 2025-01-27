@@ -1,7 +1,6 @@
-package umc.duckmelang.domain.member.Facade;
+package umc.duckmelang.domain.member.facade;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.domain.application.service.ApplicationQueryService;
@@ -12,7 +11,6 @@ import umc.duckmelang.domain.member.service.MemberQueryService;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 import umc.duckmelang.domain.post.service.PostQueryService;
-import umc.duckmelang.domain.postimage.dto.PostThumbnailResponseDto;
 import umc.duckmelang.domain.postimage.service.PostImageQueryService;
 
 @Service
