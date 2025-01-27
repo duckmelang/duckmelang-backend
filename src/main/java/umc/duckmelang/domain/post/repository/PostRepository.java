@@ -21,4 +21,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p FROM Post p WHERE p.title LIKE %:searchKeyword%")
     Page<Post> findByTitle(String searchKeyword, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"member"})
+    @Query("SELECT p FROM Post p WHERE p.member.id = :memberId")
+    Page<Post> findMyPost(Long memberId, Pageable pageable);
 }

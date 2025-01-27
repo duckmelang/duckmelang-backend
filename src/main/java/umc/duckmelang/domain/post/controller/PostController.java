@@ -89,4 +89,12 @@ public class PostController {
         return ApiResponse.onSuccess(BookmarkConverter.bookmarkJoinResultDto(bookmark));
     }
 
+    @GetMapping("/my")
+    @CommonApiResponses
+    @Operation(summary = "내 게시글 조회 API", description = "나의 동행에서 내 게시글을 확인하는 API입니다. memberId를 받고, 추후 JWT로 변경예정, 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
+    public ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@RequestParam("memberId") Long memberId, @RequestParam(name ="page", defaultValue = "0") Integer page){
+        Page<Post> postList = postQueryService.getMyPostList(memberId, page);
+        return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
+    }
+
 }
