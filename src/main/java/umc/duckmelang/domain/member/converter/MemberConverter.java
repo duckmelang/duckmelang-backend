@@ -6,6 +6,7 @@ import umc.duckmelang.domain.eventcategory.domain.EventCategory;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
 import umc.duckmelang.domain.member.service.MemberQueryService;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
@@ -19,6 +20,21 @@ import java.util.stream.Collectors;
 @Component
 public class MemberConverter {
 
+
+    public static Member toMember(MemberRequestDto.SignupDto request){
+        return Member.builder()
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .build();
+    }
+
+    public static MemberResponseDto.SignupResultDto toSignupResultDto(Member member){
+        return MemberResponseDto.SignupResultDto.builder()
+                .memberId(member.getId())
+                .createdAt(member.getCreatedAt())
+                .build();
+
+    }
 
     public static MemberIdol toMemberIdol(Member member, IdolCategory idolCategory) {
         return MemberIdol.builder()
@@ -90,7 +106,8 @@ public class MemberConverter {
                 .member(member)
                 .memberImage(profileImageUrl)
                 .isPublic(true)  // 새로운 프로필 이미지 등록 시에는 항상 전체공개 속성으로 생성됨
-                .build();    }
+                .build();
+    }
 
     public static MemberResponseDto.CreateMemberProfileImageResultDto toCreateMemberProfileImageResponseDto(MemberProfileImage memberProfileImage) {
 

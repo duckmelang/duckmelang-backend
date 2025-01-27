@@ -2,7 +2,7 @@ package umc.duckmelang.domain.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import umc.duckmelang.domain.authprovider.domain.AuthProvider;
+import umc.duckmelang.domain.auth.domain.Auth;
 import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
@@ -13,7 +13,7 @@ import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.bookmark.domain.Bookmark;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.handler.MemberHandler;
+import umc.duckmelang.global.apipayload.exception.MemberException;
 import umc.duckmelang.global.common.BaseEntity;
 
 import java.time.LocalDate;
@@ -39,7 +39,7 @@ public class Member extends BaseEntity {
     @Column(length = 500)
     private String introduction;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate birth;
 
     // true = 남성, false = 여성
@@ -55,7 +55,7 @@ public class Member extends BaseEntity {
     private List<MemberProfileImage> memberProfileImageList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AuthProvider> authProviderList = new ArrayList<>();
+    private List<Auth> authList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberIdol> memberIdolList = new ArrayList<>();
@@ -89,6 +89,11 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "secondMember", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MateRelationship> mateRelationshipinSecondList = new ArrayList<>();
 
+    // 비밀번호 설정 함수
+    public void encodePassword(String password){
+        this.password=password;
+    }
+
     // 복사 생성자
     public Member(Member other) {
         this.introduction = other.introduction;
@@ -120,10 +125,10 @@ public class Member extends BaseEntity {
     // 프로필 업데이트 메서드
     public void updateProfile(String nickname, String introduction) {
         if (nickname == null || nickname.isBlank()) {
-            throw new MemberHandler(ErrorStatus.MEMBER_EMPTY_NICKNAME);
+            throw new MemberException(ErrorStatus.MEMBER_EMPTY_NICKNAME);
         }
         if (introduction == null || introduction.isBlank()) {
-            throw new MemberHandler(ErrorStatus.MEMBER_EMPTY_INTRODUCTION);
+            throw new MemberException(ErrorStatus.MEMBER_EMPTY_INTRODUCTION);
         }
         this.nickname = nickname;
         this.introduction = introduction;

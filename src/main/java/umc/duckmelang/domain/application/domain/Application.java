@@ -6,7 +6,11 @@ import umc.duckmelang.domain.application.domain.enums.ApplicationStatus;
 import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.post.domain.Post;
+import umc.duckmelang.domain.review.domain.Review;
 import umc.duckmelang.global.common.BaseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,6 +37,9 @@ public class Application extends BaseEntity {
 
     @OneToOne(mappedBy = "application", cascade = CascadeType.ALL)
     private MateRelationship mateRelationship;
+
+    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviewList = new ArrayList<>();
 
     // 연관관계 편의 메서드
     public void setPost(Post post) {
@@ -67,5 +74,15 @@ public class Application extends BaseEntity {
         }
         this.status = status;
         return true;
+    }
+
+    // 연관 관계 편의 메서드 (Review)
+    public void addReview(Review review) {
+        this.reviewList.add(review);
+        review.setApplication(this);
+    }
+
+    public void removeReview(Review review) {
+        this.reviewList.remove(review);
     }
 }

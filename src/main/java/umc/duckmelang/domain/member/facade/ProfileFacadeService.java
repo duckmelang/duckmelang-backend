@@ -16,8 +16,8 @@ import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageComman
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 import umc.duckmelang.domain.post.service.PostQueryService;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.handler.MemberHandler;
-import umc.duckmelang.global.apipayload.exception.handler.MemberProfileImageHandler;
+import umc.duckmelang.global.apipayload.exception.MemberException;
+import umc.duckmelang.global.apipayload.exception.MemberProfileImageException;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +35,12 @@ public class ProfileFacadeService {
     public MemberResponseDto.GetMypageMemberPreviewResultDto getMypageMemberPreview(Long memberId) {
 
         // 회원 기본 정보 조회
-        Member member = memberQueryService.getMemberById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberQueryService.findById(memberId)
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // 대표 프로필 이미지 1개 조회
         MemberProfileImage latestPublicMemberProfileImage = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
-                .orElseThrow(() -> new MemberProfileImageHandler(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
+                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
 
         return MemberConverter.toGetMemberPreviewResponseDto(member, latestPublicMemberProfileImage);
     }
@@ -51,8 +51,8 @@ public class ProfileFacadeService {
     public MemberResponseDto.GetMypageMemberProfileResultDto getMyProfileByMemberId(Long memberId) {
 
         // 회원 기본 정보 조회
-        Member member = memberQueryService.getMemberById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberQueryService.findById(memberId)
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // 포스트 수 조회
         int postCount = postQueryService.getPostCount(memberId);
@@ -62,7 +62,7 @@ public class ProfileFacadeService {
 
         // 대표 프로필 이미지 1개 조회
         MemberProfileImage image = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
-                .orElseThrow(() -> new MemberProfileImageHandler(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
+                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
 
 
         return MemberConverter.toGetMemberProfileResponseDto(member, image, postCount, matchCount);
@@ -74,8 +74,8 @@ public class ProfileFacadeService {
     public MemberResponseDto.GetMypageMemberProfileEditResultDto updateMypageMemberProfile(Long memberId, MemberRequestDto.UpdateMemberProfileDto request) {
 
         // 회원 기본 정보 조회
-        Member retrievedMember = memberQueryService.getMemberById(memberId)
-                .orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Member retrievedMember = memberQueryService.findById(memberId)
+                .orElseThrow(()-> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // 회원 기본 정보 수정
         Member updatedMember = memberCommandService.updateMemberProfile(memberId, request);
@@ -85,7 +85,7 @@ public class ProfileFacadeService {
 
         // 대표 프로필 이미지 1개 조회
         MemberProfileImage latestPublicMemberProfileImage = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
-                .orElseThrow(()-> new MemberProfileImageHandler(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
+                .orElseThrow(()-> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
 
 
         return MemberConverter.toUpdateMemberProfileDto(updatedMember,latestPublicMemberProfileImage);

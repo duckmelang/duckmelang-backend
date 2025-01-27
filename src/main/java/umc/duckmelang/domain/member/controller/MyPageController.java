@@ -19,9 +19,6 @@ import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageComman
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 import umc.duckmelang.domain.post.service.PostQueryService;
 import umc.duckmelang.global.apipayload.ApiResponse;
-import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.handler.MemberHandler;
-import umc.duckmelang.global.apipayload.exception.handler.MemberProfileImageHandler;
 
 @RestController
 @RequiredArgsConstructor

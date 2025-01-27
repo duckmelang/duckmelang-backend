@@ -10,7 +10,7 @@ import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.handler.MemberHandler;
+import umc.duckmelang.global.apipayload.exception.MemberException;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +29,7 @@ public class MemberProfileImageQueryServiceImpl implements MemberProfileImageQue
     public Optional<MemberProfileImage> getLatestPublicMemberProfileImage(Long memberId) {
         // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
         return memberProfileImageRepository.findFirstByMemberIdAndIsPublicTrueOrderByCreatedAtDesc(memberId);
     }
@@ -39,7 +39,7 @@ public class MemberProfileImageQueryServiceImpl implements MemberProfileImageQue
     public Page<MemberProfileImage> getAllMemberProfileImageByMemberId(Long memberId, int page) {
         // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
         return memberProfileImageRepository.findAllByMemberId(memberId, PageRequest.of(page,10));
     }

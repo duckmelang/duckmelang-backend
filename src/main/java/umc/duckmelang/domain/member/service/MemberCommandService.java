@@ -10,6 +10,7 @@ import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import java.util.List;
 
 public interface MemberCommandService {
+    Member signupMember(MemberRequestDto.SignupDto request);
     List<MemberIdol> selectIdols(Long memberId, MemberRequestDto.SelectIdolsDto request);
     List<MemberEvent> selectEvents(Long memberId, MemberRequestDto.SelectEventsDto request);
     List<Landmine> createLandmines(Long memberId, MemberRequestDto.CreateLandminesDto request);

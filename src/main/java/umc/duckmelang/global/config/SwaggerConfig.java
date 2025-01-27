@@ -1,6 +1,5 @@
 package umc.duckmelang.global.config;
 
-
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -15,15 +14,15 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI DuckmelangAPI() {
+        // API 정보 설정
         Info info = new Info()
                 .title("UMC duckmelang API")
                 .description("UMC duckmelang API 명세서")
                 .version("1.0.0");
 
+        // SecuritySecheme 설정
         String jwtSchemeName = "JWT TOKEN";
-        // API 요청헤더에 인증정보 포함
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
-        // SecuritySchemes 등록
         Components components = new Components()
                 .addSecuritySchemes(jwtSchemeName, new SecurityScheme()
                         .name(jwtSchemeName)
@@ -31,6 +30,7 @@ public class SwaggerConfig {
                         .scheme("bearer")
                         .bearerFormat("JWT"));
 
+        // OpenAPI 구성
         return new OpenAPI()
                 .addServersItem(new Server().url("/"))
                 .info(info)

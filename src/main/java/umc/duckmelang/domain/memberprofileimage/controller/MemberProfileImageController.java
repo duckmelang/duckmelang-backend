@@ -14,7 +14,6 @@ import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageComman
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.handler.MemberProfileImageHandler;
 
 import java.util.List;
 

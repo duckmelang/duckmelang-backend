@@ -10,8 +10,8 @@ import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageRequestDto;
 import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.handler.MemberHandler;
-import umc.duckmelang.global.apipayload.exception.handler.MemberProfileImageHandler;
+import umc.duckmelang.global.apipayload.exception.MemberException;
+import umc.duckmelang.global.apipayload.exception.MemberProfileImageException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,11 +25,11 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
     public void deleteProfileImage(Long memberId, MemberProfileImageRequestDto.MemberProfileImageDto request) {
         // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // 프로필 이미지 조회 및 유효성 검증
         MemberProfileImage profileImage = memberProfileImageRepository.findById(request.getImageId())
-                .orElseThrow(() -> new MemberProfileImageHandler(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
+                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
 
         memberProfileImageRepository.delete(profileImage);
     }
@@ -39,11 +39,11 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
     public MemberProfileImage updateProfileImageStatus(Long memberId, MemberProfileImageRequestDto.MemberProfileImageDto request) {
         // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // 프로필 이미지 조회 및 유효성 검증
         MemberProfileImage profileImage = memberProfileImageRepository.findById(request.getImageId())
-                .orElseThrow(() -> new MemberProfileImageHandler(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
+                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
 
         //프로필 이미지 공개 범위 변경
         MemberProfileImage updatedProfileImage = MemberProfileImageConverter.toMemberProfileImageWithChangedStatus(request.getImageId(), request.isPublic());
@@ -56,7 +56,7 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
     public MemberProfileImage createMemberProfile(Long memberId, String memberProfileImageURL) {
         // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // 프로필 이미지 생성
         MemberProfileImage createdProfileImage = MemberProfileImageConverter.toCreateMemberProfileImage(member, memberProfileImageURL);
