@@ -14,6 +14,7 @@ import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,6 +67,14 @@ public class MemberConverter {
 
     public static MemberResponseDto.SelectEventsResultDto toSelectEventResponseDto(List<MemberEvent> memberEventList) {
 
+        // memberEventList가 비어있을 경우
+        if (memberEventList == null || memberEventList.isEmpty()) {
+            return MemberResponseDto.SelectEventsResultDto.builder()
+                    .memberId(null) // memberId를 null로 설정
+                    .eventCategoryIds(new ArrayList<>()) // 빈 리스트 반환
+                    .build();
+        }
+
         Member member = memberEventList.get(0).getMember(); // 반환된 리스트 내 모든 MemberEvent는 같은 Member를 참조하고 있음을 전제
 
         List<Long> eventCategoryIds = memberEventList.stream()
@@ -87,6 +96,14 @@ public class MemberConverter {
     }
 
     public static MemberResponseDto.CreateLandmineResultDto toCreateLandmineResponseDto(List<Landmine> landmineList) {
+
+        // landmineList가 비어있을 경우
+        if (landmineList == null || landmineList.isEmpty()) {
+            return MemberResponseDto.CreateLandmineResultDto.builder()
+                    .memberId(null) // memberId를 null로 설정
+                    .landmineContents(new ArrayList<>()) // 빈 리스트 반환
+                    .build();
+        }
 
         Member member = landmineList.get(0).getMember(); // 반환된 리스트 내 모든 MemberEvent는 같은 Member를 참조하고 있음을 전제
 
