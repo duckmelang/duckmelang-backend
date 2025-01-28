@@ -26,9 +26,9 @@ public class ReviewResponseDto {
     @NoArgsConstructor
     public static class ReviewDto{
         private Long reviewId;
-        private String name;
-        private Boolean gender;
-        private LocalDate birth;
+        private String nickname;
+        private String gender;
+        private Integer age;
         private String content;
         private Short score;
     }

@@ -24,7 +24,7 @@ public class PostConverter {
                 .title(post.getTitle())
                 .category(post.getEventCategory().getName())
                 .date(post.getEventDate())
-                .name(post.getMember().getName())
+                .nickname(post.getMember().getNickname())
                 .createdAt(post.getCreatedAt())
                 .build();
     }
@@ -50,9 +50,9 @@ public class PostConverter {
                 .collect(Collectors.toList());
 
         return PostResponseDto.PostDetailDto.builder()
-                .name(post.getMember().getName())
-                .birth(post.getMember().getBirth())
-                .gender(post.getMember().getGender())
+                .nickname(post.getMember().getNickname())
+                .age(post.getMember().calculateAge())
+                .gender(post.getMember().stringGender())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .idol(idolNames)

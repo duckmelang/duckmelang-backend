@@ -159,7 +159,7 @@ public class MemberConverter {
         return MemberResponseDto.GetMypageMemberPreviewResultDto.builder()
                 .memberId(member.getId())
                 .nickname(member.getNickname())
-                .gender(member.getGender())
+                .gender(member.stringGender())
                 .age(member.calculateAge())
                 .latestPublicMemberProfileImage(memberProfileImage.getMemberImage())
                 .build();
@@ -170,7 +170,7 @@ public class MemberConverter {
         return  MemberResponseDto.GetMypageMemberProfileResultDto.builder()
                 .memberId(member.getId())
                 .nickname(member.getNickname())
-                .gender(member.getGender())
+                .gender(member.stringGender())
                 .age(member.calculateAge())
                 .latestPublicMemberProfileImage(memberProfileImage.getMemberImage())
                 .introduction(member.getIntroduction())
@@ -200,7 +200,7 @@ public class MemberConverter {
                                                                       MemberProfileImage image){
         return MemberResponseDto.OtherProfileDto.builder()
                 .nickname(member.getNickname())
-                .gender(member.getGender()?"Male":"Female")
+                .gender(member.stringGender())
                 .age(member.calculateAge())
                 .introduction(member.getIntroduction())
                 .profileImageUrl(image.getMemberImage())

@@ -75,7 +75,7 @@ public class MemberResponseDto {
     public static class GetMypageMemberPreviewResultDto {
         private Long memberId;
         private String nickname;
-        private boolean gender;
+        private String gender;
         private int age;
         private String latestPublicMemberProfileImage;
     }
@@ -87,7 +87,7 @@ public class MemberResponseDto {
     public static class GetMypageMemberProfileResultDto {
         private Long memberId;
         private String nickname;
-        private boolean gender;
+        private String gender;
         private int age;
         private String latestPublicMemberProfileImage;
         private String introduction;

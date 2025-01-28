@@ -38,9 +38,9 @@ public class ReviewConverter {
     public static ReviewResponseDto.ReviewDto reviewDto(Review review) {
         return ReviewResponseDto.ReviewDto.builder()
                 .reviewId(review.getId())
-                .name(review.getSender().getNickname())
-                .gender(review.getSender().getGender())
-                .birth(review.getSender().getBirth())
+                .nickname(review.getSender().getNickname())
+                .gender(review.getSender().stringGender())
+                .age(review.getSender().calculateAge())
                 .content(review.getContent())
                 .score(review.getScore())
                 .build();

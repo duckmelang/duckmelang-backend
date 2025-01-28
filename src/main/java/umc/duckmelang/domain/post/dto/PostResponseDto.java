@@ -20,7 +20,7 @@ public class PostResponseDto {
         private String title;
         private String category;
         private LocalDate date;
-        private String name;
+        private String nickname;
         private LocalDateTime createdAt;
     }
 
@@ -42,9 +42,9 @@ public class PostResponseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class PostDetailDto{
-        private String name;
-        private LocalDate birth;
-        private Boolean gender;
+        private String nickname;
+        private Integer age;
+        private String gender;
         private String title;
         private String content;
         private List<String> idol;
