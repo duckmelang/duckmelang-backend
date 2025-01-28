@@ -191,10 +191,10 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        // 상태 변경 메서드 호출
-        member.updateProfile(request.getNickname(), request.getIntroduction());
+        // 프로필 업데이트
+        Member updatedMember = MemberConverter.toUpdateMember(member, request.getNickname(), request.getIntroduction());
 
-        return member;
+        return memberRepository.save(updatedMember);
     }
 
 }

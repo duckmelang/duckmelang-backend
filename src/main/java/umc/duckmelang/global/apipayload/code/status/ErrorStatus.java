@@ -61,6 +61,8 @@ public enum ErrorStatus implements BaseErrorCode {
     NOT_POSSESSED_APPLICATION(HttpStatus.CONFLICT, "APPLICATION4002", "본인 소유의 동행 요청이 아닙니다."),
     APPLICATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLICATION4003", "존재하지 않는 동행 요청입니다."),
 
+    //MEMBER_PROFILE_IMAGE
+    MEMBER_PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER_PROFILE_IMAGE4001", "멤버 프로필 이미지가 없습니다."),
     // 테스트 응답
     TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트");
 
@@ -87,4 +89,6 @@ public enum ErrorStatus implements BaseErrorCode {
                 .httpStatus(httpStatus)
                 .build();
     }
+
+
 }

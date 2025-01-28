@@ -1,6 +1,9 @@
 package umc.duckmelang.domain.review.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.domain.application.domain.Application;
@@ -23,7 +26,7 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
     }
 
     @Override
-    public Optional<Application> getReviewInformation(Long myId, Long memberId) {
+    public List<Application> getReviewInformation(Long myId, Long memberId) {
         return reviewRepository.findReviewInformation(myId, memberId);
     }
 

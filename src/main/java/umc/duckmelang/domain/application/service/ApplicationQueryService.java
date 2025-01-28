@@ -17,6 +17,6 @@ public interface ApplicationQueryService {
     Page<SentApplicationDto> getSentFailedApplicationList(Long memberId, Integer page);
     Page<SentApplicationDto> getSentPendingApplicationList(Long memberId, Integer page);
 
+    // 멤버 id를 받아 1. post 작성자거나 2. application 작성자고, 3. succeed한 application 개수 조회
     int countMatchedApplications(Long memberId);
-
 }

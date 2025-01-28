@@ -22,7 +22,7 @@ import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRepository;
 import umc.duckmelang.global.apipayload.exception.IdolCategoryException;
 import umc.duckmelang.global.apipayload.exception.LandmineException;
-import umc.duckmelang.global.apipayload.exception.handler.TempHandler;
+import umc.duckmelang.global.apipayload.exception.MemberException;
 
 import java.util.Arrays;
 import java.util.Collections;

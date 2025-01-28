@@ -1,5 +1,7 @@
 package umc.duckmelang.domain.member.converter;
 
+import org.springframework.data.domain.Page;
+
 import jakarta.validation.constraints.Size;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.eventcategory.domain.EventCategory;
@@ -13,7 +15,11 @@ import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
+import umc.duckmelang.domain.postimage.converter.PostImageConverter;
+import umc.duckmelang.domain.postimage.dto.PostImageResponseDto;
+import umc.duckmelang.domain.postimage.dto.PostThumbnailResponseDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,6 +72,14 @@ public class MemberConverter {
 
     public static MemberResponseDto.SelectEventsResultDto toSelectEventResponseDto(List<MemberEvent> memberEventList) {
 
+        // memberEventList가 비어있을 경우
+        if (memberEventList == null || memberEventList.isEmpty()) {
+            return MemberResponseDto.SelectEventsResultDto.builder()
+                    .memberId(null) // memberId를 null로 설정
+                    .eventCategoryIds(new ArrayList<>()) // 빈 리스트 반환
+                    .build();
+        }
+
         Member member = memberEventList.get(0).getMember(); // 반환된 리스트 내 모든 MemberEvent는 같은 Member를 참조하고 있음을 전제
 
         List<Long> eventCategoryIds = memberEventList.stream()
@@ -87,6 +101,14 @@ public class MemberConverter {
     }
 
     public static MemberResponseDto.CreateLandmineResultDto toCreateLandmineResponseDto(List<Landmine> landmineList) {
+
+        // landmineList가 비어있을 경우
+        if (landmineList == null || landmineList.isEmpty()) {
+            return MemberResponseDto.CreateLandmineResultDto.builder()
+                    .memberId(null) // memberId를 null로 설정
+                    .landmineContents(new ArrayList<>()) // 빈 리스트 반환
+                    .build();
+        }
 
         Member member = landmineList.get(0).getMember(); // 반환된 리스트 내 모든 MemberEvent는 같은 Member를 참조하고 있음을 전제
 
@@ -119,7 +141,8 @@ public class MemberConverter {
     }
 
     public static Member toMemberWithIntroduction(Member member, String introduction) {
-        return member.withIntroduction(introduction);
+        member.updateIntroduction(introduction);
+        return member;
     }
 
     public static MemberResponseDto.CreateIntroductionResultDto toCreateIntroductionResponseDto(Member member) {
@@ -157,6 +180,10 @@ public class MemberConverter {
 
     }
 
+    public static Member toUpdateMember(Member member, String updatedNickname, String updatedIntroduction) {
+        member.updateProfile(updatedNickname, updatedIntroduction);
+        return member;
+    }
 
     public static MemberResponseDto.GetMypageMemberProfileEditResultDto toUpdateMemberProfileDto(Member updatedMember, MemberProfileImage latestPublicMemberProfileImage) {
         return MemberResponseDto.GetMypageMemberProfileEditResultDto.builder()
@@ -164,6 +191,21 @@ public class MemberConverter {
                 .nickname(updatedMember.getNickname())
                 .introduction(updatedMember.getIntroduction())
                 .latestPublicMemberProfileImage(latestPublicMemberProfileImage.getMemberImage())
+                .build();
+    }
+
+    public static MemberResponseDto.OtherProfileDto ToOtherProfileDto(Member member,
+                                                                      int postCnt,
+                                                                      int matchCnt,
+                                                                      MemberProfileImage image){
+        return MemberResponseDto.OtherProfileDto.builder()
+                .nickname(member.getNickname())
+                .gender(member.getGender()?"Male":"Female")
+                .age(member.calculateAge())
+                .introduction(member.getIntroduction())
+                .profileImageUrl(image.getMemberImage())
+                .postCnt(postCnt)
+                .matchCnt(matchCnt)
                 .build();
     }
 }

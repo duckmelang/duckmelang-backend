@@ -1,5 +1,7 @@
 package umc.duckmelang.domain.member.dto;
 
+import lombok.*;
+import umc.duckmelang.domain.postimage.dto.PostImageResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -108,7 +110,6 @@ public class MemberResponseDto {
 //        private String introduction;
 //    }
 
-
     @Builder
     @Getter
     @NoArgsConstructor
@@ -118,5 +119,21 @@ public class MemberResponseDto {
         private String nickname;
         private String latestPublicMemberProfileImage;
         private String introduction;
+    }
+
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class OtherProfileDto {
+        String nickname;
+        String gender;
+        int age;
+        String introduction;
+        String profileImageUrl;
+
+        int postCnt;
+        int matchCnt;
     }
 }

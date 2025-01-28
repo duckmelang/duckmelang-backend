@@ -1,5 +1,7 @@
 package umc.duckmelang.domain.review.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import umc.duckmelang.domain.application.domain.Application;
@@ -18,6 +20,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             "JOIN FETCH a.post p " +
             "JOIN FETCH p.member pm " +
             "WHERE (pm.id = :memberId AND a.member.id = :myId) " +
-            "OR (a.member.id = :memberId AND pm.id = :myId)")
-    Optional<Application> findReviewInformation(Long myId, Long memberId);
+            "OR (a.member.id = :memberId AND pm.id = :myId)" +
+            "ORDER BY a.createdAt DESC")
+    List<Application> findReviewInformation(Long myId, Long memberId);
 }
