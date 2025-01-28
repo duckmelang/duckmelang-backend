@@ -68,7 +68,7 @@ class ApplicationQueryServiceImplTest {
         );
         Page<ReceivedApplicationDto> expectedPage = new PageImpl<>(dtoList);
 
-        when(applicationRepository.findReceivedApplicationList(
+        when(applicationRepository.findReceivedApplicationListByStatus(
                 eq(memberId),
                 eq(ApplicationStatus.SUCCEED),
                 any(PageRequest.class)
@@ -92,7 +92,7 @@ class ApplicationQueryServiceImplTest {
         );
         Page<ReceivedApplicationDto> expectedPage = new PageImpl<>(dtoList);
 
-        when(applicationRepository.findReceivedApplicationList(
+        when(applicationRepository.findReceivedApplicationListByStatus(
                 eq(memberId),
                 eq(ApplicationStatus.FAILED),
                 any(PageRequest.class)
@@ -116,7 +116,7 @@ class ApplicationQueryServiceImplTest {
         );
         Page<ReceivedApplicationDto> expectedPage = new PageImpl<>(dtoList);
 
-        when(applicationRepository.findReceivedApplicationList(
+        when(applicationRepository.findReceivedApplicationListByStatus(
                 eq(memberId),
                 eq(ApplicationStatus.PENDING),
                 any(PageRequest.class)
@@ -140,7 +140,7 @@ class ApplicationQueryServiceImplTest {
         );
         Page<SentApplicationDto> expectedPage = new PageImpl<>(dtoList);
 
-        when(applicationRepository.findSentApplicationList(
+        when(applicationRepository.findSentApplicationListByStatus(
                 eq(memberId),
                 eq(ApplicationStatus.SUCCEED),
                 any(PageRequest.class)
@@ -164,7 +164,7 @@ class ApplicationQueryServiceImplTest {
         );
         Page<SentApplicationDto> expectedPage = new PageImpl<>(dtoList);
 
-        when(applicationRepository.findSentApplicationList(
+        when(applicationRepository.findSentApplicationListByStatus(
                 eq(memberId),
                 eq(ApplicationStatus.FAILED),
                 any(PageRequest.class)
@@ -188,7 +188,7 @@ class ApplicationQueryServiceImplTest {
         );
         Page<SentApplicationDto> expectedPage = new PageImpl<>(dtoList);
 
-        when(applicationRepository.findSentApplicationList(
+        when(applicationRepository.findSentApplicationListByStatus(
                 eq(memberId),
                 eq(ApplicationStatus.PENDING),
                 any(PageRequest.class)

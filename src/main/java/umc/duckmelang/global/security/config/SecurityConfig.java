@@ -39,7 +39,7 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/swagger-ui.html",
                                 "/webjars/**",
-                                "/login", "/members/signup", "/token/refresh", "/logout"
+                                "/login", "/members/signup", "/token/refresh", "/logout", "/requests/**"
                                         , "/login/oauth2/code/kakao").permitAll()
                         .anyRequest().authenticated()
                 )
