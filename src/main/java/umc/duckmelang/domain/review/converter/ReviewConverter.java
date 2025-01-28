@@ -74,6 +74,7 @@ public class ReviewConverter {
                 .title(application.getPost().getTitle())
                 .eventCategory(application.getPost().getEventCategory().getName())
                 .date(application.getPost().getEventDate())
+                .postImageUrl(application.getPost().getPostImageList().isEmpty() ? null : application.getPost().getPostImageList().get(0).getPostImageUrl())
                 .build();
     }
 }

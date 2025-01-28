@@ -53,6 +53,7 @@ public class ReviewResponseDto {
         private String title;
         private String eventCategory;
         private LocalDate date;
+        private String postImageUrl;
 
     }
 }
