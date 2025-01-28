@@ -10,8 +10,10 @@ import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostRequestDto;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
 import umc.duckmelang.domain.postidol.domain.PostIdol;
+import umc.duckmelang.domain.postimage.domain.PostImage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,7 @@ public class PostConverter {
                 .date(post.getEventDate())
                 .nickname(post.getMember().getNickname())
                 .createdAt(post.getCreatedAt())
+                .postImageUrl(post.getPostImageList().isEmpty() ? null : post.getPostImageList().get(0).getPostImageUrl()) // 첫 번째 이미지 URL 가져오기
                 .build();
     }
 
@@ -59,6 +62,11 @@ public class PostConverter {
                 .category(post.getEventCategory().getName())
                 .date(post.getEventDate())
                 .createdAt(post.getCreatedAt())
+                .postImageUrl(post.getPostImageList() == null || post.getPostImageList().isEmpty()
+                        ? Collections.emptyList() // 리스트가 비어 있으면 빈 리스트 반환
+                        : post.getPostImageList().stream()
+                        .map(PostImage::getPostImageUrl)
+                        .collect(Collectors.toList()))
                 .build();
 
     }
@@ -93,6 +101,18 @@ public class PostConverter {
         }
 
         post.getPostIdolList().addAll(postIdols);
+
+        // 이미지 URL 리스트 처리
+        List<PostImage> postImages = request.getPostImageUrls().stream()
+                .map(url -> PostImage.builder()
+                        .post(post)
+                        .postImageUrl(url)
+                        .build())
+                .toList();
+        if (post.getPostImageList() == null) {
+            post.setPostImageList(new ArrayList<>());
+        }
+        post.getPostImageList().addAll(postImages);
 
         return post;
     }

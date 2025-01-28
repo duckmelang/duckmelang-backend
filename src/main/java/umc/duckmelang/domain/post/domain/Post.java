@@ -92,4 +92,14 @@ public class Post extends BaseEntity {
         }
     }
 
+    public void setPostImageList(List<PostImage> postImageList){
+        if(this.postImageList !=null){
+            this.postImageList.forEach(postImage-> postImage.setPost(null));
+        }
+        this.postImageList = postImageList;
+        if (postImageList != null) {
+            postImageList.forEach(postImage-> postImage.setPost(this));
+        }
+    }
+
 }

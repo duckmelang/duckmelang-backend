@@ -22,6 +22,7 @@ public class PostResponseDto {
         private LocalDate date;
         private String nickname;
         private LocalDateTime createdAt;
+        private String postImageUrl;
     }
 
     @Getter
@@ -51,6 +52,7 @@ public class PostResponseDto {
         private String category;
         private LocalDate date;
         private LocalDateTime createdAt;
+        private List<String> postImageUrl;
     }
 
     @Getter

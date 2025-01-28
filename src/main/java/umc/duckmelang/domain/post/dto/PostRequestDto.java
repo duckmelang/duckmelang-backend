@@ -25,5 +25,7 @@ public class PostRequestDto {
         private Long categoryId;
         @NotNull
         private LocalDate date;
+
+        private List<String> postImageUrls;
     }
 }
