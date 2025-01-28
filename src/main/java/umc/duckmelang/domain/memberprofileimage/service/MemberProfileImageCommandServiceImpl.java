@@ -46,7 +46,7 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
 
         //프로필 이미지 공개 범위 변경
-        MemberProfileImage updatedProfileImage = MemberProfileImageConverter.toMemberProfileImageWithChangedStatus(request.getImageId(), request.isPublic());
+        MemberProfileImage updatedProfileImage = MemberProfileImageConverter.toMemberProfileImageWithChangedStatus(profileImage, request.isPublic());
 
         return memberProfileImageRepository.save(updatedProfileImage);
     }
