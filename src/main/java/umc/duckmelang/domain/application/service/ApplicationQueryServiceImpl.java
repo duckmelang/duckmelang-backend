@@ -57,7 +57,15 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
         return applicationRepository.findSentApplicationList(memberId, ApplicationStatus.PENDING, PageRequest.of(page,10));
     }
 
+
+    /**
+     * 특정 회원의 SUCCEED 상태인 Application 수 조회
+     *
+     * @param memberId 회원 ID
+     * @return SUCCEED 상태인 Application 수(long)
+     */
     @Override
+    @Transactional(readOnly = true)
     public int countMatchedApplications(Long memberId) {
         return applicationRepository.countByMemberIdOrPostMemberIdAndStatus(memberId, ApplicationStatus.SUCCEED);
     }

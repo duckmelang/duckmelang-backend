@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.repository.PostRepository;
-import umc.duckmelang.domain.postimage.dto.PostImageResponseDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +38,23 @@ public class PostQueryServiceImpl implements PostQueryService{
         return postRepository.findById(postId);
     }
 
+    @Override
+    public Page<Post> getPostListByTitle(String searchKeyword, Integer page){
+        return postRepository.findByTitle(searchKeyword, PageRequest.of(page, 10));
+
+    }
+
+    @Override
+    public Optional<Post> findById(Long postId) {
+        return postRepository.findById(postId);
+    }
+
+    /**
+     * 특정 멤버가 작성한 게시물 수 조회: 프로필 조회 시 사용
+     *
+     * @param memberId 멤버 ID
+     * @return 게시물 수
+     */
     @Override
     public int getPostCount(Long memberId) {
         return postRepository.countAllByMemberId(memberId);
