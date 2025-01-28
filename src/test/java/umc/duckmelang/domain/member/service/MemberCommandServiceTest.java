@@ -23,6 +23,9 @@ import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRep
 import umc.duckmelang.global.apipayload.exception.IdolCategoryException;
 import umc.duckmelang.global.apipayload.exception.LandmineException;
 import umc.duckmelang.global.apipayload.exception.MemberException;
+import umc.duckmelang.global.apipayload.exception.IdolCategoryException;
+import umc.duckmelang.global.apipayload.exception.LandmineException;
+import umc.duckmelang.global.apipayload.exception.MemberException;
 import umc.duckmelang.global.apipayload.exception.handler.TempHandler;
 
 import java.util.Arrays;
@@ -131,7 +134,7 @@ class MemberCommandServiceTest {
         when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(MemberHandler.class, () -> memberCommandService.selectIdols(memberId, request));
+        assertThrows(MemberException.class, () -> memberCommandService.selectIdols(memberId, request));
         verify(memberRepository, times(1)).findById(memberId);
     }
 

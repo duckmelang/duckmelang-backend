@@ -12,6 +12,8 @@ import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.bookmark.domain.Bookmark;
 import umc.duckmelang.domain.landmine.domain.Landmine;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.MemberException;
 import umc.duckmelang.global.common.BaseEntity;
 
 import java.time.LocalDate;
@@ -41,6 +43,7 @@ public class Member extends BaseEntity {
     @Column(nullable = true)
     private LocalDate birth;
 
+    // true = 남성, false = 여성
     private Boolean gender;
 
     @Column(columnDefinition = "TINYTEXT")
@@ -97,9 +100,37 @@ public class Member extends BaseEntity {
         this.introduction = other.introduction;
     }
 
-    public Member withIntroduction(String introduction) {
-        Member newMember = new Member(this);
-        newMember.introduction = introduction;
-        return newMember;
+    // 회원의 만 나이를 계산하는 메서드
+    public int calculateAge(){
+        // 생년월일 가져오기
+        LocalDate birth = this.birth;
+        // 현재 날짜 가져오기
+        LocalDate today = LocalDate.now();
+
+        // 현재 연도와 태어난 연도의 차이를 계산
+        int age = today.getYear() - birth.getYear();
+
+        // 생일이 올해 아직 지나지 않았다면 나이를 1 줄임
+        if (today.isBefore(birth.withYear(today.getYear()))) {
+            age--;
+        }
+        return age;
+    }
+
+    // 자기소개 업데이트 메서드
+    public void updateIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    // 프로필 업데이트 메서드
+    public void updateProfile(String nickname, String introduction) {
+        if (nickname == null || nickname.isBlank()) {
+            throw new MemberException(ErrorStatus.MEMBER_EMPTY_NICKNAME);
+        }
+        if (introduction == null || introduction.isBlank()) {
+            throw new MemberException(ErrorStatus.MEMBER_EMPTY_INTRODUCTION);
+        }
+        this.nickname = nickname;
+        this.introduction = introduction;
     }
 }

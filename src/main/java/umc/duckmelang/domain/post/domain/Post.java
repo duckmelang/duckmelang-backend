@@ -80,4 +80,16 @@ public class Post extends BaseEntity {
             eventCategory.getPostList().add(this);
         }
     }
+
+//    연관관계 편의 메서드
+    public void setPostIdolList(List<PostIdol> postIdolList) {
+        if (this.postIdolList != null) {
+            this.postIdolList.forEach(postIdol -> postIdol.setPost(null));
+        }
+        this.postIdolList = postIdolList;
+        if (postIdolList != null) {
+            postIdolList.forEach(postIdol -> postIdol.setPost(this));
+        }
+    }
+
 }

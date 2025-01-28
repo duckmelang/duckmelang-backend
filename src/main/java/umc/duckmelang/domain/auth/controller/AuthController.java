@@ -2,6 +2,7 @@ package umc.duckmelang.domain.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import umc.duckmelang.domain.auth.dto.AuthRequestDto;
@@ -20,7 +21,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인 API", description = "RefreshToken과 AccessToken을 발급합니다.")
-    public ApiResponse<AuthResponseDto.TokenResponse> login(@RequestBody AuthRequestDto.LoginDto request) {
+    public ApiResponse<AuthResponseDto.TokenResponse> login(@Valid @RequestBody AuthRequestDto.LoginDto request) {
         return ApiResponse.onSuccess(authService.login(request.getEmail(), request.getPassword()));
     }
 

@@ -183,4 +183,18 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         return memberRepository.save(updatedMember);
     }
 
+    @Override
+    @Transactional
+    public Member updateMemberProfile(Long memberId, MemberRequestDto.UpdateMemberProfileDto request) {
+
+        // 회원 조회 및 유효성 검증
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        // 프로필 업데이트
+        Member updatedMember = MemberConverter.toUpdateMember(member, request.getNickname(), request.getIntroduction());
+
+        return memberRepository.save(updatedMember);
+    }
+
 }

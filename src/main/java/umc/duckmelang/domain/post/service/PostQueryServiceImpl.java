@@ -29,8 +29,35 @@ public class PostQueryServiceImpl implements PostQueryService{
     }
 
     @Override
+    public Page<Post> getPostListByMember(Long memberId, Integer page) {
+        return postRepository.findByMember(memberId, PageRequest.of(page,10));
+    }
+
+    @Override
     public Optional<Post> getPostDetail(Long postId){
         return postRepository.findById(postId);
+    }
+
+    @Override
+    public Page<Post> getPostListByTitle(String searchKeyword, Integer page){
+        return postRepository.findByTitle(searchKeyword, PageRequest.of(page, 10));
+
+    }
+
+    @Override
+    public Optional<Post> findById(Long postId) {
+        return postRepository.findById(postId);
+    }
+
+    /**
+     * 특정 멤버가 작성한 게시물 수 조회: 프로필 조회 시 사용
+     *
+     * @param memberId 멤버 ID
+     * @return 게시물 수
+     */
+    @Override
+    public int getPostCount(Long memberId) {
+        return postRepository.countAllByMemberId(memberId);
     }
 
 }

@@ -1,12 +1,6 @@
 package umc.duckmelang.domain.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +24,6 @@ import java.util.List;
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
-
     private final MemberCommandService memberCommandService;
 
     @PostMapping("/signup")
@@ -94,7 +87,7 @@ public class MemberController {
     }
 
     @Operation(summary = "자기소개 문구 설정 API", description = "회원이 최초로 자기소개 문구를 설정하는 API입니다. 빈 문자열과 공백을 허용하지 않습니다. 최대 500자 작성 가능합니다.")
-    @PostMapping("/{memberId}/profile-introduction")
+    @PatchMapping("/{memberId}/profile-introduction")
     public ApiResponse<MemberResponseDto.CreateIntroductionResultDto> createIntroduction (
             @PathVariable(name = "memberId") Long memberId,
             @RequestBody @Valid MemberRequestDto.CreateIntroductionDto request) {
@@ -103,8 +96,4 @@ public class MemberController {
 
         return ApiResponse.onSuccess(MemberConverter.toCreateIntroductionResponseDto(updatedmember));
     }
-
-
-
-
-    }
+}

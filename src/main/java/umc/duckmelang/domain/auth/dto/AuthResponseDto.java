@@ -3,6 +3,8 @@ package umc.duckmelang.domain.auth.dto;
 import lombok.*;
 import umc.duckmelang.domain.member.domain.Member;
 
+import java.time.LocalDateTime;
+
 public class AuthResponseDto {
 
     @Builder
