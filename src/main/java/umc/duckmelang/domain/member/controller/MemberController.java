@@ -84,7 +84,7 @@ public class MemberController {
     }
 
     @Operation(summary = "자기소개 문구 설정 API", description = "회원이 최초로 자기소개 문구를 설정하는 API입니다. 빈 문자열과 공백을 허용하지 않습니다. 최대 500자 작성 가능합니다.")
-    @PostMapping("/{memberId}/profile-introduction")
+    @PatchMapping("/{memberId}/profile-introduction")
     public ApiResponse<MemberResponseDto.CreateIntroductionResultDto> createIntroduction (
             @PathVariable(name = "memberId") Long memberId,
             @RequestBody @Valid MemberRequestDto.CreateIntroductionDto request) {
