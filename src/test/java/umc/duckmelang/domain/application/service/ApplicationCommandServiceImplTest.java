@@ -118,7 +118,7 @@ class ApplicationCommandServiceImplTest {
             // When & Then
             assertThatThrownBy(() -> applicationCommandService.updateStatusToFailed(999L, 1L))
                     .isInstanceOf(ApplicationException.class)
-                    .matches(ex -> ((ApplicationException) ex).getErrorReason().getCode().equals("APPLICATION4003"));
+                    .matches(ex -> ((ApplicationException) ex).getReason().getCode().equals("APPLICATION4003"));
 
             verify(applicationRepository, never()).save(any(Application.class));
         }
@@ -143,10 +143,10 @@ class ApplicationCommandServiceImplTest {
                     .matches(
                             ex -> {
                                 ApplicationException appEx = (ApplicationException) ex;
-                                System.out.println("Error code: " + appEx.getErrorReason());
-                                return appEx.getErrorReason() != null &&
-                                        appEx.getErrorReason().getCode() != null &&
-                                        appEx.getErrorReason().getCode().equals("APPLICATION4001");
+                                System.out.println("Error code: " + appEx.getReason().getCode());
+                                return appEx.getReason().getCode() != null &&
+                                        appEx.getReason().getCode() != null &&
+                                        appEx.getReason().getCode().equals("APPLICATION4001");
                             },
                             "should have error code APPLICATION4001"
                     );
@@ -188,7 +188,7 @@ class ApplicationCommandServiceImplTest {
             // When & Then
             assertThatThrownBy(() -> applicationCommandService.updateStatusToCanceled(1L, 999L))
                     .isInstanceOf(ApplicationException.class)
-                    .matches(ex -> ((ApplicationException) ex).getErrorReason().getCode().equals("APPLICATION4003"));
+                    .matches(ex -> ((ApplicationException) ex).getReason().getCode().equals("APPLICATION4003"));
 
             verify(applicationRepository, never()).save(any(Application.class));
         }
@@ -233,7 +233,7 @@ class ApplicationCommandServiceImplTest {
             // When & Then
             assertThatThrownBy(() -> applicationCommandService.updateStatusToSucceed(1L, 999L))
                     .isInstanceOf(ApplicationException.class)
-                    .matches(ex -> ((ApplicationException) ex).getErrorReason().getCode().equals("APPLICATION4003"));
+                    .matches(ex -> ((ApplicationException) ex).getReason().getCode().equals("APPLICATION4003"));
 
             verify(mateRelationshipRepository, never()).save(any(MateRelationship.class));
             verify(applicationRepository, never()).save(any(Application.class));
@@ -256,7 +256,7 @@ class ApplicationCommandServiceImplTest {
             // When & Then
             assertThatThrownBy(() -> applicationCommandService.updateStatusToSucceed(1L, 1L))
                     .isInstanceOf(ApplicationException.class)
-                    .matches(ex -> ((ApplicationException) ex).getErrorReason().getCode().equals("APPLICATION4001"));
+                    .matches(ex -> ((ApplicationException) ex).getReason().getCode().equals("APPLICATION4001"));
 
             verify(mateRelationshipRepository, never()).save(any(MateRelationship.class));
             verify(applicationRepository, never()).save(any(Application.class));

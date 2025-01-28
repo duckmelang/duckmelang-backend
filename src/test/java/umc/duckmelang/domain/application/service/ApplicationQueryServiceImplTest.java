@@ -15,14 +15,17 @@ import umc.duckmelang.domain.application.dto.ReceivedApplicationDto;
 import umc.duckmelang.domain.application.dto.SentApplicationDto;
 import umc.duckmelang.domain.application.repository.ApplicationRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ApplicationQueryServiceImplTest {
@@ -59,146 +62,200 @@ class ApplicationQueryServiceImplTest {
     }
 
     @Test
-    @DisplayName("받은 승인된 지원서 목록 조회")
-    void getReceivedSucceedingApplicationList() {
-        // given
-        List<ReceivedApplicationDto> dtoList = Arrays.asList(
-                new ReceivedApplicationDto("User1", 1L, "Post1", 1L, LocalDateTime.now()),
-                new ReceivedApplicationDto("User2", 2L, "Post2", 2L, LocalDateTime.now())
-        );
-        Page<ReceivedApplicationDto> expectedPage = new PageImpl<>(dtoList);
-
-        when(applicationRepository.findReceivedApplicationListByStatus(
-                eq(memberId),
-                eq(ApplicationStatus.SUCCEED),
-                any(PageRequest.class)
-        )).thenReturn(expectedPage);
-
-        // when
-        Page<ReceivedApplicationDto> result = applicationQueryService.getReceivedSucceedingApplicationList(memberId, page);
-
-        // then
-        assertThat(result.getContent()).hasSize(2);
-        assertThat(result.getContent()).isEqualTo(dtoList);
-    }
-
-    @Test
-    @DisplayName("받은 거절된 지원서 목록 조회")
-    void getReceivedFailedApplicationList() {
-        // given
-        List<ReceivedApplicationDto> dtoList = Arrays.asList(
-                new ReceivedApplicationDto("User3", 3L, "Post3", 3L, LocalDateTime.now()),
-                new ReceivedApplicationDto("User4", 4L, "Post4", 4L, LocalDateTime.now())
-        );
-        Page<ReceivedApplicationDto> expectedPage = new PageImpl<>(dtoList);
-
-        when(applicationRepository.findReceivedApplicationListByStatus(
-                eq(memberId),
-                eq(ApplicationStatus.FAILED),
-                any(PageRequest.class)
-        )).thenReturn(expectedPage);
-
-        // when
-        Page<ReceivedApplicationDto> result = applicationQueryService.getReceivedFailedApplicationList(memberId, page);
-
-        // then
-        assertThat(result.getContent()).hasSize(2);
-        assertThat(result.getContent()).isEqualTo(dtoList);
-    }
-
-    @Test
     @DisplayName("받은 대기중인 지원서 목록 조회")
     void getReceivedPendingApplicationList() {
         // given
+        LocalDateTime now = LocalDateTime.now();
         List<ReceivedApplicationDto> dtoList = Arrays.asList(
-                new ReceivedApplicationDto("User5", 5L, "Post5", 5L, LocalDateTime.now()),
-                new ReceivedApplicationDto("User6", 6L, "Post6", 6L, LocalDateTime.now())
+                ReceivedApplicationDto.builder()
+                        .applicationMemberNickname("user1")
+                        .postId(1L)
+                        .postTitle("title1")
+                        .applicationId(1L)
+                        .applicationCreatedAt(now)
+                        .applicationStatus(ApplicationStatus.SUCCEED)
+                        .build(),
+                ReceivedApplicationDto.builder()
+                        .applicationMemberNickname("user2")
+                        .postId(2L)
+                        .postTitle("title2")
+                        .applicationId(2L)
+                        .applicationCreatedAt(now.plusMinutes(1))
+                        .applicationStatus(ApplicationStatus.SUCCEED)
+                        .build(),
+                ReceivedApplicationDto.builder()
+                        .applicationMemberNickname("user3")
+                        .postId(3L)
+                        .postTitle("title3")
+                        .applicationId(3L)
+                        .applicationCreatedAt(now.plusMinutes(2))
+                        .applicationStatus(ApplicationStatus.PENDING)
+                        .build(),
+                ReceivedApplicationDto.builder()
+                        .applicationMemberNickname("user4")
+                        .postId(4L)
+                        .postTitle("title4")
+                        .applicationId(4L)
+                        .applicationCreatedAt(now.plusMinutes(3))
+                        .applicationStatus(ApplicationStatus.PENDING)
+                        .build()
         );
-        Page<ReceivedApplicationDto> expectedPage = new PageImpl<>(dtoList);
+        List<ReceivedApplicationDto> pendingList = dtoList.stream()
+                .filter(dto -> dto.getApplicationStatus() == ApplicationStatus.PENDING)
+                .collect(Collectors.toList());
+        Page<ReceivedApplicationDto> expectedPage = new PageImpl<>(pendingList);
 
-        when(applicationRepository.findReceivedApplicationListByStatus(
-                eq(memberId),
-                eq(ApplicationStatus.PENDING),
-                any(PageRequest.class)
-        )).thenReturn(expectedPage);
+        when(applicationRepository.findReceivedApplicationListByStatus(eq(memberId), eq(ApplicationStatus.PENDING), any(PageRequest.class)))
+                .thenReturn(expectedPage);
 
         // when
         Page<ReceivedApplicationDto> result = applicationQueryService.getReceivedPendingApplicationList(memberId, page);
 
         // then
         assertThat(result.getContent()).hasSize(2);
-        assertThat(result.getContent()).isEqualTo(dtoList);
+        assertThat(result.getContent())
+                .extracting("applicationStatus")
+                .containsOnly(ApplicationStatus.PENDING);
+        assertThat(result.getContent())
+                .extracting("applicationMemberNickname")
+                .containsExactly("user3", "user4");
+        verify(applicationRepository, times(1)).findReceivedApplicationListByStatus(eq(memberId), eq(ApplicationStatus.PENDING), any(PageRequest.class));
     }
-
     @Test
-    @DisplayName("보낸 승인된 지원서 목록 조회")
-    void getSentSucceedingApplicationList() {
+    @DisplayName("받은 수락/거절 지원서 목록 조회")
+    void getReceivedApplicationListExceptPending() {
         // given
-        List<SentApplicationDto> dtoList = Arrays.asList(
-                new SentApplicationDto(1L, "Post1", "Nickname1", LocalDateTime.now(), "Event1", 1L),
-                new SentApplicationDto(2L, "Post2", "Nickname2", LocalDateTime.now(), "Event2", 2L)
+        LocalDateTime now = LocalDateTime.now();
+        List<ReceivedApplicationDto> dtoList = Arrays.asList(
+                ReceivedApplicationDto.builder()
+                        .applicationMemberNickname("user1")
+                        .postId(1L)
+                        .postTitle("title1")
+                        .applicationId(1L)
+                        .applicationCreatedAt(now)
+                        .applicationStatus(ApplicationStatus.SUCCEED)
+                        .build(),
+                ReceivedApplicationDto.builder()
+                        .applicationMemberNickname("user2")
+                        .postId(2L)
+                        .postTitle("title2")
+                        .applicationId(2L)
+                        .applicationCreatedAt(now.plusMinutes(1))
+                        .applicationStatus(ApplicationStatus.SUCCEED)
+                        .build(),
+                ReceivedApplicationDto.builder()
+                        .applicationMemberNickname("user5")
+                        .postId(5L)
+                        .postTitle("title5")
+                        .applicationId(5L)
+                        .applicationCreatedAt(now.plusMinutes(4))
+                        .applicationStatus(ApplicationStatus.FAILED)
+                        .build(),
+                ReceivedApplicationDto.builder()
+                        .applicationMemberNickname("user6")
+                        .postId(6L)
+                        .postTitle("title6")
+                        .applicationId(6L)
+                        .applicationCreatedAt(now.plusMinutes(5))
+                        .applicationStatus(ApplicationStatus.FAILED)
+                        .build()
         );
-        Page<SentApplicationDto> expectedPage = new PageImpl<>(dtoList);
 
-        when(applicationRepository.findSentApplicationListByStatus(
-                eq(memberId),
-                eq(ApplicationStatus.SUCCEED),
-                any(PageRequest.class)
-        )).thenReturn(expectedPage);
+        List<ReceivedApplicationDto> nonPendingList = dtoList.stream()
+                .filter(dto -> dto.getApplicationStatus() != ApplicationStatus.PENDING)
+                .collect(Collectors.toList());
+        Page<ReceivedApplicationDto> expectedPage = new PageImpl<>(nonPendingList);
+
+        when(applicationRepository.findReceivedApplicationListExceptPending(eq(memberId), any(PageRequest.class)))
+                .thenReturn(expectedPage);
 
         // when
-        Page<SentApplicationDto> result = applicationQueryService.getSentSucceedingApplicationList(memberId, page);
+        Page<ReceivedApplicationDto> result = applicationQueryService.getReceivedApplicationListExceptPending(memberId, page);
 
         // then
-        assertThat(result.getContent()).hasSize(2);
-        assertThat(result.getContent()).isEqualTo(dtoList);
+        assertThat(result.getContent()).hasSize(4);
+        assertThat(result.getContent())
+                .extracting("applicationStatus")
+                .containsOnly(ApplicationStatus.SUCCEED, ApplicationStatus.FAILED);
+        assertThat(result.getContent())
+                .extracting("applicationMemberNickname")
+                .containsExactly("user1", "user2", "user5", "user6");
+        verify(applicationRepository, times(1)).findReceivedApplicationListExceptPending(eq(memberId), any(PageRequest.class));
     }
 
-    @Test
-    @DisplayName("보낸 거절된 지원서 목록 조회")
-    void getSentFailedApplicationList() {
-        // given
-        List<SentApplicationDto> dtoList = Arrays.asList(
-                new SentApplicationDto(3L, "Post3", "Nickname3", LocalDateTime.now(), "Event3", 3L),
-                new SentApplicationDto(4L, "Post4", "Nickname4", LocalDateTime.now(), "Event4", 4L)
-        );
-        Page<SentApplicationDto> expectedPage = new PageImpl<>(dtoList);
-
-        when(applicationRepository.findSentApplicationListByStatus(
-                eq(memberId),
-                eq(ApplicationStatus.FAILED),
-                any(PageRequest.class)
-        )).thenReturn(expectedPage);
-
-        // when
-        Page<SentApplicationDto> result = applicationQueryService.getSentFailedApplicationList(memberId, page);
-
-        // then
-        assertThat(result.getContent()).hasSize(2);
-        assertThat(result.getContent()).isEqualTo(dtoList);
-    }
 
     @Test
-    @DisplayName("보낸 대기중인 지원서 목록 조회")
+    @DisplayName("보낸 지원서 목록 조회")
     void getSentPendingApplicationList() {
         // given
         List<SentApplicationDto> dtoList = Arrays.asList(
-                new SentApplicationDto(5L, "Post5", "Nickname5", LocalDateTime.now(), "Event5", 5L),
-                new SentApplicationDto(6L, "Post6", "Nickname6", LocalDateTime.now(), "Event6", 6L)
+                SentApplicationDto.builder()
+                        .postId(1L)
+                        .postTitle("Post1")
+                        .postMemberNickname("Nickname1")
+                        .eventDate(LocalDate.now())
+                        .eventCategory("Event1")
+                        .applicationId(1L)
+                        .applicationStatus(ApplicationStatus.PENDING)
+                        .build(),
+                SentApplicationDto.builder()
+                        .postId(2L)
+                        .postTitle("Post2")
+                        .postMemberNickname("Nickname2")
+                        .eventDate(LocalDate.now())
+                        .eventCategory("Event2")
+                        .applicationId(2L)
+                        .applicationStatus(ApplicationStatus.PENDING)
+                        .build(),
+                SentApplicationDto.builder()
+                        .postId(3L)
+                        .postTitle("Post3")
+                        .postMemberNickname("Nickname3")
+                        .eventDate(LocalDate.now())
+                        .eventCategory("Event3")
+                        .applicationId(3L)
+                        .applicationStatus(ApplicationStatus.SUCCEED)
+                        .build(),
+                SentApplicationDto.builder()
+                        .postId(4L)
+                        .postTitle("Post4")
+                        .postMemberNickname("Nickname4")
+                        .eventDate(LocalDate.now())
+                        .eventCategory("Event4")
+                        .applicationId(4L)
+                        .applicationStatus(ApplicationStatus.SUCCEED)
+                        .build(),
+                SentApplicationDto.builder()
+                        .postId(5L)
+                        .postTitle("Post5")
+                        .postMemberNickname("Nickname5")
+                        .eventDate(LocalDate.now())
+                        .eventCategory("Event5")
+                        .applicationId(5L)
+                        .applicationStatus(ApplicationStatus.FAILED)
+                        .build(),
+                SentApplicationDto.builder()
+                        .postId(6L)
+                        .postTitle("Post6")
+                        .postMemberNickname("Nickname6")
+                        .eventDate(LocalDate.now())
+                        .eventCategory("Event6")
+                        .applicationId(6L)
+                        .applicationStatus(ApplicationStatus.FAILED)
+                        .build()
         );
         Page<SentApplicationDto> expectedPage = new PageImpl<>(dtoList);
 
-        when(applicationRepository.findSentApplicationListByStatus(
+        when(applicationRepository.findSentApplicationList(
                 eq(memberId),
-                eq(ApplicationStatus.PENDING),
                 any(PageRequest.class)
         )).thenReturn(expectedPage);
 
         // when
-        Page<SentApplicationDto> result = applicationQueryService.getSentPendingApplicationList(memberId, page);
+        Page<SentApplicationDto> result = applicationQueryService.getSentApplicationList(memberId, page);
 
         // then
-        assertThat(result.getContent()).hasSize(2);
+        assertThat(result.getContent()).hasSize(6);
         assertThat(result.getContent()).isEqualTo(dtoList);
     }
 }
