@@ -70,7 +70,7 @@ public class ProfileFacadeService {
 
 
 
-    @Transactional(readOnly = true)
+    @Transactional
     public MemberResponseDto.GetMypageMemberProfileEditResultDto updateMypageMemberProfile(Long memberId, MemberRequestDto.UpdateMemberProfileDto request) {
 
         // 회원 기본 정보 조회

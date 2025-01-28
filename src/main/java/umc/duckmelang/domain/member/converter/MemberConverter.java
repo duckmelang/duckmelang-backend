@@ -136,7 +136,8 @@ public class MemberConverter {
     }
 
     public static Member toMemberWithIntroduction(Member member, String introduction) {
-        return member.withIntroduction(introduction);
+        member.updateIntroduction(introduction);
+        return member;
     }
 
     public static MemberResponseDto.CreateIntroductionResultDto toCreateIntroductionResponseDto(Member member) {
@@ -174,6 +175,10 @@ public class MemberConverter {
 
     }
 
+    public static Member toUpdateMember(Member member, String updatedNickname, String updatedIntroduction) {
+        member.updateProfile(updatedNickname, updatedIntroduction);
+        return member;
+    }
 
     public static MemberResponseDto.GetMypageMemberProfileEditResultDto toUpdateMemberProfileDto(Member updatedMember, MemberProfileImage latestPublicMemberProfileImage) {
         return MemberResponseDto.GetMypageMemberProfileEditResultDto.builder()
