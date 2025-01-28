@@ -10,6 +10,7 @@ import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.handler.MemberProfileImageException;
 import umc.duckmelang.global.apipayload.exception.MemberException;
 
 import java.util.List;
