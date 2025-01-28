@@ -29,6 +29,8 @@ public class MemberRequestDto {
 
     @Builder
     @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class SelectIdolsDto{
         @NotEmpty(message = "최소 하나의 아이돌을 선택해야 합니다.")
         @Size(min = 1, message = "최소 하나의 아이돌을 선택해야 합니다.")
