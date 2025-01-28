@@ -8,6 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import umc.duckmelang.domain.bookmark.converter.BookmarkConverter;
+import umc.duckmelang.domain.bookmark.domain.Bookmark;
+import umc.duckmelang.domain.bookmark.dto.BookmarkResponseDto;
+import umc.duckmelang.domain.bookmark.service.BookmarkCommandService;
 import umc.duckmelang.domain.idolcategory.validation.annotation.ExistIdol;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
@@ -29,6 +33,7 @@ public class PostController {
 
     private final PostQueryService postQueryService;
     private final PostCommandService postCommandService;
+    private final BookmarkCommandService bookmarkCommandService;
 
     @GetMapping("/")
     @CommonApiResponses
@@ -74,7 +79,30 @@ public class PostController {
         Page<Post> postList = postQueryService.getPostListByTitle(searchKeyword, page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
 
+    }
 
+    @PostMapping("/{postId}/bookmarks")
+    @CommonApiResponses
+    @Operation(summary = "게시글 스크랩 API", description = "게시글 스크랩하는 API 입니다. 우선 memberId를 받습니다(추후 JWT로 변경 예정)")
+    public ApiResponse<BookmarkResponseDto.BookmarkJoinResultDto>joinBookmark (@PathVariable(name="postId") Long postId, @RequestParam(name="memberId") Long memberId){
+        Bookmark bookmark = bookmarkCommandService.joinBookmark(postId, memberId);
+        return ApiResponse.onSuccess(BookmarkConverter.bookmarkJoinResultDto(bookmark));
+    }
+
+    @GetMapping("/my")
+    @CommonApiResponses
+    @Operation(summary = "내 게시글 조회 API", description = "나의 동행에서 내 게시글을 확인하는 API입니다. memberId를 받고, 추후 JWT로 변경예정, 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
+    public ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@RequestParam("memberId") Long memberId, @ValidPageNumber @RequestParam(name ="page", defaultValue = "0") Integer page){
+        Page<Post> postList = postQueryService.getMyPostList(memberId, page);
+        return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
+    }
+
+    @PatchMapping("/{postId}/status")
+    @CommonApiResponses
+    @Operation(summary = "게시글 상태 변경 API", description = "게시글을 상태를 모집 중 -> 모집 완료/ 또는 모집 완료 -> 모집 중으로 바꿉니다. 모집 중은 wanted가 1, 모집 완료는 0입니다.")
+    public ApiResponse<PostResponseDto.PostStatusDto> patchPostStatus(@ExistPost @PathVariable("postId") Long postId){
+        Post post = postCommandService.patchPostStatus(postId);
+        return ApiResponse.onSuccess(PostConverter.postStatusDto(post));
     }
 
 }

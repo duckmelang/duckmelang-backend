@@ -4,8 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.member.validation.annotation.ExistMember;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
@@ -19,8 +21,11 @@ import umc.duckmelang.domain.review.service.ReviewCommandService;
 import umc.duckmelang.domain.review.service.ReviewQueryService;
 import umc.duckmelang.global.annotations.CommonApiResponses;
 import umc.duckmelang.global.apipayload.ApiResponse;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.ApplicationException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -51,6 +56,21 @@ public class ReviewController {
     public ApiResponse<ReviewResponseDto.ReviewListDto> getOtherReviewList(@ExistMember @PathVariable(name="memberId") Long memberId){
         List<Review> reviewList = reviewQueryService.getReviewList(memberId);
         return ApiResponse.onSuccess(ReviewConverter.reviewListDto(reviewList));
+    }
+
+    @GetMapping("/reviews/information")
+    @CommonApiResponses
+    @Operation(summary = "후기글 작성 페이지 내 관련 정보 조회 API", description = "후기글 작성 페이지에서 applicationId 외에 유저네임, 게시글 제목, 행사 날짜 등 정보를 보여주는 API 입니다. memberId를 requestParam으로 넣어주세요. myId는 추후 JWT 추출 예정")
+    public ApiResponse<ReviewResponseDto.ReviewInformationDto> getReviewInformation(@ExistMember @RequestParam(name="memberId") Long memberId, @RequestParam(name="myId") Long myId){
+        List<Application> applications = reviewQueryService.getReviewInformation(myId, memberId);
+
+        // 첫 번째 Application만 사용
+        if (applications.isEmpty()) {
+            throw new ApplicationException(ErrorStatus.APPLICATION_NOT_FOUND);
+        }
+        Application application = applications.get(0);
+
+        return ApiResponse.onSuccess(ReviewConverter.reviewInformationDto(application));
     }
 
 }

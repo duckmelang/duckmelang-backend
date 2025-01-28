@@ -117,6 +117,14 @@ public class PostConverter {
         return post;
     }
 
+    public static PostResponseDto.PostStatusDto postStatusDto(Post post) {
+        return PostResponseDto.PostStatusDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .wanted(post.getWanted())
+                .build();
+    }
+
 
 
 }

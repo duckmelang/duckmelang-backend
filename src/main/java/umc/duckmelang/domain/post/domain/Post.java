@@ -10,6 +10,8 @@ import umc.duckmelang.domain.eventcategory.domain.EventCategory;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.postidol.domain.PostIdol;
 import umc.duckmelang.domain.postimage.domain.PostImage;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.PostException;
 import umc.duckmelang.global.common.BaseEntity;
 
 import java.time.LocalDate;
@@ -59,6 +61,7 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Application> applicationList = new ArrayList<>();
 
+
     // 연관관계 편의 메서드
     public void setMember(Member member) {
         if (this.member != null) {
@@ -89,6 +92,17 @@ public class Post extends BaseEntity {
         this.postIdolList = postIdolList;
         if (postIdolList != null) {
             postIdolList.forEach(postIdol -> postIdol.setPost(this));
+        }
+
+    }
+
+    public void toggleWanted() {
+        if (this.wanted == 0) {
+            this.wanted = 1;
+        } else if (this.wanted == 1) {
+            this.wanted = 0;
+        } else {
+            throw new PostException(ErrorStatus.INVALID_WANTED);  // 원하시는 ErrorStatus를 여기서 던질 수 있습니다.
         }
     }
 
