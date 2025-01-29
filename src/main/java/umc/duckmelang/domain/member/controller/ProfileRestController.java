@@ -45,9 +45,9 @@ public class ProfileRestController {
 
     @GetMapping(path = "/{memberId}/images")
     @Operation(summary = "다른 멤버 프로필 사진 조회",description = "path variable로 프로필 사진들을 조회하고자하는 상대 member의 id를 받습니다.")
-    ApiResponse<MemberProfileImageResponseDto.GetAllProfileImageResultDto> getProfileImages(@PathVariable @ExistsMember Long memberId, int page) {
-        Page<MemberProfileImage> memberProfileImagePage = memberProfileImageQueryService.getAllMemberProfileImageByMemberId(memberId, page);
-        return ApiResponse.onSuccess(MemberProfileImageConverter.toGetAllProfileImageResultDto(memberProfileImagePage));
+    ApiResponse<MemberProfileImageResponseDto.MemberProfileImageListDto> getProfileImages(@PathVariable @ExistsMember Long memberId, int page) {
+        Page<MemberProfileImage> memberProfileImagePage = memberProfileImageQueryService.getPublicMemberProfileImageByMemberId(memberId, page);
+        return ApiResponse.onSuccess(MemberProfileImageConverter.toMemberProfileImageListDto(memberProfileImagePage));
     }
 
     @GetMapping(path = "/{memberId}/posts")
