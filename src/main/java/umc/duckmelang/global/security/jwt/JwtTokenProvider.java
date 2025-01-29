@@ -24,8 +24,7 @@ public class JwtTokenProvider {
     public JwtTokenProvider(
             @Value("${jwt.secret-key}") String secretKey,
             @Value("${jwt.access-expiration}") long accessTokenExpiration,
-            @Value("${jwt.refresh-expiration}") long refreshTokenExpiration,
-            RedisTemplate<String, String> redisTemplate
+            @Value("${jwt.refresh-expiration}") long refreshTokenExpiration
     ) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);

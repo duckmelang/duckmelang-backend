@@ -14,7 +14,7 @@ import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryS
 import umc.duckmelang.global.apipayload.ApiResponse;
 
 @RestController
-@RequestMapping("/profile/image")
+@RequestMapping("/mypage/profile/image")
 @RequiredArgsConstructor
 public class MemberProfileImageController {
 
