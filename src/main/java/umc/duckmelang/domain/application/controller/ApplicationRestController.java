@@ -32,16 +32,6 @@ public class ApplicationRestController {
         return ApiResponse.onSuccess(ApplicationConverter.toApplicationStatusChangeResponseDto(application));
     }
 
-    @PostMapping("/sent/canceled/{applicationId}")
-    @CommonApiResponses
-    @Operation(summary = "보낸 동행요청 취소 API",description = "path variable로 상태를 변경하고자 하는 동행요청 id를 받습니다.\nrequest body로 member id(추후 JWT로 교체)를 받습니다.")
-    public ApiResponse<ApplicationResponseDto.ApplicationStatusChangeResponseDto> cancelApplication(@PathVariable @ExistsApplication Long applicationId,
-                                                                                                  @RequestParam Long memberId  // 임시로 사용. 나중에 JWT에서 추출할 예정
-    ) {
-        Application application = applicationCommandService.updateStatusToCanceled(applicationId, memberId);
-        return ApiResponse.onSuccess(ApplicationConverter.toApplicationStatusChangeResponseDto(application));
-    }
-
     @PostMapping("/received/succeed/{applicationId}")
     @CommonApiResponses
     @Operation(summary = "받은 동행요청 수락 API",description = "path variable로 상태를 변경하고자 하는 동행요청 id를 받습니다.\nrequest body로 member id(추후 JWT로 교체)를 받습니다.")
