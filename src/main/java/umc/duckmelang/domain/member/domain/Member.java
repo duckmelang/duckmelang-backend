@@ -99,12 +99,6 @@ public class Member extends BaseEntity {
         this.introduction = other.introduction;
     }
 
-    public Member withIntroduction(String introduction) {
-        Member newMember = new Member(this);
-        newMember.introduction = introduction;
-        return newMember;
-    }
-
     // 회원의 만 나이를 계산하는 메서드
     public int calculateAge(){
         // 생년월일 가져오기
@@ -120,6 +114,11 @@ public class Member extends BaseEntity {
             age--;
         }
         return age;
+    }
+
+    // 자기소개 업데이트 메서드
+    public void updateIntroduction(String introduction) {
+        this.introduction = introduction;
     }
 
     // 프로필 업데이트 메서드

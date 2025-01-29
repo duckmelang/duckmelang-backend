@@ -8,6 +8,7 @@ import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageRequestDto;
 import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageResponseDto;
 
+import java.util.stream.Collectors;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,11 +45,10 @@ public class MemberProfileImageConverter {
                 .build();
     }
 
-    public static MemberProfileImage toMemberProfileImageWithChangedStatus(Long imageId, boolean isPublic) {
-        return MemberProfileImage.builder()
-                .id(imageId)
-                .isPublic(isPublic)
-                .build();
+    public static MemberProfileImage toMemberProfileImageWithChangedStatus(MemberProfileImage profileImage, boolean isPublic) {
+        profileImage.changeStatus(isPublic);
+        return profileImage;
+
     }
 
     public static MemberProfileImageResponseDto.UpdateProfileImageStatusResultDto toUpdateProfileImageStatusResultDto(MemberProfileImage updatedMemberProfileImage) {

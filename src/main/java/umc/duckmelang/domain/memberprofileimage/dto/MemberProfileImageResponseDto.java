@@ -27,6 +27,19 @@ public class MemberProfileImageResponseDto {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class MemberProfileImageListDto{
+        List<MemberProfileImageDto> profileImageList;
+        Integer listSize;
+        Integer totalPage;
+        Long totalElements;
+        Boolean isFirst;
+        Boolean isLast;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class MemberProfileImageDto{
         String memberProfileImageUrl;
         LocalDateTime createdAt;
