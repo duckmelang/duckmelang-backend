@@ -37,5 +37,9 @@ public class MemberProfileImage extends BaseEntity {
             member.getMemberProfileImageList().add(this);
     }
 
+    // 공개설정 변경 메서드
+    public void changeStatus (boolean isPublic) {
+        this.isPublic = isPublic;
+    }
 
 }

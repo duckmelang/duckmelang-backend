@@ -22,8 +22,14 @@ import umc.duckmelang.domain.post.service.PostCommandServiceImpl;
 import umc.duckmelang.domain.post.service.PostQueryService;
 import umc.duckmelang.domain.post.validation.annotation.ExistPost;
 import umc.duckmelang.domain.post.validation.annotation.ValidPageNumber;
+import umc.duckmelang.domain.review.domain.Review;
+import umc.duckmelang.domain.review.service.ReviewQueryService;
 import umc.duckmelang.global.annotations.CommonApiResponses;
 import umc.duckmelang.global.apipayload.ApiResponse;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
@@ -33,9 +39,9 @@ public class PostController {
 
     private final PostQueryService postQueryService;
     private final PostCommandService postCommandService;
-    private final BookmarkCommandService bookmarkCommandService;
+    private final ReviewQueryService reviewQueryService;
 
-    @GetMapping("/")
+    @GetMapping("")
     @CommonApiResponses
     @Operation(summary = "홈화면 게시글 전체 조회 API", description = "조건 없이 모든 게시글을 조회하는 API 입니다. 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
     public ApiResponse<PostResponseDto.PostPreviewListDto> getPostList (@ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page){
@@ -56,12 +62,15 @@ public class PostController {
 
     @GetMapping("/{postId}")
     @CommonApiResponses
-    @Operation(summary = "게시글 상세 조회 API", description = "홈화면에서 게시글 1개 클릭시 자세히 보여주는 API입니다. 스크랩, 채팅, 조회수, 후기평 아직 만들지 않음")
+    @Operation(summary = "게시글 상세 조회 API", description = "홈화면에서 게시글 1개 클릭시 자세히 보여주는 API입니다. wanted가 0이면 종료, 1이면 진행 중입니다. 스크랩, 채팅, 조회수, 후기평 아직 만들지 않음")
     @Parameters({@Parameter(name = "postId", description = "게시글 Id, path variable 입니다")})
     public ApiResponse<PostResponseDto.PostDetailDto> getPostDetail (@ExistPost @PathVariable(name="postId") Long postId){
         Post post = postQueryService.getPostDetail(postId)
                 .orElseThrow(()-> new IllegalArgumentException("해당 게시글이 존재하지 않습니다"));
-        return ApiResponse.onSuccess(PostConverter.postDetailDto(post));
+        List<Review> reviewList = Optional.ofNullable(reviewQueryService.getReviewList(post.getMember().getId()))
+                .orElse(Collections.emptyList());
+        double averageScore = reviewQueryService.calculateAverageScore(reviewList);
+        return ApiResponse.onSuccess(PostConverter.postDetailDto(post, averageScore));
     }
 
     @PostMapping("/{memberId}")
@@ -81,13 +90,6 @@ public class PostController {
 
     }
 
-    @PostMapping("/{postId}/bookmarks")
-    @CommonApiResponses
-    @Operation(summary = "게시글 스크랩 API", description = "게시글 스크랩하는 API 입니다. 우선 memberId를 받습니다(추후 JWT로 변경 예정)")
-    public ApiResponse<BookmarkResponseDto.BookmarkJoinResultDto>joinBookmark (@PathVariable(name="postId") Long postId, @RequestParam(name="memberId") Long memberId){
-        Bookmark bookmark = bookmarkCommandService.joinBookmark(postId, memberId);
-        return ApiResponse.onSuccess(BookmarkConverter.bookmarkJoinResultDto(bookmark));
-    }
 
     @GetMapping("/my")
     @CommonApiResponses

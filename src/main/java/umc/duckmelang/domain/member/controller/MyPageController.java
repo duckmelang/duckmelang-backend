@@ -24,7 +24,14 @@ import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
 import umc.duckmelang.domain.post.service.PostQueryService;
 
+import umc.duckmelang.domain.review.converter.ReviewConverter;
+import umc.duckmelang.domain.review.domain.Review;
+import umc.duckmelang.domain.review.dto.ReviewResponseDto;
+import umc.duckmelang.domain.review.service.ReviewQueryService;
+import umc.duckmelang.global.annotations.CommonApiResponses;
 import umc.duckmelang.global.apipayload.ApiResponse;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/mypage")
@@ -37,6 +44,7 @@ public class MyPageController {
     private final MemberProfileImageCommandService memberProfileImageCommandService;
     private final ProfileFacadeService profileFacadeService;
     private final PostQueryService postQueryService;
+    private final ReviewQueryService reviewQueryService;
 
     @GetMapping(path = "/posts")
     @Operation(summary = "내가 업로드한 게시글들 조회",description = "memberId는 추후 jwt로 바꿉니다")
@@ -70,6 +78,15 @@ public class MyPageController {
              @RequestBody MemberRequestDto.UpdateMemberProfileDto request) {
 
         return ApiResponse.onSuccess(profileFacadeService.updateMypageMemberProfile(memberId, request));
+    }
+
+    @GetMapping("/reviews")
+    @CommonApiResponses
+    @Operation(summary = "나와의 동행 후기 조회 API", description = "내 프로필에서 나와의 동행 후기 볼 때 이용하는 API 입니다. 성별은 true일때 남자, false일때 여자입니다. memberId는 추후 JWT 변경 예정")
+    public ApiResponse<ReviewResponseDto.ReviewListDto> getMyReviewList(@RequestParam(name="memberId") Long memberId){
+        List<Review> reviewList = reviewQueryService.getReviewList(memberId);
+        double averageScore = reviewQueryService.calculateAverageScore(reviewList);
+        return ApiResponse.onSuccess(ReviewConverter.reviewListDto(reviewList, averageScore));
     }
 
 

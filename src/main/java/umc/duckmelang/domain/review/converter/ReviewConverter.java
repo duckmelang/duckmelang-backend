@@ -51,19 +51,12 @@ public class ReviewConverter {
                 .build();
     }
 
-    public static ReviewResponseDto.ReviewListDto reviewListDto(List<Review> reviewList) {
+    public static ReviewResponseDto.ReviewListDto reviewListDto(List<Review> reviewList, double averageScore) {
         List<ReviewResponseDto.ReviewDto> reviewDtoList = reviewList.stream()
                 .map(ReviewConverter::reviewDto).toList();
 
-        //리뷰 score 평균값 계산
-        double average = reviewList.stream()
-                .mapToInt(Review::getScore)
-                .average()
-                .orElse(0);
-        double roundedAverage = Math.round(average *10) /10.0;
-
         return ReviewResponseDto.ReviewListDto.builder()
-                .average(roundedAverage)
+                .average(averageScore)
                 .reviewList(reviewDtoList)
                 .build();
 

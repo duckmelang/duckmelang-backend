@@ -48,8 +48,10 @@ public class PostResponseDto {
         private String nickname;
         private Integer age;
         private String gender;
+        private Double averageScore;
         private String title;
         private String content;
+        private Short wanted;
         private List<String> idol;
         private String category;
         private LocalDate date;
