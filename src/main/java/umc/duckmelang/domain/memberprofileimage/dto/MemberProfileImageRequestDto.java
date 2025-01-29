@@ -17,10 +17,5 @@ public class MemberProfileImageRequestDto {
     public static class MemberProfileImageDto {
         private Long imageId;
         private boolean publicStatus;
-
-//        @JsonGetter("isPublic") // JSON 직렬화 시 "isPublic"으로 설정
-//        public boolean isPublic() {
-//            return isPublic;
-//        }
     }
 }
