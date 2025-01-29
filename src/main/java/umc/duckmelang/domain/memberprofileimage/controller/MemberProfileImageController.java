@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.memberprofileimage.converter.MemberProfileImageConverter;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageRequestDto;
@@ -13,9 +12,6 @@ import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageResponseDt
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageCommandService;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 import umc.duckmelang.global.apipayload.ApiResponse;
-import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/mypage/profile/image")
@@ -27,11 +23,11 @@ public class MemberProfileImageController {
 
     @Operation(summary = "내 프로필 사진 전체 조회 API", description = "특정 회원 본인의 프로필 사진을 모두 조회하는 API입니다. 비공개된 사진과 공개된 사진 모두 확인 가능합니다.")
     @GetMapping("/")
-    public ApiResponse<MemberProfileImageResponseDto.GetAllProfileImageResultDto> getAllProfileImages (@RequestParam Long memberId, int page) {
+    public ApiResponse<MemberProfileImageResponseDto.MemberProfileImageListDto> getAllProfileImages (@RequestParam Long memberId, int page) {
 
         Page<MemberProfileImage> updatedMemberProfileImagePage = memberProfileImageQueryService.getAllMemberProfileImageByMemberId(memberId, page);
 
-        return ApiResponse.onSuccess(MemberProfileImageConverter.toGetAllProfileImageResultDto(updatedMemberProfileImagePage));
+        return ApiResponse.onSuccess(MemberProfileImageConverter.toMemberProfileImageListDto(updatedMemberProfileImagePage));
     }
 
     @Operation(summary = "내 프로필 사진 삭제 API", description = "특정 회원 본인의 프로필 사진 중 하나를 삭제하는 API입니다.")

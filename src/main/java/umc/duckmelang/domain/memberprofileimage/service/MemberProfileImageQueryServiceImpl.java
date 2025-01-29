@@ -44,5 +44,13 @@ public class MemberProfileImageQueryServiceImpl implements MemberProfileImageQue
         return memberProfileImageRepository.findAllByMemberId(memberId, PageRequest.of(page,10));
     }
 
+    @Override
+    public Page<MemberProfileImage> getPublicMemberProfileImageByMemberId(Long memberId, int page) {
+        // 회원 조회 및 유효성 검증
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        return memberProfileImageRepository.findAllByIsPublicIsTrueAndMemberId(memberId,PageRequest.of(page,10));
+    }
 
 }
