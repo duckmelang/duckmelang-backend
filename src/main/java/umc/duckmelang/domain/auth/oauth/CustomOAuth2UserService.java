@@ -42,33 +42,33 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private Member saveOrUpdate(OAuthAttributes attributes, String providerId) {
         ProviderKind providerKind = ProviderKind.valueOf(providerId.toUpperCase());
 
-        Member existingMember = memberRepository.findByEmail(attributes.getEmail()).orElse(null);
-        if (existingMember != null) {
-            updateMemberInfo(existingMember, attributes);
-            return memberRepository.save(existingMember);
-        }
+        return memberRepository.findByEmail(attributes.getEmail())
+                .map(member -> {
+                    updateMemberInfo(member, attributes);
+                    return memberRepository.save(member);
+                })
+                .orElseGet(() -> {
+                    Auth existingAuth = authRepository.findByTextIdAndProvider(attributes.getEmail(), providerKind).orElse(null);
+                    if (existingAuth != null) {
+                        return existingAuth.getMember();
+                    }
 
-        Auth existingAuth = authRepository.findByTextIdAndProvider(attributes.getEmail(), providerKind).orElse(null);
-        if (existingAuth != null) {
-            return existingAuth.getMember();
-        }
+                    Member newMember = Member.builder()
+                            .email(attributes.getEmail())
+                            .password("SOCIAL_LOGIN")
+                            .isProfileComplete(false)
+                            .build();
 
-        //Member newMember = attributes.toEntity(providerId);
-        Member newMember = Member.builder()
-                .email(attributes.getEmail())
-                .password("SOCIAL_LOGIN")
-                .isProfileComplete(false)
-                .build();
+                    Member savedMember = memberRepository.save(newMember);
+                    Auth newAuth = Auth.builder()
+                            .textId(attributes.getEmail())
+                            .provider(providerKind)
+                            .member(savedMember)
+                            .build();
+                    authRepository.save(newAuth);
 
-        Member savedMember = memberRepository.save(newMember);
-        Auth newAuth = Auth.builder()
-                .textId(attributes.getEmail())
-                .provider(providerKind)
-                .member(savedMember)
-                .build();
-        authRepository.save(newAuth);
-
-        return savedMember;
+                    return savedMember;
+                });
     }
 
     private void updateMemberInfo(Member member, OAuthAttributes attributes) {

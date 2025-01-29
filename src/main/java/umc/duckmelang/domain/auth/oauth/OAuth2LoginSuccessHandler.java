@@ -66,7 +66,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                 .provider(provider)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .isProfileComplete(member.isProfileComplete())
+                .profileComplete(member.isProfileComplete())
                 .build();
 
         ApiResponse<AuthResponseDto.LoginResponse> apiResponse = ApiResponse.onSuccess(loginResponse);
