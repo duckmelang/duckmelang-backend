@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import umc.duckmelang.domain.application.domain.Application;
+import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.member.validation.annotation.ExistMember;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
@@ -23,6 +25,7 @@ import umc.duckmelang.global.annotations.CommonApiResponses;
 import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.ApplicationException;
+import umc.duckmelang.global.apipayload.exception.MemberException;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +36,7 @@ import java.util.Optional;
 public class ReviewController {
     private final ReviewCommandService reviewCommandService;
     private final ReviewQueryService reviewQueryService;
+    private final MemberRepository memberRepository;
 
     @PostMapping("/reviews")
     @CommonApiResponses
@@ -70,7 +74,10 @@ public class ReviewController {
         }
         Application application = applications.get(0);
 
-        return ApiResponse.onSuccess(ReviewConverter.reviewInformationDto(application));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        return ApiResponse.onSuccess(ReviewConverter.reviewInformationDto(application , member));
     }
 
 }

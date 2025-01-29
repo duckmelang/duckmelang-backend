@@ -54,6 +54,7 @@ public class ReviewResponseDto {
         private String eventCategory;
         private LocalDate date;
         private String postImageUrl;
+        private String latestPublicMemberProfileImage;
 
     }
 }

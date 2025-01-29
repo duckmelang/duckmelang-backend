@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.repository.PostRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service

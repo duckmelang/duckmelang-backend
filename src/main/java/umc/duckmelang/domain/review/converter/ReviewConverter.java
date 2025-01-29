@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.eventcategory.domain.EventCategory;
 import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
@@ -12,6 +13,7 @@ import umc.duckmelang.domain.review.dto.ReviewRequestDto;
 import umc.duckmelang.domain.review.dto.ReviewResponseDto;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,7 +69,12 @@ public class ReviewConverter {
 
     }
 
-    public static ReviewResponseDto.ReviewInformationDto reviewInformationDto(Application application) {
+    public static ReviewResponseDto.ReviewInformationDto reviewInformationDto(Application application, Member member) {
+        MemberProfileImage latestImage = member.getMemberProfileImageList().stream()
+                .filter(MemberProfileImage::isPublic)
+                .max(Comparator.comparing(MemberProfileImage::getUpdatedAt)) // 최신 updatedAt 기준
+                .orElse(null); // 없으면 null
+
         return ReviewResponseDto.ReviewInformationDto.builder()
                 .applicationId(application.getId())
                 .name(application.getPost().getMember().getNickname())
@@ -75,6 +82,7 @@ public class ReviewConverter {
                 .eventCategory(application.getPost().getEventCategory().getName())
                 .date(application.getPost().getEventDate())
                 .postImageUrl(application.getPost().getPostImageList().isEmpty() ? null : application.getPost().getPostImageList().get(0).getPostImageUrl())
+                .latestPublicMemberProfileImage(latestImage != null ? latestImage.getMemberImage() : null)
                 .build();
     }
 }
