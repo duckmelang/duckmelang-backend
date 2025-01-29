@@ -1,12 +1,13 @@
-package umc.duckmelang.domain.post.service;
+package umc.duckmelang.domain.bookmark.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import umc.duckmelang.domain.bookmark.converter.BookmarkConverter;
+import umc.duckmelang.domain.bookmark.domain.Bookmark;
+import umc.duckmelang.domain.bookmark.repository.BookmarkRepository;
 import umc.duckmelang.domain.eventcategory.domain.EventCategory;
-import umc.duckmelang.domain.eventcategory.repository.EventCategoryRepository;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
-import umc.duckmelang.domain.idolcategory.repository.IdolCategoryRepository;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.post.converter.PostConverter;
@@ -24,41 +25,23 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class PostCommandServiceImpl implements PostCommandService {
+public class BookmarkCommandServiceImpl implements BookmarkCommandService {
 
+    private final BookmarkRepository bookmarkRepository;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
-    private final EventCategoryRepository eventCategoryRepository;
-    private final IdolCategoryRepository idolCategoryRepository;
 
     @Override
-    public Post joinPost(PostRequestDto.PostJoinDto request, Long memberId) {
+    public Bookmark joinBookmark(Long postId, Long memberId) {
 //        Member 엔티티 조회
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
-
-//        EventCategory 엔티티 조회
-        EventCategory eventCategory = eventCategoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new EventCategoryException(ErrorStatus.EVENT_CATEGORY_NOT_FOUND));
-
-//        IdolCategory 엔티티 리스트 조회
-        List<IdolCategory> idolCategories = idolCategoryRepository.findAllById(request.getIdolIds());
-        if (idolCategories.isEmpty()) {
-            throw new IdolCategoryException(ErrorStatus.IDOL_CATEGORY_NOT_FOUND);
-        }
-
-        Post newPost = PostConverter.toPost(request, member, eventCategory, idolCategories);
-        return postRepository.save(newPost);
-
-    }
-
-    @Override
-    public Post patchPostStatus(Long postId) {
+//        Post 엔티티 조회
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(ErrorStatus.POST_NOT_FOUND));
-        post.toggleWanted();
-
-        return postRepository.save(post);
+        Bookmark bookmark = BookmarkConverter.toBookmark(member, post);
+        return bookmarkRepository.save(bookmark);
     }
 }
+
 

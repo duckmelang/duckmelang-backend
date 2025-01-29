@@ -4,39 +4,34 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import umc.duckmelang.domain.application.service.ApplicationQueryService;
-import umc.duckmelang.domain.member.converter.MemberConverter;
-import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
 import umc.duckmelang.domain.member.facade.ProfileFacadeService;
 import umc.duckmelang.domain.member.service.MemberCommandService;
 import umc.duckmelang.domain.member.service.MemberQueryService;
-import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
-import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageRequestDto;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageCommandService;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
-import umc.duckmelang.domain.post.converter.PostConverter;
-import umc.duckmelang.domain.post.domain.Post;
-import umc.duckmelang.domain.post.dto.PostResponseDto;
 import umc.duckmelang.domain.post.service.PostQueryService;
 
+import umc.duckmelang.domain.review.converter.ReviewConverter;
+import umc.duckmelang.domain.review.domain.Review;
+import umc.duckmelang.domain.review.dto.ReviewResponseDto;
+import umc.duckmelang.domain.review.service.ReviewQueryService;
+import umc.duckmelang.global.annotations.CommonApiResponses;
 import umc.duckmelang.global.apipayload.ApiResponse;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/mypage")
 @RequiredArgsConstructor
 public class MyPageController {
-
-    private final MemberQueryService memberQueryService;
-    private final MemberCommandService memberCommandService;
-    private final MemberProfileImageQueryService memberProfileImageQueryService;
-    private final MemberProfileImageCommandService memberProfileImageCommandService;
     private final ProfileFacadeService profileFacadeService;
     private final PostQueryService postQueryService;
+    private final ReviewQueryService reviewQueryService;
 
     @GetMapping(path = "/posts")
     @Operation(summary = "내가 업로드한 게시글들 조회",description = "memberId는 추후 jwt로 바꿉니다")
@@ -70,6 +65,14 @@ public class MyPageController {
              @RequestBody MemberRequestDto.UpdateMemberProfileDto request) {
 
         return ApiResponse.onSuccess(profileFacadeService.updateMypageMemberProfile(memberId, request));
+    }
+
+    @GetMapping("/reviews")
+    @CommonApiResponses
+    @Operation(summary = "나와의 동행 후기 조회 API", description = "내 프로필에서 나와의 동행 후기 볼 때 이용하는 API 입니다. 성별은 true일때 남자, false일때 여자입니다. memberId는 추후 JWT 변경 예정")
+    public ApiResponse<ReviewResponseDto.ReviewListDto> getMyReviewList(@RequestParam(name="memberId") Long memberId){
+        List<Review> reviewList = reviewQueryService.getReviewList(memberId);
+        return ApiResponse.onSuccess(ReviewConverter.reviewListDto(reviewList));
     }
 
 

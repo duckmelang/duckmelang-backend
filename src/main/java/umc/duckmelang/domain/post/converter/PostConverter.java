@@ -24,7 +24,7 @@ public class PostConverter {
                 .title(post.getTitle())
                 .category(post.getEventCategory().getName())
                 .date(post.getEventDate())
-                .name(post.getMember().getName())
+                .nickname(post.getMember().getNickname())
                 .createdAt(post.getCreatedAt())
                 .build();
     }
@@ -50,7 +50,7 @@ public class PostConverter {
                 .collect(Collectors.toList());
 
         return PostResponseDto.PostDetailDto.builder()
-                .name(post.getMember().getName())
+                .nickname(post.getMember().getNickname())
                 .birth(post.getMember().getBirth())
                 .gender(post.getMember().getGender())
                 .title(post.getTitle())
@@ -80,7 +80,7 @@ public class PostConverter {
                 .member(member)
                 .build();
 
-//        아이돌
+        //아이돌
         List<PostIdol> postIdols = idolCategories.stream()
                 .map(idolCategory -> PostIdol.builder()
                         .post(post)
@@ -95,6 +95,14 @@ public class PostConverter {
         post.getPostIdolList().addAll(postIdols);
 
         return post;
+    }
+
+    public static PostResponseDto.PostStatusDto postStatusDto(Post post) {
+        return PostResponseDto.PostStatusDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .wanted(post.getWanted())
+                .build();
     }
 
 

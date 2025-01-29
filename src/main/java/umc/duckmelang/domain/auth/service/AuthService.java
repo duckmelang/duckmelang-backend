@@ -19,8 +19,6 @@ import umc.duckmelang.global.security.user.CustomUserDetails;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.AuthException;
 
-import java.util.Collections;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -51,6 +49,9 @@ public class AuthService {
     // 토큰 재발급
     @Transactional
     public AuthResponseDto.TokenResponse reissue(String refreshToken) {
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            throw new TokenException(ErrorStatus.MISSING_TOKEN);
+        }
         RefreshToken storedToken = refreshTokenService.validateAndGetRefreshToken(refreshToken);
         refreshTokenService.removeRefreshToken(refreshToken);
         Long memberId = storedToken.getMemberId();

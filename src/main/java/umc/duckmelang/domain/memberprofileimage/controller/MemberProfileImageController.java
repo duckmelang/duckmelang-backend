@@ -18,7 +18,7 @@ import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import java.util.List;
 
 @RestController
-@RequestMapping("/profile/image")
+@RequestMapping("/mypage/profile/image")
 @RequiredArgsConstructor
 public class MemberProfileImageController {
 

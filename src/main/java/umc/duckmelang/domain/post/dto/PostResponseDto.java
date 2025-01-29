@@ -20,7 +20,7 @@ public class PostResponseDto {
         private String title;
         private String category;
         private LocalDate date;
-        private String name;
+        private String nickname;
         private LocalDateTime createdAt;
     }
 
@@ -42,7 +42,7 @@ public class PostResponseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class PostDetailDto{
-        private String name;
+        private String nickname;
         private LocalDate birth;
         private Boolean gender;
         private String title;
@@ -60,6 +60,16 @@ public class PostResponseDto {
     public static class PostJoinResultDto{
         private Long id;
         private String title;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PostStatusDto{
+        private Long id;
+        private String title;
+        private Short wanted;
     }
 
 }
