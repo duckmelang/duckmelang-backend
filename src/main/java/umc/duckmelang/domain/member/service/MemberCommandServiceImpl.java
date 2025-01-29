@@ -198,4 +198,11 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         return memberRepository.save(updatedMember);
     }
 
+    @Override
+    @Transactional
+    public void  completeProfile(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()-> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+        member.completeProfile();
+    }
 }

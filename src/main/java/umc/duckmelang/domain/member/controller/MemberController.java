@@ -44,9 +44,7 @@ public class MemberController {
 
         // 리스트가 비어 있는 경우 예외 처리
         if (updatedMemberIdolList.isEmpty()) {
-            throw new IllegalArgumentException("선택된 아이돌 카테고리가 없습니다.");
-        }
-
+            throw new IllegalArgumentException("선택된 아이돌 카테고리가 없습니다.");}
         return ApiResponse.onSuccess(MemberConverter.toSelectIdolResponseDto(updatedMemberIdolList));
     }
 
@@ -57,9 +55,7 @@ public class MemberController {
             @RequestBody @Valid MemberRequestDto.SelectEventsDto request) {
 
         List<MemberEvent> updatedMemberEventList = memberCommandService.selectEvents(memberId, request);
-
         // 리스트가 비어 있는 경우 허용(따라서 예외 처리 생략)
-
         return ApiResponse.onSuccess(MemberConverter.toSelectEventResponseDto(updatedMemberEventList));
     }
 
@@ -70,9 +66,7 @@ public class MemberController {
             @RequestBody @Valid MemberRequestDto.CreateLandminesDto request) {
 
         List<Landmine> updatedLandmineList = memberCommandService.createLandmines(memberId, request);
-
         // 리스트가 비어 있는 경우 허용(따라서 예외 처리 생략)
-
         return ApiResponse.onSuccess(MemberConverter.toCreateLandmineResponseDto(updatedLandmineList));
     }
 
@@ -83,7 +77,6 @@ public class MemberController {
             @RequestBody @Valid MemberRequestDto.CreateMemberProfileImageDto request) {
 
         MemberProfileImage updatedMemberProfileImage = memberCommandService.createMemberProfileImage(memberId, request);
-
         return ApiResponse.onSuccess(MemberConverter.toCreateMemberProfileImageResponseDto(updatedMemberProfileImage));
     }
 
@@ -93,8 +86,14 @@ public class MemberController {
             @PathVariable(name = "memberId") Long memberId,
             @RequestBody @Valid MemberRequestDto.CreateIntroductionDto request) {
 
-        Member updatedmember= memberCommandService.createIntroduction(memberId, request);
-
+        Member updatedmember = memberCommandService.createIntroduction(memberId, request);
         return ApiResponse.onSuccess(MemberConverter.toCreateIntroductionResponseDto(updatedmember));
+    }
+
+    @Operation(summary = "프로필 설정 완료 API", description = "소셜 로그인 사용자가 프로필 설정을 완료하면 호출하는 API입니다. ")
+    @PatchMapping("/{memberId}/profile-complete")
+    public ApiResponse<String> completeProfile(@PathVariable(name = "memberId") Long memberId){
+        memberCommandService.completeProfile(memberId);
+        return ApiResponse.onSuccess("프로필 설정이 완료되었습니다.");
     }
 }

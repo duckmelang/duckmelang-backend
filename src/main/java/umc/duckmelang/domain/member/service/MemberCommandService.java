@@ -18,4 +18,5 @@ public interface MemberCommandService {
     MemberProfileImage createMemberProfileImage(Long memberId, MemberRequestDto.CreateMemberProfileImageDto request);
     Member createIntroduction(Long memberId, MemberRequestDto.CreateIntroductionDto request);
     Member updateMemberProfile(Long memberId, MemberRequestDto.UpdateMemberProfileDto request);
+    void completeProfile(Long memberId);
 }
