@@ -4,21 +4,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import umc.duckmelang.domain.application.service.ApplicationQueryService;
-import umc.duckmelang.domain.member.converter.MemberConverter;
-import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
 import umc.duckmelang.domain.member.facade.ProfileFacadeService;
 import umc.duckmelang.domain.member.service.MemberCommandService;
 import umc.duckmelang.domain.member.service.MemberQueryService;
-import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
-import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageRequestDto;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageCommandService;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
-import umc.duckmelang.domain.post.converter.PostConverter;
-import umc.duckmelang.domain.post.domain.Post;
-import umc.duckmelang.domain.post.dto.PostResponseDto;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
@@ -37,11 +29,6 @@ import java.util.List;
 @RequestMapping("/mypage")
 @RequiredArgsConstructor
 public class MyPageController {
-
-    private final MemberQueryService memberQueryService;
-    private final MemberCommandService memberCommandService;
-    private final MemberProfileImageQueryService memberProfileImageQueryService;
-    private final MemberProfileImageCommandService memberProfileImageCommandService;
     private final ProfileFacadeService profileFacadeService;
     private final PostQueryService postQueryService;
     private final ReviewQueryService reviewQueryService;

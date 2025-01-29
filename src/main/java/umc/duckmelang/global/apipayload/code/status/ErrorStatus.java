@@ -64,8 +64,6 @@ public enum ErrorStatus implements BaseErrorCode {
     //MEMBER_PROFILE_IMAGE
     MEMBER_PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER_PROFILE_IMAGE4001", "멤버 프로필 이미지가 없습니다.");
 
-
-
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
@@ -88,6 +86,4 @@ public enum ErrorStatus implements BaseErrorCode {
                 .httpStatus(httpStatus)
                 .build();
     }
-
-
 }

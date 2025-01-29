@@ -15,7 +15,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import umc.duckmelang.global.security.filter.JwtAuthorizationFilter;
 import umc.duckmelang.global.security.exception.CustomAuthenticationEntryPoint;
+import umc.duckmelang.domain.auth.oauth.CustomOAuth2UserService;
 import umc.duckmelang.global.security.user.CustomUserDetailsService;
+import umc.duckmelang.domain.auth.oauth.OAuth2LoginSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -24,6 +26,8 @@ public class SecurityConfig {
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
     private final CustomUserDetailsService customUserDetailsService;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,9 +43,13 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/swagger-ui.html",
                                 "/webjars/**",
-                                "/login", "/members/signup", "/token/refresh", "/logout"
-                                        , "/login/oauth2/code/kakao").permitAll()
+                                "/login", "/members/**", "/token/refresh", "/logout",
+                                "/oauth2/**", "/login/oauth2/**").permitAll()
                         .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                        .successHandler(oAuth2LoginSuccessHandler)
                 )
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(httpSecurityExceptionHandlingCustomizer -> {

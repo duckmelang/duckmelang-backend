@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.service.MemberQueryService;
 import umc.duckmelang.domain.member.validation.annotation.ExistMember;
-import umc.duckmelang.domain.post.domain.Post;
-import umc.duckmelang.domain.post.validation.annotation.ExistPost;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 
 import java.util.Optional;
