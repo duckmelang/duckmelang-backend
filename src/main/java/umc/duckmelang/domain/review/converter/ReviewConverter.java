@@ -2,13 +2,16 @@ package umc.duckmelang.domain.review.converter;
 
 import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.application.domain.Application;
+import umc.duckmelang.domain.eventcategory.domain.EventCategory;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.post.converter.PostConverter;
+import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
 import umc.duckmelang.domain.review.domain.Review;
 import umc.duckmelang.domain.review.dto.ReviewRequestDto;
 import umc.duckmelang.domain.review.dto.ReviewResponseDto;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,5 +67,13 @@ public class ReviewConverter {
 
     }
 
-
+    public static ReviewResponseDto.ReviewInformationDto reviewInformationDto(Application application) {
+        return ReviewResponseDto.ReviewInformationDto.builder()
+                .applicationId(application.getId())
+                .name(application.getPost().getMember().getNickname())
+                .title(application.getPost().getTitle())
+                .eventCategory(application.getPost().getEventCategory().getName())
+                .date(application.getPost().getEventDate())
+                .build();
+    }
 }

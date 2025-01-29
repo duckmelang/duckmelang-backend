@@ -5,4 +5,6 @@ import umc.duckmelang.domain.post.dto.PostRequestDto;
 
 public interface PostCommandService {
     Post joinPost(PostRequestDto.PostJoinDto request, Long memberId);
+    Post patchPostStatus(Long postId);
+
 }
