@@ -49,6 +49,13 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String password;
 
+    @Column(nullable = false)
+    private boolean isProfileComplete = false;
+
+    public void completeProfile(){
+        this.isProfileComplete = true;
+    }
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberProfileImage> memberProfileImageList = new ArrayList<>();
 

@@ -26,5 +26,6 @@ public class AuthResponseDto {
         private String provider;
         private String accessToken;
         private String refreshToken;
+        private boolean isProfileComplete;
     }
 }

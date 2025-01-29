@@ -43,7 +43,7 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/swagger-ui.html",
                                 "/webjars/**",
-                                "/login", "/signup", "/token/refresh", "/logout",
+                                "/login", "/members/**", "/token/refresh", "/logout",
                                 "/oauth2/**", "/login/oauth2/**").permitAll()
                         .anyRequest().authenticated()
                 )

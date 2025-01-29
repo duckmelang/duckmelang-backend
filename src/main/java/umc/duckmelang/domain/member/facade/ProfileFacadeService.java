@@ -26,9 +26,7 @@ public class ProfileFacadeService {
     private final MemberQueryService memberQueryService;
     private final MemberCommandService memberCommandService;
     private final PostQueryService postQueryService;
-    private final PostImageQueryService postImageQueryService;
     private final ApplicationQueryService applicationService;
-    private final MemberProfileImageQueryService profileImageService;
     private final ApplicationQueryService applicationQueryService;
     private final MemberProfileImageQueryService memberProfileImageQueryService;
     private final MemberProfileImageCommandService memberProfileImageCommandService;
@@ -108,7 +106,6 @@ public class ProfileFacadeService {
         // 대표 프로필 이미지 1개 조회
         MemberProfileImage latestPublicMemberProfileImage = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
                 .orElseThrow(()-> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
-
 
         return MemberConverter.toUpdateMemberProfileDto(updatedMember,latestPublicMemberProfileImage);
     }

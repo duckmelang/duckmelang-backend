@@ -5,8 +5,8 @@ import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.member.domain.Member;
-import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
+import umc.duckmelang.domain.member.dto.MemberSignUpDto;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
@@ -20,15 +20,16 @@ import java.util.ArrayList;
 public class MemberConverter {
 
 
-    public static Member toMember(MemberRequestDto.SignupDto request){
+    public static Member toMember(MemberSignUpDto.SignupDto request){
         return Member.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())
+                .isProfileComplete(true) // 일반 회원가입 사용자는 true
                 .build();
     }
 
-    public static MemberResponseDto.SignupResultDto toSignupResultDto(Member member){
-        return MemberResponseDto.SignupResultDto.builder()
+    public static MemberSignUpDto.SignupResultDto toSignupResultDto(Member member){
+        return MemberSignUpDto.SignupResultDto.builder()
                 .memberId(member.getId())
                 .createdAt(member.getCreatedAt())
                 .build();

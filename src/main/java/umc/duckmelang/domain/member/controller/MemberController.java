@@ -12,6 +12,7 @@ import umc.duckmelang.domain.member.converter.MemberConverter;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
+import umc.duckmelang.domain.member.dto.MemberSignUpDto;
 import umc.duckmelang.domain.member.service.MemberCommandService;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
@@ -28,7 +29,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입 API", description = "사용자 정보를 받아 회원가입을 처리하는 API입니다.")
-    public ApiResponse<MemberResponseDto.SignupResultDto> signup(@RequestBody @Valid MemberRequestDto.SignupDto request){
+    public ApiResponse<MemberSignUpDto.SignupResultDto> signup(@RequestBody @Valid MemberSignUpDto.SignupDto request){
         Member member = memberCommandService.signupMember(request);
         return ApiResponse.onSuccess(MemberConverter.toSignupResultDto(member));
     }

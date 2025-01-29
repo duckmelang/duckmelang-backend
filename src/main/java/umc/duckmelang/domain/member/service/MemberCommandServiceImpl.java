@@ -13,6 +13,7 @@ import umc.duckmelang.domain.landmine.repository.LandmineRepository;
 import umc.duckmelang.domain.member.converter.MemberConverter;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
+import umc.duckmelang.domain.member.dto.MemberSignUpDto;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberevent.repository.MemberEventRepository;
@@ -46,7 +47,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     @Override
     @Transactional
-    public Member signupMember(MemberRequestDto.SignupDto request){
+    public Member signupMember(MemberSignUpDto.SignupDto request){
         if(memberRepository.existsByEmail(request.getEmail())){
             throw new MemberException(ErrorStatus.DUPLICATE_EMAIL);
         }

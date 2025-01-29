@@ -53,7 +53,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return existingAuth.getMember();
         }
 
-        Member newMember = attributes.toEntity(providerId);
+        //Member newMember = attributes.toEntity(providerId);
+        Member newMember = Member.builder()
+                .email(attributes.getEmail())
+                .password("SOCIAL_LOGIN")
+                .isProfileComplete(false)
+                .build();
+
         Member savedMember = memberRepository.save(newMember);
         Auth newAuth = Auth.builder()
                 .textId(attributes.getEmail())
