@@ -32,9 +32,6 @@ public class Member extends BaseEntity {
     private Long id;
 
     @Column(length = 30)
-    private String name;
-
-    @Column(length = 30)
     private String nickname;
 
     @Column(length = 500)
