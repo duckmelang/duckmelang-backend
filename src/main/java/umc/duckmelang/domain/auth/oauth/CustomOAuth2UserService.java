@@ -66,9 +66,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private void updateMemberInfo(Member member, OAuthAttributes attributes) {
-        if (attributes.getNickname() != null && !attributes.getNickname().isEmpty()) {
-            member.setName(attributes.getNickname());
-        }
         if (!member.getEmail().equals(attributes.getEmail())) {
             member.setEmail(attributes.getEmail());
         }

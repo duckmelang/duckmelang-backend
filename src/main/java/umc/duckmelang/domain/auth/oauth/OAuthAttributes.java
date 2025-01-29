@@ -29,12 +29,9 @@ public class OAuthAttributes {
     // 카카오 로직
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
-        String nickname = profile != null ? (String) profile.get("nickname") : null;
         return OAuthAttributes.builder()
                 .nameAttributeKey(userNameAttributeName)
                 .email((String) kakaoAccount.get("email"))
-                .nickname(nickname)
                 .build();
     }
 
@@ -43,14 +40,12 @@ public class OAuthAttributes {
         return OAuthAttributes.builder()
                 .nameAttributeKey(userNameAttributeName)
                 .email((String) attributes.get("email"))
-                .nickname((String) attributes.get("name"))
                 .build();
     }
 
     public Member toEntity(String providerId) {
         return Member.builder()
                 .email(email)
-                .name(nickname)
                 .password("SOCIAL_LOGIN")
                 .build();
     }
