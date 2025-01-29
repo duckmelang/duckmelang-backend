@@ -48,6 +48,9 @@ public class Post extends BaseEntity {
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
+    @Column(name = "view_count", nullable = false)
+    private int viewCount = 0;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostIdol> postIdolList = new ArrayList<>();
 
@@ -114,6 +117,10 @@ public class Post extends BaseEntity {
         if (postImageList != null) {
             postImageList.forEach(postImage-> postImage.setPost(this));
         }
+    }
+
+    public void increaseViewCount() {
+        this.viewCount++;
     }
 
 }

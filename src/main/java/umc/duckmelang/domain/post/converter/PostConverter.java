@@ -76,6 +76,7 @@ public class PostConverter {
                 .gender(post.getMember().stringGender())
                 .averageScore(averageScore)
                 .bookmarkCount(bookmarkCount)
+                .viewCount(post.getViewCount())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .wanted(post.getWanted())

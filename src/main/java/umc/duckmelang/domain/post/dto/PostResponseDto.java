@@ -50,6 +50,7 @@ public class PostResponseDto {
         private String gender;
         private Double averageScore;
         private Integer bookmarkCount;
+        private Integer viewCount;
         private String title;
         private String content;
         private Short wanted;

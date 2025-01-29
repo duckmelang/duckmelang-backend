@@ -19,6 +19,7 @@ import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostRequestDto;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
+import umc.duckmelang.domain.post.repository.PostRepository;
 import umc.duckmelang.domain.post.service.PostCommandService;
 import umc.duckmelang.domain.post.service.PostCommandServiceImpl;
 import umc.duckmelang.domain.post.service.PostQueryService;
@@ -43,6 +44,7 @@ public class PostController {
     private final PostCommandService postCommandService;
     private final ReviewQueryService reviewQueryService;
     private final BookmarkQueryService bookmarkQueryService;
+    private final PostRepository postRepository;
 
     @GetMapping("")
     @CommonApiResponses
@@ -65,7 +67,7 @@ public class PostController {
 
     @GetMapping("/{postId}")
     @CommonApiResponses
-    @Operation(summary = "게시글 상세 조회 API", description = "홈화면에서 게시글 1개 클릭시 자세히 보여주는 API입니다. wanted가 0이면 종료, 1이면 진행 중입니다.  채팅, 조회수 아직 만들지 않음")
+    @Operation(summary = "게시글 상세 조회 API", description = "홈화면에서 게시글 1개 클릭시 자세히 보여주는 API입니다. wanted가 0이면 종료, 1이면 진행 중입니다.  채팅수 조회 아직 만들지 않음")
     @Parameters({@Parameter(name = "postId", description = "게시글 Id, path variable 입니다")})
     public ApiResponse<PostResponseDto.PostDetailDto> getPostDetail (@ExistPost @PathVariable(name="postId") Long postId){
         Post post = postQueryService.getPostDetail(postId)
