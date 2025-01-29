@@ -49,6 +49,7 @@ public class PostResponseDto {
         private Integer age;
         private String gender;
         private Double averageScore;
+        private Integer bookmarkCount;
         private String title;
         private String content;
         private Short wanted;

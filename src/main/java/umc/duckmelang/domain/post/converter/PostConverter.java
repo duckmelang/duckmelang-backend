@@ -59,7 +59,7 @@ public class PostConverter {
                 .build();
     }
 
-    public static PostResponseDto.PostDetailDto postDetailDto(Post post, Double averageScore) {
+    public static PostResponseDto.PostDetailDto postDetailDto(Post post, Double averageScore, Integer bookmarkCount) {
 
         List<String> idolNames = post.getPostIdolList().stream()
                 .map(postIdol -> postIdol.getIdolCategory().getName())
@@ -75,6 +75,7 @@ public class PostConverter {
                 .age(post.getMember().calculateAge())
                 .gender(post.getMember().stringGender())
                 .averageScore(averageScore)
+                .bookmarkCount(bookmarkCount)
                 .title(post.getTitle())
                 .content(post.getContent())
                 .wanted(post.getWanted())
