@@ -21,6 +21,7 @@ import java.util.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -29,9 +30,6 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
-
-    @Column(length = 30)
-    private String name;
 
     @Column(length = 30)
     private String nickname;
@@ -50,6 +48,13 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false, length = 100)
     private String password;
+
+    @Column(nullable = false)
+    private boolean isProfileComplete = false;
+
+    public void completeProfile(){
+        this.isProfileComplete = true;
+    }
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberProfileImage> memberProfileImageList = new ArrayList<>();
