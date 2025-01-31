@@ -19,6 +19,7 @@ import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostRequestDto;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
+import umc.duckmelang.domain.post.facade.PostFacadeService;
 import umc.duckmelang.domain.post.repository.PostRepository;
 import umc.duckmelang.domain.post.service.PostCommandService;
 import umc.duckmelang.domain.post.service.PostCommandServiceImpl;
@@ -44,7 +45,7 @@ public class PostController {
     private final PostCommandService postCommandService;
     private final ReviewQueryService reviewQueryService;
     private final BookmarkQueryService bookmarkQueryService;
-    private final PostRepository postRepository;
+    private final PostFacadeService postFacadeService;
 
     @GetMapping("")
     @CommonApiResponses
@@ -70,13 +71,7 @@ public class PostController {
     @Operation(summary = "게시글 상세 조회 API", description = "홈화면에서 게시글 1개 클릭시 자세히 보여주는 API입니다. wanted가 0이면 종료, 1이면 진행 중입니다.  채팅수 조회 아직 만들지 않음")
     @Parameters({@Parameter(name = "postId", description = "게시글 Id, path variable 입니다")})
     public ApiResponse<PostResponseDto.PostDetailDto> getPostDetail (@ExistPost @PathVariable(name="postId") Long postId){
-        Post post = postQueryService.getPostDetail(postId)
-                .orElseThrow(()-> new IllegalArgumentException("해당 게시글이 존재하지 않습니다"));
-        List<Review> reviewList = Optional.ofNullable(reviewQueryService.getReviewList(post.getMember().getId()))
-                .orElse(Collections.emptyList());
-        double averageScore = reviewQueryService.calculateAverageScore(reviewList);
-        Integer bookmarkCount = bookmarkQueryService.getBookmarkCount(postId);
-        return ApiResponse.onSuccess(PostConverter.postDetailDto(post, averageScore, bookmarkCount));
+        return ApiResponse.onSuccess(postFacadeService.getPostDetail(postId));
     }
 
     @PostMapping("/{memberId}")
@@ -93,7 +88,6 @@ public class PostController {
     public ApiResponse<PostResponseDto.PostPreviewListDto> getPostListByTitle (@ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page, @RequestParam(name="searchKeyword") String searchKeyword){
         Page<Post> postList = postQueryService.getPostListByTitle(searchKeyword, page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
-
     }
 
 
