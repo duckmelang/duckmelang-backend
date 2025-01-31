@@ -137,4 +137,13 @@ public class Member extends BaseEntity {
         this.nickname = nickname;
         this.introduction = introduction;
     }
+
+//    성별 반환 메서드(true면 남성, false면 여성으로 반환)
+    public String stringGender(){
+        if(this.gender == true){
+            return "남성";
+        } else{
+            return "여성";
+        }
+    }
 }

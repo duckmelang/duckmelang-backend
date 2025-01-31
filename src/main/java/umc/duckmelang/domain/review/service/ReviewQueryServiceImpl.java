@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.review.domain.Review;
+import umc.duckmelang.domain.review.dto.ReviewResponseDto;
 import umc.duckmelang.domain.review.repository.ReviewRepository;
 
 import java.util.List;
@@ -28,6 +29,19 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
     @Override
     public List<Application> getReviewInformation(Long myId, Long memberId) {
         return reviewRepository.findReviewInformation(myId, memberId);
+    }
+
+//    리뷰 평균값 계산
+    @Override
+    public double calculateAverageScore(List<Review> reviewList){
+        if (reviewList == null || reviewList.isEmpty()) {
+            return 0.0;
+        }
+        return Math.round(reviewList.stream()
+                .mapToInt(Review::getScore)
+                .average()
+                .orElse(0) * 10) / 10.0;
+
     }
 
 }

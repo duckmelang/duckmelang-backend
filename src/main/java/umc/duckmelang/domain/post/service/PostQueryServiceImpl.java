@@ -5,10 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.repository.PostRepository;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.MemberException;
+import umc.duckmelang.global.apipayload.exception.PostException;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,7 +38,12 @@ public class PostQueryServiceImpl implements PostQueryService{
 
     @Override
     public Optional<Post> getPostDetail(Long postId){
-        return postRepository.findById(postId);
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(ErrorStatus.POST_NOT_FOUND));
+        post.increaseViewCount();
+        postRepository.save(post);
+        return Optional.of(post);
     }
 
     @Override

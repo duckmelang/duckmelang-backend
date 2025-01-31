@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import umc.duckmelang.domain.application.domain.Application;
+import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.member.validation.annotation.ExistMember;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
@@ -23,6 +25,7 @@ import umc.duckmelang.global.annotations.CommonApiResponses;
 import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.ApplicationException;
+import umc.duckmelang.global.apipayload.exception.MemberException;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +38,7 @@ import java.util.stream.Collectors;
 public class ReviewController {
     private final ReviewCommandService reviewCommandService;
     private final ReviewQueryService reviewQueryService;
+    private final MemberRepository memberRepository;
 
     @PostMapping("")
     @CommonApiResponses
@@ -43,7 +47,6 @@ public class ReviewController {
         Review review = reviewCommandService.joinReview(request, memberId);
         return ApiResponse.onSuccess(ReviewConverter.reviewJoinResultDto(review));
     }
-
 
     @GetMapping("/information")
     @CommonApiResponses
@@ -55,8 +58,11 @@ public class ReviewController {
             throw new ApplicationException(ErrorStatus.APPLICATION_NOT_FOUND);
         }
 
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+
         List<ReviewResponseDto.ReviewInformationDto> reviewInformationDtos = applications.stream()
-                .map(ReviewConverter::reviewInformationDto)
+                .map(application -> ReviewConverter.reviewInformationDto(application, member ))
                 .collect(Collectors.toList());
 
         return ApiResponse.onSuccess(reviewInformationDtos);

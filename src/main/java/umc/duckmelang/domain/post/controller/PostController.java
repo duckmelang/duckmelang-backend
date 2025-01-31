@@ -12,18 +12,28 @@ import umc.duckmelang.domain.bookmark.converter.BookmarkConverter;
 import umc.duckmelang.domain.bookmark.domain.Bookmark;
 import umc.duckmelang.domain.bookmark.dto.BookmarkResponseDto;
 import umc.duckmelang.domain.bookmark.service.BookmarkCommandService;
+import umc.duckmelang.domain.bookmark.service.BookmarkQueryService;
+import umc.duckmelang.domain.bookmark.service.BookmarkQueryServiceImpl;
 import umc.duckmelang.domain.idolcategory.validation.annotation.ExistIdol;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostRequestDto;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
+import umc.duckmelang.domain.post.facade.PostFacadeService;
+import umc.duckmelang.domain.post.repository.PostRepository;
 import umc.duckmelang.domain.post.service.PostCommandService;
 import umc.duckmelang.domain.post.service.PostCommandServiceImpl;
 import umc.duckmelang.domain.post.service.PostQueryService;
 import umc.duckmelang.domain.post.validation.annotation.ExistPost;
 import umc.duckmelang.domain.post.validation.annotation.ValidPageNumber;
+import umc.duckmelang.domain.review.domain.Review;
+import umc.duckmelang.domain.review.service.ReviewQueryService;
 import umc.duckmelang.global.annotations.CommonApiResponses;
 import umc.duckmelang.global.apipayload.ApiResponse;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
@@ -33,7 +43,9 @@ public class PostController {
 
     private final PostQueryService postQueryService;
     private final PostCommandService postCommandService;
-    private final BookmarkCommandService bookmarkCommandService;
+    private final ReviewQueryService reviewQueryService;
+    private final BookmarkQueryService bookmarkQueryService;
+    private final PostFacadeService postFacadeService;
 
     @GetMapping("")
     @CommonApiResponses
@@ -56,12 +68,10 @@ public class PostController {
 
     @GetMapping("/{postId}")
     @CommonApiResponses
-    @Operation(summary = "게시글 상세 조회 API", description = "홈화면에서 게시글 1개 클릭시 자세히 보여주는 API입니다. 성별은 true일때 남자, false일때 여자입니다. 스크랩, 채팅, 조회수, 후기평 아직 만들지 않음")
+    @Operation(summary = "게시글 상세 조회 API", description = "홈화면에서 게시글 1개 클릭시 자세히 보여주는 API입니다. wanted가 0이면 종료, 1이면 진행 중입니다.  채팅수 조회 아직 만들지 않음")
     @Parameters({@Parameter(name = "postId", description = "게시글 Id, path variable 입니다")})
     public ApiResponse<PostResponseDto.PostDetailDto> getPostDetail (@ExistPost @PathVariable(name="postId") Long postId){
-        Post post = postQueryService.getPostDetail(postId)
-                .orElseThrow(()-> new IllegalArgumentException("해당 게시글이 존재하지 않습니다"));
-        return ApiResponse.onSuccess(PostConverter.postDetailDto(post));
+        return ApiResponse.onSuccess(postFacadeService.getPostDetail(postId));
     }
 
     @PostMapping("/{memberId}")
@@ -78,7 +88,6 @@ public class PostController {
     public ApiResponse<PostResponseDto.PostPreviewListDto> getPostListByTitle (@ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page, @RequestParam(name="searchKeyword") String searchKeyword){
         Page<Post> postList = postQueryService.getPostListByTitle(searchKeyword, page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
-
     }
 
 

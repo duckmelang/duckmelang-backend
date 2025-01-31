@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +23,8 @@ public class PostResponseDto {
         private LocalDate date;
         private String nickname;
         private LocalDateTime createdAt;
+        private String postImageUrl;
+        private String latestPublicMemberProfileImage;
     }
 
     @Getter
@@ -43,14 +46,20 @@ public class PostResponseDto {
     @NoArgsConstructor
     public static class PostDetailDto{
         private String nickname;
-        private LocalDate birth;
-        private Boolean gender;
+        private Integer age;
+        private String gender;
+        private Double averageScore;
+        private Integer bookmarkCount;
+        private Integer viewCount;
         private String title;
         private String content;
+        private Short wanted;
         private List<String> idol;
         private String category;
         private LocalDate date;
         private LocalDateTime createdAt;
+        private List<String> postImageUrl;
+        private String latestPublicMemberProfileImage;
     }
 
     @Getter

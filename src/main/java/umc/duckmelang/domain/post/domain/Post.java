@@ -48,6 +48,9 @@ public class Post extends BaseEntity {
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
+    @Column(name = "view_count", nullable = false)
+    private int viewCount = 0;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostIdol> postIdolList = new ArrayList<>();
 
@@ -104,6 +107,20 @@ public class Post extends BaseEntity {
         } else {
             throw new PostException(ErrorStatus.INVALID_WANTED);  // 원하시는 ErrorStatus를 여기서 던질 수 있습니다.
         }
+    }
+
+    public void setPostImageList(List<PostImage> postImageList){
+        if(this.postImageList !=null){
+            this.postImageList.forEach(postImage-> postImage.setPost(null));
+        }
+        this.postImageList = postImageList;
+        if (postImageList != null) {
+            postImageList.forEach(postImage-> postImage.setPost(this));
+        }
+    }
+
+    public void increaseViewCount() {
+        this.viewCount++;
     }
 
 }
