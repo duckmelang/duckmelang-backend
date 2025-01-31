@@ -72,7 +72,8 @@ public class MyPageController {
     @Operation(summary = "나와의 동행 후기 조회 API", description = "내 프로필에서 나와의 동행 후기 볼 때 이용하는 API 입니다. 성별은 true일때 남자, false일때 여자입니다. memberId는 추후 JWT 변경 예정")
     public ApiResponse<ReviewResponseDto.ReviewListDto> getMyReviewList(@RequestParam(name="memberId") Long memberId){
         List<Review> reviewList = reviewQueryService.getReviewList(memberId);
-        return ApiResponse.onSuccess(ReviewConverter.reviewListDto(reviewList));
+        double averageScore = reviewQueryService.calculateAverageScore(reviewList);
+        return ApiResponse.onSuccess(ReviewConverter.reviewListDto(reviewList, averageScore));
     }
 
 
