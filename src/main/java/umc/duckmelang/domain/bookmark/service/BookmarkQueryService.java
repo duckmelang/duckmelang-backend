@@ -6,4 +6,5 @@ import umc.duckmelang.domain.post.domain.Post;
 
 public interface BookmarkQueryService {
     Page<Post> getBookmarks(Long memberId, Integer page);
+    Integer getBookmarkCount(Long postId);
 }

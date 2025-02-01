@@ -18,4 +18,5 @@ public interface MemberProfileImageRepository extends JpaRepository<MemberProfil
     void deleteAllByMember(Member member);
     Optional<MemberProfileImage> findFirstByMemberIdAndIsPublicTrueOrderByCreatedAtDesc(Long memberId);
     Page<MemberProfileImage> findAllByMemberId(long memberId, Pageable pageable);
+    Page<MemberProfileImage> findAllByIsPublicIsTrueAndMemberId(long memberId, Pageable pageable);
 }

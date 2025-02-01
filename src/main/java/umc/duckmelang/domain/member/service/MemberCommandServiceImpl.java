@@ -13,6 +13,7 @@ import umc.duckmelang.domain.landmine.repository.LandmineRepository;
 import umc.duckmelang.domain.member.converter.MemberConverter;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
+import umc.duckmelang.domain.member.dto.MemberSignUpDto;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberevent.repository.MemberEventRepository;
@@ -36,17 +37,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberCommandServiceImpl implements MemberCommandService {
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
     private final IdolCategoryRepository idolCategoryRepository;
     private final MemberIdolRepository memberIdolRepository;
     private final EventCategoryRepository eventCategoryRepository;
     private final MemberEventRepository memberEventRepository;
     private final LandmineRepository landmineRepository;
     private final MemberProfileImageRepository memberProfileImageRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
-    public Member signupMember(MemberRequestDto.SignupDto request){
+    public Member signupMember(MemberSignUpDto.SignupDto request){
         if(memberRepository.existsByEmail(request.getEmail())){
             throw new MemberException(ErrorStatus.DUPLICATE_EMAIL);
         }
@@ -191,10 +192,17 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        // 상태 변경 메서드 호출
-        member.updateProfile(request.getNickname(), request.getIntroduction());
+        // 프로필 업데이트
+        Member updatedMember = MemberConverter.toUpdateMember(member, request.getNickname(), request.getIntroduction());
 
-        return member;
+        return memberRepository.save(updatedMember);
     }
 
+    @Override
+    @Transactional
+    public void  completeProfile(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()-> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+        member.completeProfile();
+    }
 }

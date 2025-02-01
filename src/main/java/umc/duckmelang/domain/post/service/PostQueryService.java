@@ -13,9 +13,8 @@ public interface PostQueryService {
     Page<Post> getPostListByIdol(Long idolId, Integer page);
     Page<Post> getPostListByMember(Long memberId, Integer page);
     Optional<Post> getPostDetail(Long postId);
-
     Page<Post> getPostListByTitle(String searchKeyword, Integer page );
     Optional<Post> findById(Long postId);
-
+    Page<Post> getMyPostList(Long memberId, Integer page);
     int getPostCount(Long memberId);
 }

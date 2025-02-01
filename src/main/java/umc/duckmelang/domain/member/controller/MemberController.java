@@ -5,10 +5,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import umc.duckmelang.domain.landmine.domain.Landmine;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import umc.duckmelang.domain.member.converter.MemberConverter;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
+import umc.duckmelang.domain.member.dto.MemberSignUpDto;
 import umc.duckmelang.domain.member.service.MemberCommandService;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
@@ -25,7 +29,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입 API", description = "사용자 정보를 받아 회원가입을 처리하는 API입니다.")
-    public ApiResponse<MemberResponseDto.SignupResultDto> signup(@RequestBody @Valid MemberRequestDto.SignupDto request){
+    public ApiResponse<MemberSignUpDto.SignupResultDto> signup(@RequestBody @Valid MemberSignUpDto.SignupDto request){
         Member member = memberCommandService.signupMember(request);
         return ApiResponse.onSuccess(MemberConverter.toSignupResultDto(member));
     }
@@ -40,9 +44,7 @@ public class MemberController {
 
         // 리스트가 비어 있는 경우 예외 처리
         if (updatedMemberIdolList.isEmpty()) {
-            throw new IllegalArgumentException("선택된 아이돌 카테고리가 없습니다.");
-        }
-
+            throw new IllegalArgumentException("선택된 아이돌 카테고리가 없습니다.");}
         return ApiResponse.onSuccess(MemberConverter.toSelectIdolResponseDto(updatedMemberIdolList));
     }
 
@@ -53,9 +55,7 @@ public class MemberController {
             @RequestBody @Valid MemberRequestDto.SelectEventsDto request) {
 
         List<MemberEvent> updatedMemberEventList = memberCommandService.selectEvents(memberId, request);
-
         // 리스트가 비어 있는 경우 허용(따라서 예외 처리 생략)
-
         return ApiResponse.onSuccess(MemberConverter.toSelectEventResponseDto(updatedMemberEventList));
     }
 
@@ -66,9 +66,7 @@ public class MemberController {
             @RequestBody @Valid MemberRequestDto.CreateLandminesDto request) {
 
         List<Landmine> updatedLandmineList = memberCommandService.createLandmines(memberId, request);
-
         // 리스트가 비어 있는 경우 허용(따라서 예외 처리 생략)
-
         return ApiResponse.onSuccess(MemberConverter.toCreateLandmineResponseDto(updatedLandmineList));
     }
 
@@ -79,18 +77,23 @@ public class MemberController {
             @RequestBody @Valid MemberRequestDto.CreateMemberProfileImageDto request) {
 
         MemberProfileImage updatedMemberProfileImage = memberCommandService.createMemberProfileImage(memberId, request);
-
         return ApiResponse.onSuccess(MemberConverter.toCreateMemberProfileImageResponseDto(updatedMemberProfileImage));
     }
 
     @Operation(summary = "자기소개 문구 설정 API", description = "회원이 최초로 자기소개 문구를 설정하는 API입니다. 빈 문자열과 공백을 허용하지 않습니다. 최대 500자 작성 가능합니다.")
-    @PostMapping("/{memberId}/profile-introduction")
+    @PatchMapping("/{memberId}/profile-introduction")
     public ApiResponse<MemberResponseDto.CreateIntroductionResultDto> createIntroduction (
             @PathVariable(name = "memberId") Long memberId,
             @RequestBody @Valid MemberRequestDto.CreateIntroductionDto request) {
 
-        Member updatedmember= memberCommandService.createIntroduction(memberId, request);
-
+        Member updatedmember = memberCommandService.createIntroduction(memberId, request);
         return ApiResponse.onSuccess(MemberConverter.toCreateIntroductionResponseDto(updatedmember));
+    }
+
+    @Operation(summary = "프로필 설정 완료 API", description = "소셜 로그인 사용자가 프로필 설정을 완료하면 호출하는 API입니다. ")
+    @PatchMapping("/{memberId}/profile-complete")
+    public ApiResponse<String> completeProfile(@PathVariable(name = "memberId") Long memberId){
+        memberCommandService.completeProfile(memberId);
+        return ApiResponse.onSuccess("프로필 설정이 완료되었습니다.");
     }
 }

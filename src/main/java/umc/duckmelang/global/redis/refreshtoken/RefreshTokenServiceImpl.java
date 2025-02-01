@@ -15,7 +15,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     // RefreshToken 저장
     @Transactional
-    public void saveRefreshToken(String refreshToken, Long memberId){
+    @Override
+    public void saveRefreshToken(String refreshToken, Long memberId) {
         refreshTokenRepository.findByMemberId(memberId)
                 .ifPresent(token -> refreshTokenRepository.deleteById(token.getToken()));
         RefreshToken token = RefreshToken.builder()
@@ -28,6 +29,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     // RefreshToken 유효성 검증 및 조회
     @Transactional(readOnly = true)
+    @Override
     public RefreshToken validateAndGetRefreshToken(String refreshToken) {
         RefreshToken token = refreshTokenRepository.findById(refreshToken)
                 .orElseThrow(() -> new TokenException(ErrorStatus.MISSING_TOKEN));
@@ -39,6 +41,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     // RefreshToken 삭제
     @Transactional
+    @Override
     public void removeRefreshToken(String refreshToken) {
         refreshTokenRepository.deleteById(refreshToken);
     }

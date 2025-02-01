@@ -21,6 +21,7 @@ import java.util.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -29,9 +30,6 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
-
-    @Column(length = 30)
-    private String name;
 
     @Column(length = 30)
     private String nickname;
@@ -50,6 +48,13 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false, length = 100)
     private String password;
+
+    @Column(nullable = false)
+    private boolean isProfileComplete = false;
+
+    public void completeProfile(){
+        this.isProfileComplete = true;
+    }
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberProfileImage> memberProfileImageList = new ArrayList<>();
@@ -99,12 +104,6 @@ public class Member extends BaseEntity {
         this.introduction = other.introduction;
     }
 
-    public Member withIntroduction(String introduction) {
-        Member newMember = new Member(this);
-        newMember.introduction = introduction;
-        return newMember;
-    }
-
     // 회원의 만 나이를 계산하는 메서드
     public int calculateAge(){
         // 생년월일 가져오기
@@ -122,6 +121,11 @@ public class Member extends BaseEntity {
         return age;
     }
 
+    // 자기소개 업데이트 메서드
+    public void updateIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
     // 프로필 업데이트 메서드
     public void updateProfile(String nickname, String introduction) {
         if (nickname == null || nickname.isBlank()) {
@@ -132,5 +136,14 @@ public class Member extends BaseEntity {
         }
         this.nickname = nickname;
         this.introduction = introduction;
+    }
+
+//    성별 반환 메서드(true면 남성, false면 여성으로 반환)
+    public String stringGender(){
+        if(this.gender == true){
+            return "남성";
+        } else{
+            return "여성";
+        }
     }
 }

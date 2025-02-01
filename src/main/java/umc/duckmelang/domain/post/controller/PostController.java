@@ -8,18 +8,32 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import umc.duckmelang.domain.bookmark.converter.BookmarkConverter;
+import umc.duckmelang.domain.bookmark.domain.Bookmark;
+import umc.duckmelang.domain.bookmark.dto.BookmarkResponseDto;
+import umc.duckmelang.domain.bookmark.service.BookmarkCommandService;
+import umc.duckmelang.domain.bookmark.service.BookmarkQueryService;
+import umc.duckmelang.domain.bookmark.service.BookmarkQueryServiceImpl;
 import umc.duckmelang.domain.idolcategory.validation.annotation.ExistIdol;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostRequestDto;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
+import umc.duckmelang.domain.post.facade.PostFacadeService;
+import umc.duckmelang.domain.post.repository.PostRepository;
 import umc.duckmelang.domain.post.service.PostCommandService;
 import umc.duckmelang.domain.post.service.PostCommandServiceImpl;
 import umc.duckmelang.domain.post.service.PostQueryService;
 import umc.duckmelang.domain.post.validation.annotation.ExistPost;
 import umc.duckmelang.domain.post.validation.annotation.ValidPageNumber;
+import umc.duckmelang.domain.review.domain.Review;
+import umc.duckmelang.domain.review.service.ReviewQueryService;
 import umc.duckmelang.global.annotations.CommonApiResponses;
 import umc.duckmelang.global.apipayload.ApiResponse;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
@@ -29,8 +43,11 @@ public class PostController {
 
     private final PostQueryService postQueryService;
     private final PostCommandService postCommandService;
+    private final ReviewQueryService reviewQueryService;
+    private final BookmarkQueryService bookmarkQueryService;
+    private final PostFacadeService postFacadeService;
 
-    @GetMapping("/")
+    @GetMapping("")
     @CommonApiResponses
     @Operation(summary = "홈화면 게시글 전체 조회 API", description = "조건 없이 모든 게시글을 조회하는 API 입니다. 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
     public ApiResponse<PostResponseDto.PostPreviewListDto> getPostList (@ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page){
@@ -51,12 +68,10 @@ public class PostController {
 
     @GetMapping("/{postId}")
     @CommonApiResponses
-    @Operation(summary = "게시글 상세 조회 API", description = "홈화면에서 게시글 1개 클릭시 자세히 보여주는 API입니다. 성별은 true일때 남자, false일때 여자입니다. 스크랩, 채팅, 조회수, 후기평 아직 만들지 않음")
+    @Operation(summary = "게시글 상세 조회 API", description = "홈화면에서 게시글 1개 클릭시 자세히 보여주는 API입니다. wanted가 0이면 종료, 1이면 진행 중입니다.  채팅수 조회 아직 만들지 않음")
     @Parameters({@Parameter(name = "postId", description = "게시글 Id, path variable 입니다")})
     public ApiResponse<PostResponseDto.PostDetailDto> getPostDetail (@ExistPost @PathVariable(name="postId") Long postId){
-        Post post = postQueryService.getPostDetail(postId)
-                .orElseThrow(()-> new IllegalArgumentException("해당 게시글이 존재하지 않습니다"));
-        return ApiResponse.onSuccess(PostConverter.postDetailDto(post));
+        return ApiResponse.onSuccess(postFacadeService.getPostDetail(postId));
     }
 
     @PostMapping("/{memberId}")
@@ -73,8 +88,23 @@ public class PostController {
     public ApiResponse<PostResponseDto.PostPreviewListDto> getPostListByTitle (@ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page, @RequestParam(name="searchKeyword") String searchKeyword){
         Page<Post> postList = postQueryService.getPostListByTitle(searchKeyword, page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
+    }
 
 
+    @GetMapping("/my")
+    @CommonApiResponses
+    @Operation(summary = "내 게시글 조회 API", description = "나의 동행에서 내 게시글을 확인하는 API입니다. memberId를 받고, 추후 JWT로 변경예정, 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
+    public ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@RequestParam("memberId") Long memberId, @ValidPageNumber @RequestParam(name ="page", defaultValue = "0") Integer page){
+        Page<Post> postList = postQueryService.getMyPostList(memberId, page);
+        return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
+    }
+
+    @PatchMapping("/{postId}/status")
+    @CommonApiResponses
+    @Operation(summary = "게시글 상태 변경 API", description = "게시글을 상태를 모집 중 -> 모집 완료/ 또는 모집 완료 -> 모집 중으로 바꿉니다. 모집 중은 wanted가 1, 모집 완료는 0입니다.")
+    public ApiResponse<PostResponseDto.PostStatusDto> patchPostStatus(@ExistPost @PathVariable("postId") Long postId){
+        Post post = postCommandService.patchPostStatus(postId);
+        return ApiResponse.onSuccess(PostConverter.postStatusDto(post));
     }
 
 }

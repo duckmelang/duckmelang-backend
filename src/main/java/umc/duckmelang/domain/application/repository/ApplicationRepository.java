@@ -21,7 +21,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     Optional<Application> findByIdAndMemberId(Long id, Long memberId);
 
     @Query("SELECT new umc.duckmelang.domain.application.dto.ReceivedApplicationDto(" +
-            "m.name, " +
+            "m.nickname, " +
             "p.id, " +
             "p.title, " +
             "a.id, " +

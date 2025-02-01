@@ -17,6 +17,7 @@ import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.EventCategoryException;
 import umc.duckmelang.global.apipayload.exception.IdolCategoryException;
 import umc.duckmelang.global.apipayload.exception.MemberException;
+import umc.duckmelang.global.apipayload.exception.PostException;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class PostCommandServiceImpl implements PostCommandService {
     private final IdolCategoryRepository idolCategoryRepository;
 
     @Override
-    public Post joinPost(PostRequestDto.PostJoinDto request , Long memberId){
+    public Post joinPost(PostRequestDto.PostJoinDto request, Long memberId) {
 //        Member 엔티티 조회
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
@@ -46,8 +47,18 @@ public class PostCommandServiceImpl implements PostCommandService {
             throw new IdolCategoryException(ErrorStatus.IDOL_CATEGORY_NOT_FOUND);
         }
 
-        Post newPost =PostConverter.toPost(request, member, eventCategory, idolCategories );
+        Post newPost = PostConverter.toPost(request, member, eventCategory, idolCategories);
         return postRepository.save(newPost);
 
     }
+
+    @Override
+    public Post patchPostStatus(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(ErrorStatus.POST_NOT_FOUND));
+        post.toggleWanted();
+
+        return postRepository.save(post);
+    }
 }
+

@@ -32,6 +32,7 @@ public enum ErrorStatus implements BaseErrorCode {
     //게시글 관련 에러
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST4001", "해당하는 게시글이 없습니다"),
     PAGE_MUST_LEAST_ZERO(HttpStatus.BAD_REQUEST, "POST4002", "페이지는 0 이상이어야 합니다"),
+    INVALID_WANTED(HttpStatus.BAD_REQUEST, "POST4003","게시글의 wanted 값이 유효하지 않습니다"),
 
     // 로그인 관련 응답
     AUTH_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH4000", "인증 정보가 필요합니다."),
@@ -61,10 +62,7 @@ public enum ErrorStatus implements BaseErrorCode {
     APPLICATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLICATION4003", "존재하지 않는 동행 요청입니다."),
 
     //MEMBER_PROFILE_IMAGE
-    MEMBER_PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER_PROFILE_IMAGE4001", "멤버 프로필 이미지가 없습니다."),
-    // 테스트 응답
-    TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트");
-
+    MEMBER_PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER_PROFILE_IMAGE4001", "멤버 프로필 이미지가 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
@@ -88,6 +86,4 @@ public enum ErrorStatus implements BaseErrorCode {
                 .httpStatus(httpStatus)
                 .build();
     }
-
-
 }

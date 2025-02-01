@@ -1,7 +1,6 @@
 package umc.duckmelang.domain.member.facade;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.domain.application.service.ApplicationQueryService;
@@ -27,9 +26,7 @@ public class ProfileFacadeService {
     private final MemberQueryService memberQueryService;
     private final MemberCommandService memberCommandService;
     private final PostQueryService postQueryService;
-    private final PostImageQueryService postImageQueryService;
     private final ApplicationQueryService applicationService;
-    private final MemberProfileImageQueryService profileImageService;
     private final ApplicationQueryService applicationQueryService;
     private final MemberProfileImageQueryService memberProfileImageQueryService;
     private final MemberProfileImageCommandService memberProfileImageCommandService;
@@ -93,7 +90,7 @@ public class ProfileFacadeService {
 
 
 
-    @Transactional(readOnly = true)
+    @Transactional
     public MemberResponseDto.GetMypageMemberProfileEditResultDto updateMypageMemberProfile(Long memberId, MemberRequestDto.UpdateMemberProfileDto request) {
 
         // 회원 기본 정보 조회
@@ -109,7 +106,6 @@ public class ProfileFacadeService {
         // 대표 프로필 이미지 1개 조회
         MemberProfileImage latestPublicMemberProfileImage = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
                 .orElseThrow(()-> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
-
 
         return MemberConverter.toUpdateMemberProfileDto(updatedMember,latestPublicMemberProfileImage);
     }
