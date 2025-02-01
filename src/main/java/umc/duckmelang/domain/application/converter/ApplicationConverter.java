@@ -44,6 +44,7 @@ public class ApplicationConverter {
                 .eventDate(application.getPost().getEventDate())
                 .eventCategory(application.getPost().getEventCategory().getName())
                 .applicationId(application.getId())
+                .applicationStatus(application.getStatus())
                 .build();
     }
 
@@ -65,6 +66,7 @@ public class ApplicationConverter {
                 .postId(application.getPost().getId())
                 .postTitle(application.getPost().getTitle())
                 .applicationCreatedAt(application.getCreatedAt())
+                .applicationStatus(application.getStatus())
                 .build();
     }
 }

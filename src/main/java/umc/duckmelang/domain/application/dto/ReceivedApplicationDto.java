@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import umc.duckmelang.domain.application.domain.enums.ApplicationStatus;
 
 import java.time.LocalDateTime;
 
@@ -18,4 +19,5 @@ public class ReceivedApplicationDto{
     String postTitle;
     Long applicationId;
     LocalDateTime applicationCreatedAt;
+    ApplicationStatus applicationStatus;
 }

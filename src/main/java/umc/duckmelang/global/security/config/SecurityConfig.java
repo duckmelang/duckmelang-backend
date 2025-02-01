@@ -72,6 +72,7 @@ public class SecurityConfig {
                 .exceptionHandling(httpSecurityExceptionHandlingCustomizer -> {
                     httpSecurityExceptionHandlingCustomizer.authenticationEntryPoint(customAuthenticationEntryPoint);
                 });
+        return http.build();
     }
 
     @Bean
