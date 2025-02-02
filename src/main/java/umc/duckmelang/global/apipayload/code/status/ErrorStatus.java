@@ -33,6 +33,9 @@ public enum ErrorStatus implements BaseErrorCode {
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST4001", "해당하는 게시글이 없습니다"),
     PAGE_MUST_LEAST_ZERO(HttpStatus.BAD_REQUEST, "POST4002", "페이지는 0 이상이어야 합니다"),
     INVALID_WANTED(HttpStatus.BAD_REQUEST, "POST4003","게시글의 wanted 값이 유효하지 않습니다"),
+    
+    //게시글 이미지 관련 에러
+    POST_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "POSTIMAGE4001","해당하는 게시글 이미지가 없습니다"),
 
     // 로그인 관련 응답
     AUTH_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH4000", "인증 정보가 필요합니다."),

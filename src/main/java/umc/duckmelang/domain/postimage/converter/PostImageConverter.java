@@ -1,8 +1,6 @@
 package umc.duckmelang.domain.postimage.converter;
 
 import org.springframework.data.domain.Page;
-import umc.duckmelang.domain.application.domain.Application;
-import umc.duckmelang.domain.application.dto.SentApplicationDto;
 import umc.duckmelang.domain.postimage.domain.PostImage;
 import umc.duckmelang.domain.postimage.dto.PostImageResponseDto;
 import umc.duckmelang.domain.postimage.dto.PostThumbnailResponseDto;
