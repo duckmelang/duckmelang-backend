@@ -34,26 +34,12 @@ public class ApplicationResponseDto {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ReceivedApplicationListDto{
-        List<ReceivedApplicationDto> receivedApplicationList;
+    public static class ShowApplicationListDto {
+        List<ShowApplicationDto> receivedApplicationList;
         Integer listSize;
         Integer totalPage;
         Long totalElements;
         Boolean isFirst;
         Boolean isLast;
     }
-
-    @Builder
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class SentApplicationListDto{
-        List<SentApplicationDto> sentApplicationList;
-        Integer listSize;
-        Integer totalPage;
-        Long totalElements;
-        Boolean isFirst;
-        Boolean isLast;
-    }
-
 }

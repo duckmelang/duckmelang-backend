@@ -10,8 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.application.domain.enums.ApplicationStatus;
-import umc.duckmelang.domain.application.dto.ReceivedApplicationDto;
-import umc.duckmelang.domain.application.dto.SentApplicationDto;
 
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
@@ -20,78 +18,42 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     Optional<Application> findByIdAndMemberId(Long id, Long memberId);
 
-    @Query("SELECT new umc.duckmelang.domain.application.dto.ReceivedApplicationDto(" +
-            "m.nickname, " +
-            "p.id, " +
-            "p.title, " +
-            "a.id, " +
-            "a.createdAt," +
-            "a.status) " +
-            "FROM Post p " +
+    @Query("SELECT a FROM Post p " +
             "JOIN p.member pm " +
             "INNER JOIN p.applicationList a " +
             "INNER JOIN a.member m " +
             "WHERE a.status = :status " +
             "AND pm.id = :postOwnerId")
-    Page<ReceivedApplicationDto> findReceivedApplicationListByStatus(
+    Page<Application> findReceivedApplicationListByStatus(
             @Param("postOwnerId") Long postOwnerId,
             @Param("status") ApplicationStatus status,
             Pageable pageable
     );
 
-    @Query(value = "SELECT new umc.duckmelang.domain.application.dto.SentApplicationDto(" +
-            "p.id, " +
-            "p.title, " +
-            "pm.nickname, " +
-            "p.eventDate, " +
-            "e.name, " +
-            "a.id," +
-            "a.status) " +
-            "FROM Application a " +
+    @Query(value = "SELECT a FROM Application a " +
             "INNER JOIN a.member m " +
-            "INNER JOIN a.post p " +
-            "INNER JOIN p.member pm " +
-            "INNER JOIN p.eventCategory e " +
             "WHERE m.id = :applicationOwnerId")
-    Page<SentApplicationDto> findSentApplicationList(
+    Page<Application> findSentApplicationList(
             @Param("applicationOwnerId") Long applicationOwnerId,
             Pageable pageable
     );
 
-    @Query("SELECT new umc.duckmelang.domain.application.dto.ReceivedApplicationDto(" +
-            "m.nickname, " +
-            "p.id, " +
-            "p.title, " +
-            "a.id, " +
-            "a.createdAt," +
-            "a.status) " +
-            "FROM Post p " +
+    @Query("SELECT a FROM Post p " +
             "JOIN p.member pm " +
             "INNER JOIN p.applicationList a " +
             "INNER JOIN a.member m " +
             "WHERE pm.id = :postOwnerId " +
             "AND a.status <> umc.duckmelang.domain.application.domain.enums.ApplicationStatus.PENDING")
-    Page<ReceivedApplicationDto> findReceivedApplicationListExceptPending(
+    Page<Application> findReceivedApplicationListExceptPending(
             @Param("postOwnerId") Long postOwnerId,
             Pageable pageable
     );
 
-    @Query(value = "SELECT new umc.duckmelang.domain.application.dto.SentApplicationDto(" +
-            "p.id, " +
-            "p.title, " +
-            "pm.nickname, " +
-            "p.eventDate, " +  // LocalDateTime -> LocalDate 변환은 DTO 내부에서 처리
-            "e.name, " +
-            "a.id," +
-            "a.status) " +
-            "FROM Application a " +
+    @Query(value = "SELECT a FROM Application a " +
             "INNER JOIN a.member m " +
-            "INNER JOIN a.post p " +
-            "INNER JOIN p.member pm " +
-            "INNER JOIN p.eventCategory e " +
             "WHERE m.id = :applicationOwnerId " +
             "AND a.status = :status")
-    Page<SentApplicationDto> findSentApplicationListByStatus(
+    Page<Application> findSentApplicationListByStatus(
             @Param("applicationOwnerId") Long applicationOwnerId,
             @Param("status") ApplicationStatus status,
             Pageable pageable
