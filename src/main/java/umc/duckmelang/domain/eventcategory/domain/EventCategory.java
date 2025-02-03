@@ -2,6 +2,9 @@ package umc.duckmelang.domain.eventcategory.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import umc.duckmelang.domain.eventcategory.domain.enums.EventKind;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.global.common.BaseEntity;
 
@@ -12,11 +15,17 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@DynamicUpdate
+@DynamicInsert
 public class EventCategory extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_category_id")
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "kind", columnDefinition = "VARCHAR(15) DEFAULT '행사'")
+    private EventKind kind;
 
     @Column(name = "name", columnDefinition = "TINYTEXT", nullable = false)
     private String name;
