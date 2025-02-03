@@ -24,7 +24,7 @@ public class EventCategory extends BaseEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "kind", columnDefinition = "VARCHAR(15) DEFAULT '행사'")
+    @Column(name = "kind", columnDefinition = "VARCHAR(15) DEFAULT 'EVENT'")
     private EventKind kind;
 
     @Column(name = "name", columnDefinition = "TINYTEXT", nullable = false)
