@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.auth.sms;
+package umc.duckmelang.domain.auth.sms.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

@@ -51,6 +51,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Member
     NO_SUCH_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4001", "존재하지 않는 멤버입니다."),
+    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "MEMBER4008", "이미 존재하는 닉네임입니다."),
 
     // 지뢰 관련 에러
     DUPLICATE_LANDMINE(HttpStatus.BAD_REQUEST, "LANDMINE4001", "중복된 키워드가 존재합니다."),

@@ -3,22 +3,16 @@ package umc.duckmelang.domain.review.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.member.validation.annotation.ExistMember;
-import umc.duckmelang.domain.post.converter.PostConverter;
-import umc.duckmelang.domain.post.domain.Post;
-import umc.duckmelang.domain.post.validation.annotation.ValidPageNumber;
 import umc.duckmelang.domain.review.converter.ReviewConverter;
 import umc.duckmelang.domain.review.domain.Review;
 import umc.duckmelang.domain.review.dto.ReviewRequestDto;
 import umc.duckmelang.domain.review.dto.ReviewResponseDto;
-import umc.duckmelang.domain.review.repository.ReviewRepository;
 import umc.duckmelang.domain.review.service.ReviewCommandService;
 import umc.duckmelang.domain.review.service.ReviewQueryService;
 import umc.duckmelang.global.annotations.CommonApiResponses;
@@ -28,14 +22,13 @@ import umc.duckmelang.global.apipayload.exception.ApplicationException;
 import umc.duckmelang.global.apipayload.exception.MemberException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/reviews")
 @Validated
-public class ReviewController {
+public class ReviewRestController {
     private final ReviewCommandService reviewCommandService;
     private final ReviewQueryService reviewQueryService;
     private final MemberRepository memberRepository;

@@ -11,6 +11,7 @@ import umc.duckmelang.domain.idolcategory.repository.IdolCategoryRepository;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import umc.duckmelang.domain.landmine.repository.LandmineRepository;
 import umc.duckmelang.domain.member.converter.MemberConverter;
+import umc.duckmelang.domain.member.converter.MemberProfileConverter;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberSignUpDto;
@@ -54,6 +55,25 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         Member newMember = MemberConverter.toMember(request);
         newMember.encodePassword(passwordEncoder.encode(request.getPassword()));
         return memberRepository.save(newMember);
+    }
+
+    @Override
+    @Transactional
+    public Member registerProfile(Long memberId, MemberRequestDto.ProfileRequestDto request){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()-> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        // 닉네임 중복 검증
+        if(memberRepository.existsByNickname(request.getNickname())){
+            throw new MemberException(ErrorStatus.DUPLICATE_NICKNAME);
+        }
+
+        // 프로필 정보 등록
+        member.setNickname(request.getNickname());
+        member.setBirth(request.getBirth());
+        member.setGender(request.getGender());
+
+        return memberRepository.save(member);
     }
 
     @Override
@@ -193,7 +213,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // 프로필 업데이트
-        Member updatedMember = MemberConverter.toUpdateMember(member, request.getNickname(), request.getIntroduction());
+        Member updatedMember = MemberProfileConverter.toUpdateMember(member, request.getNickname(), request.getIntroduction());
 
         return memberRepository.save(updatedMember);
     }

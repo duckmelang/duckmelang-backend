@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import umc.duckmelang.domain.auth.domain.Auth;
 import umc.duckmelang.domain.materelationship.domain.MateRelationship;
+import umc.duckmelang.domain.member.domain.enums.Gender;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.post.domain.Post;
@@ -41,7 +42,8 @@ public class Member extends BaseEntity {
     private LocalDate birth;
 
     // true = 남성, false = 여성
-    private Boolean gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column(columnDefinition = "TINYTEXT")
     private String email;
@@ -138,12 +140,13 @@ public class Member extends BaseEntity {
         this.introduction = introduction;
     }
 
-//    성별 반환 메서드(true면 남성, false면 여성으로 반환)
+    // 성별 반환 메서드(true면 남성, false면 여성으로 반환)
     public String stringGender(){
-        if(this.gender == true){
-            return "남성";
-        } else{
-            return "여성";
-        }
+//        if(this.gender == true){
+//            return "남성";
+//        } else{
+//            return "여성";
+//        }
+        return this.gender.name();
     }
 }

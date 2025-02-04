@@ -8,38 +8,26 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import umc.duckmelang.domain.bookmark.converter.BookmarkConverter;
-import umc.duckmelang.domain.bookmark.domain.Bookmark;
-import umc.duckmelang.domain.bookmark.dto.BookmarkResponseDto;
-import umc.duckmelang.domain.bookmark.service.BookmarkCommandService;
 import umc.duckmelang.domain.bookmark.service.BookmarkQueryService;
-import umc.duckmelang.domain.bookmark.service.BookmarkQueryServiceImpl;
 import umc.duckmelang.domain.idolcategory.validation.annotation.ExistIdol;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostRequestDto;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
 import umc.duckmelang.domain.post.facade.PostFacadeService;
-import umc.duckmelang.domain.post.repository.PostRepository;
 import umc.duckmelang.domain.post.service.PostCommandService;
-import umc.duckmelang.domain.post.service.PostCommandServiceImpl;
 import umc.duckmelang.domain.post.service.PostQueryService;
 import umc.duckmelang.domain.post.validation.annotation.ExistPost;
 import umc.duckmelang.domain.post.validation.annotation.ValidPageNumber;
-import umc.duckmelang.domain.review.domain.Review;
 import umc.duckmelang.domain.review.service.ReviewQueryService;
 import umc.duckmelang.global.annotations.CommonApiResponses;
 import umc.duckmelang.global.apipayload.ApiResponse;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 @Validated
-public class PostController {
+public class PostRestController {
 
     private final PostQueryService postQueryService;
     private final PostCommandService postCommandService;

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.domain.application.service.ApplicationQueryService;
 import umc.duckmelang.domain.member.converter.MemberConverter;
+import umc.duckmelang.domain.member.converter.MemberProfileConverter;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
@@ -43,7 +44,7 @@ public class ProfileFacadeService {
         MemberProfileImage latestPublicMemberProfileImage = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
 
-        return MemberConverter.toGetMemberPreviewResponseDto(member, latestPublicMemberProfileImage);
+        return MemberProfileConverter.toGetMemberPreviewResponseDto(member, latestPublicMemberProfileImage);
     }
 
 
@@ -64,7 +65,7 @@ public class ProfileFacadeService {
         MemberProfileImage image = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
 
-        return MemberConverter.ToOtherProfileDto(member, postCount, matchCount, image);
+        return MemberProfileConverter.ToOtherProfileDto(member, postCount, matchCount, image);
     }
 
     @Transactional(readOnly = true)
@@ -85,7 +86,7 @@ public class ProfileFacadeService {
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
 
 
-        return MemberConverter.toGetMemberProfileResponseDto(member, image, postCount, matchCount);
+        return MemberProfileConverter.toGetMemberProfileResponseDto(member, image, postCount, matchCount);
     }
 
 
@@ -107,6 +108,6 @@ public class ProfileFacadeService {
         MemberProfileImage latestPublicMemberProfileImage = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
                 .orElseThrow(()-> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
 
-        return MemberConverter.toUpdateMemberProfileDto(updatedMember,latestPublicMemberProfileImage);
+        return MemberProfileConverter.toUpdateMemberProfileDto(updatedMember,latestPublicMemberProfileImage);
     }
 }

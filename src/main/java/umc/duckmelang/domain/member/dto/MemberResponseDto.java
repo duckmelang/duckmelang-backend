@@ -4,9 +4,23 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import umc.duckmelang.domain.member.domain.enums.Gender;
+
+import java.time.LocalDate;
 import java.util.List;
 
 public class MemberResponseDto {
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProfileResultDto{
+        private Long memberId;
+        private String nickname;
+        private LocalDate birth;
+        private Gender gender;
+    }
 
     @Builder
     @Getter
@@ -62,7 +76,7 @@ public class MemberResponseDto {
     public static class GetMypageMemberPreviewResultDto {
         private Long memberId;
         private String nickname;
-        private String gender;
+        private Gender gender;
         private int age;
         private String latestPublicMemberProfileImage;
     }
@@ -74,15 +88,13 @@ public class MemberResponseDto {
     public static class GetMypageMemberProfileResultDto {
         private Long memberId;
         private String nickname;
-        private String gender;
+        private Gender gender;
         private int age;
         private String latestPublicMemberProfileImage;
         private String introduction;
         private long postCount;
         private long succeedApplicationCount;
     }
-
-
 
 //    //member의 프로필을 수정하는 화면에 진입하면, 기존 프로필 정보들을 보여주는 추가 API가 필요할 듯하다.
 
@@ -108,14 +120,13 @@ public class MemberResponseDto {
         private String introduction;
     }
 
-
     @Builder
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class OtherProfileDto {
         String nickname;
-        String gender;
+        Gender gender;
         int age;
         String introduction;
         String profileImageUrl;
