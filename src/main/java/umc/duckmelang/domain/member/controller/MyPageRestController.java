@@ -30,7 +30,7 @@ public class MyPageRestController {
     private final ReviewQueryService reviewQueryService;
 
     @Operation(summary = "마이페이지 조회 API", description = "마이페이지 첫 화면에 노출되는 회원 정보를 조회해오는 API입니다. member의 id, nickname, gender, age, 대표 프로필 사진을 불러옵니다.")
-    @GetMapping("/")
+    @GetMapping("")
     public ApiResponse<MemberResponseDto.GetMypageMemberPreviewResultDto> getMypageMemberPreview (@RequestParam Long memberId) {
         return ApiResponse.onSuccess(profileFacadeService.getMypageMemberPreview(memberId));
     }
@@ -43,7 +43,7 @@ public class MyPageRestController {
 
     @GetMapping("/reviews")
     @CommonApiResponses
-    @Operation(summary = "나와의 동행 후기 조회 API", description = "내 프로필에서 나와의 동행 후기 볼 때 이용하는 API 입니다. 성별은 true일때 남자, false일때 여자입니다. memberId는 추후 JWT 변경 예정")
+    @Operation(summary = "나와의 동행 후기 조회 API", description = "내 프로필에서 나와의 동행 후기 볼 때 이용하는 API 입니다. memberId는 추후 JWT 변경 예정")
     public ApiResponse<ReviewResponseDto.ReviewListDto> getMyReviewList(@RequestParam(name="memberId") Long memberId){
         List<Review> reviewList = reviewQueryService.getReviewList(memberId);
         double averageScore = reviewQueryService.calculateAverageScore(reviewList);
