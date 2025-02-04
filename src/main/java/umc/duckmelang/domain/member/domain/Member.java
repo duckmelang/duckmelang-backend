@@ -32,7 +32,7 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(length = 30)
+    @Column(length = 30, nullable = true)
     private String nickname;
 
     @Column(length = 500)
@@ -43,6 +43,7 @@ public class Member extends BaseEntity {
 
     // true = 남성, false = 여성
     @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
     private Gender gender;
 
     @Column(columnDefinition = "TINYTEXT")

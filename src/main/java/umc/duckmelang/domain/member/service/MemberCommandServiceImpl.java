@@ -63,12 +63,10 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(()-> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        // 닉네임 중복 검증
         if(memberRepository.existsByNickname(request.getNickname())){
             throw new MemberException(ErrorStatus.DUPLICATE_NICKNAME);
         }
 
-        // 프로필 정보 등록
         member.setNickname(request.getNickname());
         member.setBirth(request.getBirth());
         member.setGender(request.getGender());
@@ -201,6 +199,9 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         // 자기소개 업데이트
         Member updatedMember = MemberConverter.toMemberWithIntroduction(member, request.getIntroduction());
 
+        // 자기소개 업데이트
+        updatedMember.completeProfile();
+
         return memberRepository.save(updatedMember);
     }
 
@@ -216,13 +217,5 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         Member updatedMember = MemberProfileConverter.toUpdateMember(member, request.getNickname(), request.getIntroduction());
 
         return memberRepository.save(updatedMember);
-    }
-
-    @Override
-    @Transactional
-    public void  completeProfile(Long memberId){
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(()-> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
-        member.completeProfile();
     }
 }

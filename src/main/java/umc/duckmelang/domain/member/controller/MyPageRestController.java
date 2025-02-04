@@ -29,16 +29,6 @@ public class MyPageRestController {
     private final PostQueryService postQueryService;
     private final ReviewQueryService reviewQueryService;
 
-    @GetMapping(path = "/posts")
-    @Operation(summary = "내가 업로드한 게시글들 조회",description = "memberId는 추후 jwt로 바꿉니다")
-    ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@RequestParam Long memberId, int page) {
-        if(page<0){
-            throw new IllegalArgumentException("페이지 번호는 0 이상어야합니다");
-        }
-        Page<Post> postList = postQueryService.getPostListByMember(memberId, page);
-        return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
-    }
-
     @Operation(summary = "마이페이지 조회 API", description = "마이페이지 첫 화면에 노출되는 회원 정보를 조회해오는 API입니다. member의 id, nickname, gender, age, 대표 프로필 사진을 불러옵니다.")
     @GetMapping("/mypage")
     public ApiResponse<MemberResponseDto.GetMypageMemberPreviewResultDto> getMypageMemberPreview (@RequestParam Long memberId) {
@@ -60,7 +50,17 @@ public class MyPageRestController {
         return ApiResponse.onSuccess(ReviewConverter.reviewListDto(reviewList, averageScore));
     }
 
-    @Operation(summary = "내 프로필 수정 API", description = "마이페이지를 통해 접근할 수 있는 내 프로필을 수정하는 API입니다. member의 nickname introduction을 수정하고 프로필 사진을 생성할 수 있습니다. ")
+    @GetMapping("/posts")
+    @Operation(summary = "내가 업로드한 게시글들 조회",description = "memberId는 추후 jwt로 바꿉니다")
+    ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@RequestParam Long memberId, int page) {
+        if(page<0){
+            throw new IllegalArgumentException("페이지 번호는 0 이상어야합니다");
+        }
+        Page<Post> postList = postQueryService.getPostListByMember(memberId, page);
+        return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
+    }
+
+    @Operation(summary = "내 프로필 수정 API", description = "마이페이지를 통해 접근할 수 있는 내 프로필을 수정하는 API입니다. member의 nickname, introduction을 수정하고 프로필 사진을 생성할 수 있습니다. ")
     @PatchMapping("/profile/edit")
     public ApiResponse<MemberResponseDto.GetMypageMemberProfileEditResultDto> updateMypageMemberProfile
             (@RequestParam Long memberId,
