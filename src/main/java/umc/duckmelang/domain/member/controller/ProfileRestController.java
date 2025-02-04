@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import umc.duckmelang.domain.member.facade.ProfileFacadeService;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
-import umc.duckmelang.domain.member.validation.annotation.ExistMember;
 import umc.duckmelang.domain.member.validation.annotation.ExistsMember;
 import umc.duckmelang.domain.memberprofileimage.converter.MemberProfileImageConverter;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
@@ -62,8 +61,8 @@ public class ProfileRestController {
 
     @GetMapping("/{memberId}/reviews")
     @CommonApiResponses
-    @Operation(summary = "다른 사람의 동행 후기 조회 API", description = "다른 사람의 프로필에서 동행 후기 볼 때 이용하는 API 입니다. 성별은 true일때 남자, false일때 여자입니다.")
-    public ApiResponse<ReviewResponseDto.ReviewListDto> getOtherReviewList(@ExistMember @PathVariable(name="memberId") Long memberId){
+    @Operation(summary = "다른 사람의 동행 후기 조회 API", description = "path variable로 동행 후기를 조회하고자 하는 상대 member의 id를 받습니다.")
+    public ApiResponse<ReviewResponseDto.ReviewListDto> getOtherReviewList(@PathVariable @ExistsMember Long memberId){
         List<Review> reviewList = reviewQueryService.getReviewList(memberId);
         double averageScore = reviewQueryService.calculateAverageScore(reviewList);
         return ApiResponse.onSuccess(ReviewConverter.reviewListDto(reviewList, averageScore));

@@ -73,7 +73,7 @@ public class PostConverter {
         return PostResponseDto.PostDetailDto.builder()
                 .nickname(post.getMember().getNickname())
                 .age(post.getMember().calculateAge())
-                .gender(post.getMember().stringGender())
+                .gender(post.getMember().getGender())
                 .averageScore(averageScore)
                 .bookmarkCount(bookmarkCount)
                 .viewCount(post.getViewCount())
@@ -147,7 +147,4 @@ public class PostConverter {
                 .wanted(post.getWanted())
                 .build();
     }
-
-
-
 }

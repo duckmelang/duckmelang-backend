@@ -14,7 +14,7 @@ import umc.duckmelang.global.security.jwt.JwtUtil;
 
 @RestController
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthRestController {
     private final AuthService authService;
     private final JwtUtil jwtUtil;
     private final BlacklistService blacklistService;

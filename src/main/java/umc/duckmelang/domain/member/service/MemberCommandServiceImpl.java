@@ -11,6 +11,7 @@ import umc.duckmelang.domain.idolcategory.repository.IdolCategoryRepository;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import umc.duckmelang.domain.landmine.repository.LandmineRepository;
 import umc.duckmelang.domain.member.converter.MemberConverter;
+import umc.duckmelang.domain.member.converter.MemberProfileConverter;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberSignUpDto;
@@ -58,8 +59,24 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     @Override
     @Transactional
+    public Member registerProfile(Long memberId, MemberRequestDto.ProfileRequestDto request){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()-> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        if(memberRepository.existsByNickname(request.getNickname())){
+            throw new MemberException(ErrorStatus.DUPLICATE_NICKNAME);
+        }
+
+        member.setNickname(request.getNickname());
+        member.setBirth(request.getBirth());
+        member.setGender(request.getGender());
+
+        return memberRepository.save(member);
+    }
+
+    @Override
+    @Transactional
     public List<MemberIdol> selectIdols(Long memberId, MemberRequestDto.SelectIdolsDto request) {
-        // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -71,6 +88,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         // 기존 데이터 존재 시 삭제
         memberIdolRepository.deleteAllByMember(member);
+
         // 새 데이터 저장
         List<MemberIdol> memberIdolList = idolCategoryList.stream()
                 .map(idolCategory -> MemberConverter.toMemberIdol(member, idolCategory))
@@ -142,7 +160,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         return landmineRepository.saveAll(landmineList);
     }
 
-
     @Override
     @Transactional
     public MemberProfileImage createMemberProfileImage(Long memberId, MemberRequestDto.CreateMemberProfileImageDto request) {
@@ -181,6 +198,9 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         // 자기소개 업데이트
         Member updatedMember = MemberConverter.toMemberWithIntroduction(member, request.getIntroduction());
 
+        // 자기소개 업데이트
+        updatedMember.completeProfile();
+
         return memberRepository.save(updatedMember);
     }
 
@@ -193,16 +213,8 @@ public class MemberCommandServiceImpl implements MemberCommandService {
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // 프로필 업데이트
-        Member updatedMember = MemberConverter.toUpdateMember(member, request.getNickname(), request.getIntroduction());
+        Member updatedMember = MemberProfileConverter.toUpdateMember(member, request.getNickname(), request.getIntroduction());
 
         return memberRepository.save(updatedMember);
-    }
-
-    @Override
-    @Transactional
-    public void  completeProfile(Long memberId){
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(()-> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
-        member.completeProfile();
     }
 }

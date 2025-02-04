@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import umc.duckmelang.domain.auth.domain.Auth;
 import umc.duckmelang.domain.materelationship.domain.MateRelationship;
+import umc.duckmelang.domain.member.domain.enums.Gender;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.post.domain.Post;
@@ -31,7 +32,7 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(length = 30)
+    @Column(length = 30, nullable = true)
     private String nickname;
 
     @Column(length = 500)
@@ -40,8 +41,9 @@ public class Member extends BaseEntity {
     @Column(nullable = true)
     private LocalDate birth;
 
-    // true = 남성, false = 여성
-    private Boolean gender;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
+    private Gender gender;
 
     @Column(columnDefinition = "TINYTEXT")
     private String email;
@@ -138,12 +140,8 @@ public class Member extends BaseEntity {
         this.introduction = introduction;
     }
 
-//    성별 반환 메서드(true면 남성, false면 여성으로 반환)
-    public String stringGender(){
-        if(this.gender == true){
-            return "남성";
-        } else{
-            return "여성";
-        }
-    }
+//    // 성별 반환 메서드
+//    public String stringGender(){
+//        return this.gender.name();
+//    }
 }

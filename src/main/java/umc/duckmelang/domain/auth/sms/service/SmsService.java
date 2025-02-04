@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.auth.sms;
+package umc.duckmelang.domain.auth.sms.service;
 
 import umc.duckmelang.domain.auth.sms.dto.SmsRequestDto;
 import umc.duckmelang.domain.auth.sms.dto.SmsVerifyDto;

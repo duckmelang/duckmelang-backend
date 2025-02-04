@@ -44,7 +44,7 @@ public class ReviewConverter {
         return ReviewResponseDto.ReviewDto.builder()
                 .reviewId(review.getId())
                 .nickname(review.getSender().getNickname())
-                .gender(review.getSender().stringGender())
+                .gender(review.getSender().getGender())
                 .age(review.getSender().calculateAge())
                 .content(review.getContent())
                 .score(review.getScore())
