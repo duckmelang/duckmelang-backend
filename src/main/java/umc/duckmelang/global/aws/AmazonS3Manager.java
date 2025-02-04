@@ -43,4 +43,8 @@ public class AmazonS3Manager{
         return amazonConfig.getMemberProfileImagePath() + '/' + uuid.getUuid();
     }
 
+    public String generatePostImageKeyName(Uuid uuid) {
+        return amazonConfig.getPostImagePath() + '/' + uuid.getUuid();
+    }
+
 }

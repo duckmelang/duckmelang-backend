@@ -35,6 +35,9 @@ public class AmazonConfig {
     @Value("${cloud.aws.s3.path.memberProfileImage}")
     private String memberProfileImagePath;
 
+    @Value("${cloud.aws.s3.path.postImage}")
+    private String postImagePath;
+
     @PostConstruct
     public void init() {
         this.awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
