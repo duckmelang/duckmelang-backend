@@ -41,7 +41,6 @@ public class Member extends BaseEntity {
     @Column(nullable = true)
     private LocalDate birth;
 
-    // true = 남성, false = 여성
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
     private Gender gender;
@@ -141,13 +140,8 @@ public class Member extends BaseEntity {
         this.introduction = introduction;
     }
 
-    // 성별 반환 메서드(true면 남성, false면 여성으로 반환)
+    // 성별 반환 메서드
     public String stringGender(){
-//        if(this.gender == true){
-//            return "남성";
-//        } else{
-//            return "여성";
-//        }
         return this.gender.name();
     }
 }

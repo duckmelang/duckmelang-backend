@@ -77,7 +77,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Override
     @Transactional
     public List<MemberIdol> selectIdols(Long memberId, MemberRequestDto.SelectIdolsDto request) {
-        // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -89,6 +88,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         // 기존 데이터 존재 시 삭제
         memberIdolRepository.deleteAllByMember(member);
+
         // 새 데이터 저장
         List<MemberIdol> memberIdolList = idolCategoryList.stream()
                 .map(idolCategory -> MemberConverter.toMemberIdol(member, idolCategory))
@@ -159,7 +159,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         return landmineRepository.saveAll(landmineList);
     }
-
 
     @Override
     @Transactional

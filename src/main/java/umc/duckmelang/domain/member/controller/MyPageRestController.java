@@ -30,7 +30,7 @@ public class MyPageRestController {
     private final ReviewQueryService reviewQueryService;
 
     @Operation(summary = "마이페이지 조회 API", description = "마이페이지 첫 화면에 노출되는 회원 정보를 조회해오는 API입니다. member의 id, nickname, gender, age, 대표 프로필 사진을 불러옵니다.")
-    @GetMapping("/mypage")
+    @GetMapping("/")
     public ApiResponse<MemberResponseDto.GetMypageMemberPreviewResultDto> getMypageMemberPreview (@RequestParam Long memberId) {
         return ApiResponse.onSuccess(profileFacadeService.getMypageMemberPreview(memberId));
     }
