@@ -17,7 +17,6 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Profile({"dev"})
 public class AmazonS3Manager{
 
     private final AmazonS3 amazonS3;

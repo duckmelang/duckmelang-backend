@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Type;
 
 @Component
-@Profile({"dev"})
 public class MultipartJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {
 
     /** "Content-Type: multipart/form-data" 헤더를 지원하는 HTTP 요청 변환기 */

@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Getter
-@Profile({"dev"})
 public class AmazonConfig {
 
     private AWSCredentials awsCredentials;
