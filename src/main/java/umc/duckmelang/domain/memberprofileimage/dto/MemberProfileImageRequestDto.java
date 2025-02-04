@@ -18,4 +18,5 @@ public class MemberProfileImageRequestDto {
         private Long imageId;
         private boolean publicStatus;
     }
+    
 }

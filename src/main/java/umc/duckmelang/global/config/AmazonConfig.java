@@ -11,17 +11,19 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Getter
+@Profile({"dev"})
 public class AmazonConfig {
 
     private AWSCredentials awsCredentials;
 
-    @Value("${cloud.aws.credentials.accessKey")
+    @Value("${cloud.aws.credentials.access-key}")
     private String accessKey;
 
-    @Value("${cloud.aws.credentials.secretKey")
+    @Value("${cloud.aws.credentials.secret-key}")
     private String secretKey;
 
     @Value("${cloud.aws.region.static}")
@@ -30,7 +32,7 @@ public class AmazonConfig {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${cloud.aws.s3.path.memberProfileImage")
+    @Value("${cloud.aws.s3.path.memberProfileImage}")
     private String memberProfileImagePath;
 
     @PostConstruct
