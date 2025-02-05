@@ -56,6 +56,9 @@ dependencies {
 
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// mongoDB (채팅 이력 저장용)
+	implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
 }
 
 tasks.named('test') {

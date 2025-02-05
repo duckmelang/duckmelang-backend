@@ -34,6 +34,15 @@ public class MemberConverter {
                 .build();
     }
 
+    public static MemberResponseDto.ProfileResultDto toProfileResponseDto(Member member){
+        return MemberResponseDto.ProfileResultDto.builder()
+                .memberId(member.getId())
+                .nickname(member.getNickname())
+                .birth(member.getBirth())
+                .gender(member.getGender())
+                .build();
+    }
+
     public static MemberIdol toMemberIdol(Member member, IdolCategory idolCategory) {
         return MemberIdol.builder()
                 .member(member)
@@ -107,7 +116,6 @@ public class MemberConverter {
                 .memberId(member.getId())
                 .landmineContents(landmineContents)
                 .build();
-
     }
 
     public static MemberProfileImage toMemberProfileImage(Member member, String profileImageUrl) {
@@ -135,60 +143,6 @@ public class MemberConverter {
         return MemberResponseDto.CreateIntroductionResultDto.builder()
                 .memberId(member.getId())
                 .introduction(member.getIntroduction())
-                .build();
-
-    }
-
-    public static MemberResponseDto.GetMypageMemberPreviewResultDto toGetMemberPreviewResponseDto(Member member, MemberProfileImage memberProfileImage) {
-        return MemberResponseDto.GetMypageMemberPreviewResultDto.builder()
-                .memberId(member.getId())
-                .nickname(member.getNickname())
-                .gender(member.stringGender())
-                .age(member.calculateAge())
-                .latestPublicMemberProfileImage(memberProfileImage.getMemberImage())
-                .build();
-    }
-
-    public static MemberResponseDto.GetMypageMemberProfileResultDto toGetMemberProfileResponseDto(Member member, MemberProfileImage memberProfileImage, long postCount, long succeedApplicationCount) {
-        return  MemberResponseDto.GetMypageMemberProfileResultDto.builder()
-                .memberId(member.getId())
-                .nickname(member.getNickname())
-                .gender(member.stringGender())
-                .age(member.calculateAge())
-                .latestPublicMemberProfileImage(memberProfileImage.getMemberImage())
-                .introduction(member.getIntroduction())
-                .postCount(postCount)
-                .succeedApplicationCount(succeedApplicationCount)
-                .build();
-
-    }
-
-    public static Member toUpdateMember(Member member, String updatedNickname, String updatedIntroduction) {
-        member.updateProfile(updatedNickname, updatedIntroduction);
-        return member;
-    }
-
-    public static MemberResponseDto.GetMypageMemberProfileEditResultDto toUpdateMemberProfileDto(Member updatedMember, MemberProfileImage latestPublicMemberProfileImage) {
-        return MemberResponseDto.GetMypageMemberProfileEditResultDto.builder()
-                .memberId(updatedMember.getId())
-                .nickname(updatedMember.getNickname())
-                .introduction(updatedMember.getIntroduction())
-                .latestPublicMemberProfileImage(latestPublicMemberProfileImage.getMemberImage())
-                .build();
-    }
-
-    public static MemberResponseDto.OtherProfileDto ToOtherProfileDto(Member member,
-                                                                      int postCnt,
-                                                                      int matchCnt,
-                                                                      MemberProfileImage image){
-        return MemberResponseDto.OtherProfileDto.builder()
-                .nickname(member.getNickname())
-                .gender(member.stringGender())
-                .age(member.calculateAge())
-                .introduction(member.getIntroduction())
-                .profileImageUrl(image.getMemberImage())
-                .postCnt(postCnt)
-                .matchCnt(matchCnt)
                 .build();
     }
 }

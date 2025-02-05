@@ -24,6 +24,12 @@ jobs:
           echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
         shell: bash
 
+      - name: Create empty application-dev.yml  # 빈 application-dev.yml 파일 생성
+        run: |
+          cd ./src/main/resources
+          touch application-dev.yml
+        shell: bash
+
       - name: Grant execute permission for gradlew  # gradlew 실행 권한 부여
         run: chmod +x gradlew
 
@@ -33,7 +39,7 @@ jobs:
           arguments: build
 
       - name: Upload build artifact  # 빌드된 아티팩트 업로드
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4 #v4로 변경
         with:
           name: duckmealng
           path: build/libs/*.jar
@@ -44,7 +50,7 @@ jobs:
 
     steps:
       - name: Download build artifact  # 이전 단계에서 업로드한 아티팩트 다운로드
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4 #v4로 변경
         with:
           name: duckmealng
           path: build/libs/

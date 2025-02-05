@@ -29,7 +29,7 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
 
         // 프로필 이미지 조회 및 유효성 검증
         MemberProfileImage profileImage = memberProfileImageRepository.findById(request.getImageId())
-                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
+                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
 
         memberProfileImageRepository.delete(profileImage);
     }
@@ -43,7 +43,7 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
 
         // 프로필 이미지 조회 및 유효성 검증
         MemberProfileImage profileImage = memberProfileImageRepository.findById(request.getImageId())
-                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
+                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
 
         //프로필 이미지 공개 범위 변경
         MemberProfileImage updatedProfileImage = MemberProfileImageConverter.toMemberProfileImageWithChangedStatus(profileImage, request.isPublicStatus());

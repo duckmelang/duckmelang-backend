@@ -1,13 +1,15 @@
-package umc.duckmelang.domain.auth.sms;
+package umc.duckmelang.domain.auth.sms.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import umc.duckmelang.domain.auth.sms.util.SmsCertificationUtil;
 import umc.duckmelang.domain.auth.sms.dto.SmsRequestDto;
 import umc.duckmelang.domain.auth.sms.dto.SmsVerifyDto;
+import umc.duckmelang.domain.auth.sms.repository.SmsRepository;
 
 @RequiredArgsConstructor
 @Service
-public class SmsServiceImpl implements SmsService{
+public class SmsServiceImpl implements SmsService {
     private final SmsCertificationUtil smsCertificationUtil;
     private final SmsRepository smsRepository;
 

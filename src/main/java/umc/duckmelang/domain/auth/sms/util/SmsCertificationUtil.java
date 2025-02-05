@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.auth.sms;
+package umc.duckmelang.domain.auth.sms.util;
 
 import jakarta.annotation.PostConstruct;
 

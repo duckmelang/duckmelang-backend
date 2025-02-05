@@ -23,7 +23,7 @@ public class PostIdol extends BaseEntity {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idol_catgory_id")
+    @JoinColumn(name = "idol_category_id")
     private IdolCategory idolCategory;
 
     public void setPost(Post post) {

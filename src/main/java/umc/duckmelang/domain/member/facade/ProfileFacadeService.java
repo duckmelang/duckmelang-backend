@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.domain.application.service.ApplicationQueryService;
-import umc.duckmelang.domain.member.converter.MemberConverter;
+import umc.duckmelang.domain.member.converter.MemberProfileConverter;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
@@ -14,7 +14,6 @@ import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageCommandService;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 import umc.duckmelang.domain.post.service.PostQueryService;
-import umc.duckmelang.domain.postimage.service.PostImageQueryService;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.MemberException;
 import umc.duckmelang.global.apipayload.exception.MemberProfileImageException;
@@ -31,22 +30,18 @@ public class ProfileFacadeService {
     private final MemberProfileImageQueryService memberProfileImageQueryService;
     private final MemberProfileImageCommandService memberProfileImageCommandService;
 
-
     @Transactional(readOnly = true)
     public MemberResponseDto.GetMypageMemberPreviewResultDto getMypageMemberPreview(Long memberId) {
-
         // 회원 기본 정보 조회
         Member member = memberQueryService.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // 대표 프로필 이미지 1개 조회
         MemberProfileImage latestPublicMemberProfileImage = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
-                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
+                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
 
-        return MemberConverter.toGetMemberPreviewResponseDto(member, latestPublicMemberProfileImage);
+        return MemberProfileConverter.toGetMemberPreviewResponseDto(member, latestPublicMemberProfileImage);
     }
-
-
 
     @Transactional(readOnly = true)
     public MemberResponseDto.OtherProfileDto getOtherProfileByMemberId(Long memberId, int page) {
@@ -62,9 +57,9 @@ public class ProfileFacadeService {
 
         // 프로필 이미지 1개 조회
         MemberProfileImage image = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
-                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
+                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
 
-        return MemberConverter.ToOtherProfileDto(member, postCount, matchCount, image);
+        return MemberProfileConverter.ToOtherProfileDto(member, postCount, matchCount, image);
     }
 
     @Transactional(readOnly = true)
@@ -82,13 +77,10 @@ public class ProfileFacadeService {
 
         // 대표 프로필 이미지 1개 조회
         MemberProfileImage image = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
-                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
+                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
 
-
-        return MemberConverter.toGetMemberProfileResponseDto(member, image, postCount, matchCount);
+        return MemberProfileConverter.toGetMemberProfileResponseDto(member, image, postCount, matchCount);
     }
-
-
 
     @Transactional
     public MemberResponseDto.GetMypageMemberProfileEditResultDto updateMypageMemberProfile(Long memberId, MemberRequestDto.UpdateMemberProfileDto request) {
@@ -105,8 +97,8 @@ public class ProfileFacadeService {
 
         // 대표 프로필 이미지 1개 조회
         MemberProfileImage latestPublicMemberProfileImage = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
-                .orElseThrow(()-> new MemberProfileImageException(ErrorStatus.MEMBERPROFILEIMAGE_NOT_FOUND));
+                .orElseThrow(()-> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
 
-        return MemberConverter.toUpdateMemberProfileDto(updatedMember,latestPublicMemberProfileImage);
+        return MemberProfileConverter.toUpdateMemberProfileDto(updatedMember,latestPublicMemberProfileImage);
     }
 }

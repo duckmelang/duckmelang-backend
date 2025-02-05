@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import umc.duckmelang.domain.eventcategory.domain.EventCategory;
+import umc.duckmelang.domain.member.domain.enums.Gender;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +29,7 @@ public class ReviewResponseDto {
     public static class ReviewDto{
         private Long reviewId;
         private String nickname;
-        private String gender;
+        private Gender gender;
         private Integer age;
         private String content;
         private Short score;

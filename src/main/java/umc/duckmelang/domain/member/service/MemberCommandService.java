@@ -12,11 +12,11 @@ import java.util.List;
 
 public interface MemberCommandService {
     Member signupMember(MemberSignUpDto.SignupDto request);
+    Member registerProfile(Long memberId, MemberRequestDto.ProfileRequestDto request);
     List<MemberIdol> selectIdols(Long memberId, MemberRequestDto.SelectIdolsDto request);
     List<MemberEvent> selectEvents(Long memberId, MemberRequestDto.SelectEventsDto request);
     List<Landmine> createLandmines(Long memberId, MemberRequestDto.CreateLandminesDto request);
     MemberProfileImage createMemberProfileImage(Long memberId, MemberRequestDto.CreateMemberProfileImageDto request);
     Member createIntroduction(Long memberId, MemberRequestDto.CreateIntroductionDto request);
     Member updateMemberProfile(Long memberId, MemberRequestDto.UpdateMemberProfileDto request);
-    void completeProfile(Long memberId);
 }

@@ -22,7 +22,7 @@ public class MemberExistsValidator implements ConstraintValidator<ExistsMember, 
     public boolean isValid(Long memberId, ConstraintValidatorContext context) {
         boolean isValid = memberQueryService.existsById(memberId);
         if(!isValid){
-            context.buildConstraintViolationWithTemplate(ErrorStatus.NO_SUCH_MEMBER.toString()).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorStatus.MEMBER_NOT_FOUND.toString()).addConstraintViolation();
         }
         return isValid;
     }

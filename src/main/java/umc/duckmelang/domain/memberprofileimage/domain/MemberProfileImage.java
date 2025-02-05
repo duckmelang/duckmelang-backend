@@ -42,4 +42,17 @@ public class MemberProfileImage extends BaseEntity {
         this.isPublic = isPublic;
     }
 
+    private static final String DEFAULT_IMAGE_URL = "default_img.url";
+
+    /**
+     * 공개된 MemberProfileImage가 없을 때 조회할 경우 사용할 디폴트 객체
+     * **/
+    public static MemberProfileImage createDefault(Member member) {
+        return MemberProfileImage.builder()
+                .member(member)
+                .isPublic(true)
+                .memberImage(DEFAULT_IMAGE_URL)
+                .build();
+    }
+
 }
