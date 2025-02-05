@@ -27,12 +27,4 @@ public class NotificationSetting extends BaseEntity {
     private Boolean requestNotificationEnabled = true;  // 동행 확정 요청 알림 수신 여부
     @Column(nullable = false)
     private Boolean reviewNotificationEnabled = true;  // 후기 작성 알림 수신 여부
-
-
-    @Column(nullable = false)
-    private Boolean pushNotificationEnabled = true;  // 푸시 알림 수신 여부
-    @Column(nullable = false)
-    private Boolean smsNotificationEnabled = true;  // SMS 알림 수신 여부
-    @Column(nullable = false)
-    private Boolean emailNotificationEnabled = true;  // 이메일 알림 수신 여부
 }
