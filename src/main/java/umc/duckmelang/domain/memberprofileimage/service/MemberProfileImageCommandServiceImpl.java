@@ -2,6 +2,7 @@ package umc.duckmelang.domain.memberprofileimage.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +30,9 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
     private final UuidRepository uuidRepository;
 
     private final AmazonS3Manager s3Manager;
+
+    @Value("${spring.custom.default.profile-image}")
+    private String defaultProfileImage;
 
     @Override
     @Transactional
@@ -83,8 +87,13 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
         Uuid savedUuid = uuidRepository.save(Uuid.builder()
                 .uuid(uuid).build());
 
-        String imageUrl = s3Manager.uploadFile(s3Manager.generateMemberProfileImageKeyName(savedUuid), profileImage);
-        return memberProfileImageRepository.save(MemberProfileImageConverter.toCreateMemberProfileImage(member, imageUrl));
+        // 프로필 사진을 선택하지 않은 경우, 기본 프로필 사진으로 설정
+        String profileImageUrl;
+        if (profileImage == null || profileImage.isEmpty())
+            profileImageUrl = defaultProfileImage;
+        else profileImageUrl = s3Manager.uploadFile(s3Manager.generateMemberProfileImageKeyName(savedUuid), profileImage);
+
+        return memberProfileImageRepository.save(MemberProfileImageConverter.toCreateMemberProfileImage(member, profileImageUrl));
 
     }
 

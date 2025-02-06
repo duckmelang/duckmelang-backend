@@ -142,30 +142,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         return landmineRepository.saveAll(landmineList);
     }
 
-
-    @Override
-    @Transactional
-    public MemberProfileImage createMemberProfileImage(Long memberId, MemberRequestDto.CreateMemberProfileImageDto request) {
-        // 회원 조회 및 유효성 검증
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
-
-        // 기존 데이터 존재 시 삭제
-        memberProfileImageRepository.deleteAllByMember(member);
-
-        String profileImageUrl = request.getMemberProfileImageURL();
-
-        // 프로필 사진을 선택하지 않은 경우, 기본 프로필 사진으로 설정
-        if (profileImageUrl == null || profileImageUrl.trim().isEmpty()) {
-            profileImageUrl = "default-profile-image-url"; // 기본 프로필 사진 URL 추후 설정
-        }
-
-        // 새 데이터 저장
-        MemberProfileImage memberProfileImage = MemberConverter.toMemberProfileImage(member, profileImageUrl);
-
-        return memberProfileImageRepository.save(memberProfileImage);
-    }
-
     @Override
     @Transactional
     public Member createIntroduction(Long memberId, MemberRequestDto.CreateIntroductionDto request) {
