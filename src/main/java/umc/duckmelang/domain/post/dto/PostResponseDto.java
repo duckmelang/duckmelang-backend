@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import umc.duckmelang.domain.member.domain.enums.Gender;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 
 import java.time.LocalDate;
@@ -47,7 +48,7 @@ public class PostResponseDto {
     public static class PostDetailDto{
         private String nickname;
         private Integer age;
-        private String gender;
+        private Gender gender;
         private Double averageScore;
         private Integer bookmarkCount;
         private Integer viewCount;
@@ -81,5 +82,4 @@ public class PostResponseDto {
         private String title;
         private Short wanted;
     }
-
 }

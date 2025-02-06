@@ -66,5 +66,4 @@ public class MemberProfileImageController {
 
         return ApiResponse.onSuccess(MemberProfileImageConverter.toUpdateProfileImageStatusResultDto(updatedMemberProfileImage));
     }
-
 }

@@ -27,7 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
-public class MemberController {
+public class MemberRestController {
     private final MemberCommandService memberCommandService;
     private final MemberProfileImageCommandService memberProfileImageCommandService;
 
@@ -38,39 +38,33 @@ public class MemberController {
         return ApiResponse.onSuccess(MemberConverter.toSignupResultDto(member));
     }
 
+    @Operation(summary = "닉네임, 생년월일, 성별 설정 API", description = "회원이 닉네임, 생년월일, 성별을 설정하는 API입니다.")
+    @PatchMapping("/{memberId}/profile")
+    public ApiResponse<MemberResponseDto.ProfileResultDto> registerProfile(@PathVariable(name = "memberId") Long memberId, @RequestBody @Valid MemberRequestDto.ProfileRequestDto request){
+        Member member = memberCommandService.registerProfile(memberId, request);
+        return ApiResponse.onSuccess(MemberConverter.toProfileResponseDto(member));
+    }
+
     @Operation(summary = "덕질하는 아이돌 선택 API", description = "회원이 덕질하는 아이돌(들)을 선택하는 API입니다. 최소 하나의 아이돌은 선택해야 합니다.")
     @PostMapping("/{memberId}/interesting-idol")
-    public ApiResponse<MemberResponseDto.SelectIdolsResultDto> selectIdols(
-            @PathVariable(name = "memberId") Long memberId,
-            @RequestBody @Valid MemberRequestDto.SelectIdolsDto request) {
-
+    public ApiResponse<MemberResponseDto.SelectIdolsResultDto> selectIdols(@PathVariable(name = "memberId") Long memberId, @RequestBody @Valid MemberRequestDto.SelectIdolsDto request) {
         List<MemberIdol> updatedMemberIdolList = memberCommandService.selectIdols(memberId, request);
-
-        // 리스트가 비어 있는 경우 예외 처리
         if (updatedMemberIdolList.isEmpty()) {
             throw new IllegalArgumentException("선택된 아이돌 카테고리가 없습니다.");}
         return ApiResponse.onSuccess(MemberConverter.toSelectIdolResponseDto(updatedMemberIdolList));
     }
 
-    @Operation(summary = "선호하는 행사 종류 선택 API", description = "회원이 선호하는 행사(들)를 선택하는 API입니다. 하나도 선택하지 않을 수 있습니다.(이 경우 빈 리스트를 반환합니다)")
+    @Operation(summary = "관심있는 행사 종류 선택 API", description = "회원이 관심있는 행사(들)를 선택하는 API입니다. 하나도 선택하지 않을 수 있습니다.(이 경우 빈 리스트를 반환합니다)")
     @PostMapping("/{memberId}/interesting-event")
-    public ApiResponse<MemberResponseDto.SelectEventsResultDto> selectEvents(
-            @PathVariable(name = "memberId") Long memberId,
-            @RequestBody @Valid MemberRequestDto.SelectEventsDto request) {
-
+    public ApiResponse<MemberResponseDto.SelectEventsResultDto> selectEvents(@PathVariable(name = "memberId") Long memberId, @RequestBody @Valid MemberRequestDto.SelectEventsDto request) {
         List<MemberEvent> updatedMemberEventList = memberCommandService.selectEvents(memberId, request);
-        // 리스트가 비어 있는 경우 허용(따라서 예외 처리 생략)
         return ApiResponse.onSuccess(MemberConverter.toSelectEventResponseDto(updatedMemberEventList));
     }
 
     @Operation(summary = "지뢰 설정 API", description = "회원이 기피하는 키워드(들)를 선택하는 API입니다. 하나도 선택하지 않을 수 있습니다.(이 경우 빈 리스트를 반환합니다)")
     @PostMapping("/{memberId}/landmine")
-    public ApiResponse<MemberResponseDto.CreateLandmineResultDto> createLandmines(
-            @PathVariable(name = "memberId") Long memberId,
-            @RequestBody @Valid MemberRequestDto.CreateLandminesDto request) {
-
+    public ApiResponse<MemberResponseDto.CreateLandmineResultDto> createLandmines(@PathVariable(name = "memberId") Long memberId, @RequestBody @Valid MemberRequestDto.CreateLandminesDto request) {
         List<Landmine> updatedLandmineList = memberCommandService.createLandmines(memberId, request);
-        // 리스트가 비어 있는 경우 허용(따라서 예외 처리 생략)
         return ApiResponse.onSuccess(MemberConverter.toCreateLandmineResponseDto(updatedLandmineList));
     }
 
@@ -85,18 +79,8 @@ public class MemberController {
 
     @Operation(summary = "자기소개 문구 설정 API", description = "회원이 최초로 자기소개 문구를 설정하는 API입니다. 빈 문자열과 공백을 허용하지 않습니다. 최대 500자 작성 가능합니다.")
     @PatchMapping("/{memberId}/profile-introduction")
-    public ApiResponse<MemberResponseDto.CreateIntroductionResultDto> createIntroduction (
-            @PathVariable(name = "memberId") Long memberId,
-            @RequestBody @Valid MemberRequestDto.CreateIntroductionDto request) {
-
+    public ApiResponse<MemberResponseDto.CreateIntroductionResultDto> createIntroduction (@PathVariable(name = "memberId") Long memberId, @RequestBody @Valid MemberRequestDto.CreateIntroductionDto request) {
         Member updatedmember = memberCommandService.createIntroduction(memberId, request);
         return ApiResponse.onSuccess(MemberConverter.toCreateIntroductionResponseDto(updatedmember));
-    }
-
-    @Operation(summary = "프로필 설정 완료 API", description = "소셜 로그인 사용자가 프로필 설정을 완료하면 호출하는 API입니다. ")
-    @PatchMapping("/{memberId}/profile-complete")
-    public ApiResponse<String> completeProfile(@PathVariable(name = "memberId") Long memberId){
-        memberCommandService.completeProfile(memberId);
-        return ApiResponse.onSuccess("프로필 설정이 완료되었습니다.");
     }
 }
