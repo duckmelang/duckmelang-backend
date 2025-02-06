@@ -4,7 +4,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import umc.duckmelang.domain.member.service.MemberQueryService;
+import umc.duckmelang.domain.member.service.member.MemberQueryService;
 import umc.duckmelang.domain.member.validation.annotation.ExistsMember;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 

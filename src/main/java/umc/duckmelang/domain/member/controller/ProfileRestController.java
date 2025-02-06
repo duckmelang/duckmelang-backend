@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import umc.duckmelang.domain.member.dto.MyPageRequestDto;
+import umc.duckmelang.domain.member.dto.MyPageResponseDto;
 import umc.duckmelang.domain.member.facade.ProfileFacadeService;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
 import umc.duckmelang.domain.member.validation.annotation.ExistsMember;
@@ -38,7 +40,7 @@ public class ProfileRestController {
 
     @GetMapping(path = "/{memberId}")
     @Operation(summary = "다른 멤버 프로필 조회",description = "path variable로 프로필을 조회하고자하는 상대 member의 id를 받습니다.")
-    ApiResponse<MemberResponseDto.OtherProfileDto> getOtherProfile(@PathVariable @ExistsMember Long memberId, int page) {
+    ApiResponse<MyPageResponseDto.OtherProfileDto> getOtherProfile(@PathVariable @ExistsMember Long memberId, int page) {
         return ApiResponse.onSuccess(profileFacadeService.getOtherProfileByMemberId(memberId, page));
     }
 

@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.member.service;
+package umc.duckmelang.domain.member.service.member;
 
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;

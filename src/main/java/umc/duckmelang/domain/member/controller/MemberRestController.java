@@ -15,7 +15,7 @@ import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
 import umc.duckmelang.domain.member.dto.MemberSignUpDto;
-import umc.duckmelang.domain.member.service.MemberCommandService;
+import umc.duckmelang.domain.member.service.member.MemberCommandService;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
