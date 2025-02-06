@@ -63,8 +63,14 @@ dependencies {
 	// websocket (채팅 통신용)
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-	//S3
+	// S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	// Jackson (JSON 직렬화 형식 지정을 위해 등록)
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+	implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
+
 }
 
 tasks.named('test') {

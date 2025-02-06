@@ -1,9 +1,12 @@
 package umc.duckmelang.domain.chatmessage.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import umc.duckmelang.global.common.serializer.LocalDateTimeSerializer;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +33,7 @@ public class ChatMessage {
     private String content;   // 메세지 내용
 
     @CreatedDate
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createdAt;
 
 }
