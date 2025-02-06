@@ -4,10 +4,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import umc.duckmelang.domain.bookmark.converter.BookmarkConverter;
+import umc.duckmelang.domain.bookmark.domain.Bookmark;
+import umc.duckmelang.domain.bookmark.dto.BookmarkResponseDto;
+import umc.duckmelang.domain.bookmark.service.BookmarkCommandService;
 import umc.duckmelang.domain.bookmark.service.BookmarkQueryService;
 import umc.duckmelang.domain.idolcategory.validation.annotation.ExistIdol;
 import umc.duckmelang.domain.post.converter.PostConverter;
@@ -22,6 +29,8 @@ import umc.duckmelang.domain.post.validation.annotation.ValidPageNumber;
 import umc.duckmelang.domain.review.service.ReviewQueryService;
 import umc.duckmelang.global.annotations.CommonApiResponses;
 import umc.duckmelang.global.apipayload.ApiResponse;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
@@ -62,11 +71,14 @@ public class PostRestController {
         return ApiResponse.onSuccess(postFacadeService.getPostDetail(postId));
     }
 
-    @PostMapping("/{memberId}")
+    @PostMapping(value = "/{memberId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CommonApiResponses
-    @Operation(summary = "게시글 작성 API", description = "게시글 쓰기 API입니다. ")
-    public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (@PathVariable(name="memberId") Long memberId, @RequestBody @Valid PostRequestDto.PostJoinDto request){
-        Post post = postCommandService.joinPost(request, memberId);
+    @Operation(summary = "게시글 작성 API(실제 이미지 업로드)", description = "게시글 쓰기 API입니다. 최대 5개의 이미지 업로드 가능.. ")
+    public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (
+            @PathVariable(name="memberId") Long memberId,
+            @RequestPart @Valid PostRequestDto.PostJoinDto request,
+            @Size(max = 5) @RequestPart("images") List<MultipartFile> images){
+        Post post = postCommandService.joinPost(request, memberId, images);
         return ApiResponse.onSuccess(PostConverter.postJoinResultDto(post));
     }
 

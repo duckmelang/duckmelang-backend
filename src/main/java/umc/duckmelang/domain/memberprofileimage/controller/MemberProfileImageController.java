@@ -1,10 +1,14 @@
 package umc.duckmelang.domain.memberprofileimage.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import umc.duckmelang.domain.memberprofileimage.converter.MemberProfileImageConverter;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageRequestDto;
@@ -28,6 +32,17 @@ public class MemberProfileImageController {
         Page<MemberProfileImage> updatedMemberProfileImagePage = memberProfileImageQueryService.getAllMemberProfileImageByMemberId(memberId, page);
 
         return ApiResponse.onSuccess(MemberProfileImageConverter.toMemberProfileImageListDto(updatedMemberProfileImagePage));
+    }
+
+    @Operation(summary = "내 프로필 사진 추가 API(실제 이미지 업로드)", description = "특정 회원 본인의 프로필 사진을 추가하는 API입니다.")
+    @PostMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ApiResponse<MemberProfileImageResponseDto.MemberProfileImageDto> createProfileImage (
+            @RequestParam Long memberId,
+            @RequestPart("profileImage")MultipartFile profileImage) {
+
+        MemberProfileImage memberProfileImage = memberProfileImageCommandService.createProfileImage(memberId, profileImage);
+
+        return ApiResponse.onSuccess(MemberProfileImageConverter.toMemberProfileImageDto(memberProfileImage));
     }
 
     @Operation(summary = "내 프로필 사진 삭제 API", description = "특정 회원 본인의 프로필 사진 중 하나를 삭제하는 API입니다.")

@@ -3,7 +3,9 @@ package umc.duckmelang.domain.member.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +19,7 @@ import umc.duckmelang.domain.member.service.MemberCommandService;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
+import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageCommandService;
 import umc.duckmelang.global.apipayload.ApiResponse;
 
 import java.util.List;
@@ -26,6 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberRestController {
     private final MemberCommandService memberCommandService;
+    private final MemberProfileImageCommandService memberProfileImageCommandService;
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입 API", description = "사용자 정보를 받아 회원가입을 처리하는 API입니다.")
@@ -64,10 +68,12 @@ public class MemberRestController {
         return ApiResponse.onSuccess(MemberConverter.toCreateLandmineResponseDto(updatedLandmineList));
     }
 
-    @Operation(summary = "프로필 사진 설정 API", description = "회원이 최초로 프로필 사진을 설정하는 API입니다. 프로필 사진을 설정하지 않을 경우 기본 프로필이 설정됩니다.")
-    @PostMapping("/{memberId}/profile-image")
-    public ApiResponse<MemberResponseDto.CreateMemberProfileImageResultDto> createMemberProfileImage(@PathVariable(name = "memberId") Long memberId, @RequestBody @Valid MemberRequestDto.CreateMemberProfileImageDto request) {
-        MemberProfileImage updatedMemberProfileImage = memberCommandService.createMemberProfileImage(memberId, request);
+    @Operation(summary = "프로필 사진 설정 API(실제 이미지 업로드)", description = "회원이 최초로 프로필 사진을 설정하는 API입니다. 프로필 사진을 설정하지 않을 경우 기본 프로필이 설정됩니다.")
+    @PostMapping(value = "/{memberId}/profile-image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ApiResponse<MemberResponseDto.CreateMemberProfileImageResultDto> createMemberProfileImage(
+            @PathVariable(name = "memberId") Long memberId,
+            @RequestPart(required = false) MultipartFile profileImage) {
+        MemberProfileImage updatedMemberProfileImage = memberProfileImageCommandService.createProfileImage(memberId, profileImage);
         return ApiResponse.onSuccess(MemberConverter.toCreateMemberProfileImageResponseDto(updatedMemberProfileImage));
     }
 

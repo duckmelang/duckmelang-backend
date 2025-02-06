@@ -54,14 +54,6 @@ public class MemberRequestDto {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class CreateMemberProfileImageDto {
-        private String memberProfileImageURL;
-    }
-
-    @Builder
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class CreateIntroductionDto {
         @NotBlank(message = "자기소개를 비워둘 수 없습니다.")
         @Size(max = 500, message = "자기소개는 500자를 초과할 수 없습니다.")

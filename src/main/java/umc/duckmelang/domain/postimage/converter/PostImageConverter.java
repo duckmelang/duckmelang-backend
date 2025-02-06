@@ -1,6 +1,7 @@
 package umc.duckmelang.domain.postimage.converter;
 
 import org.springframework.data.domain.Page;
+import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.postimage.domain.PostImage;
 import umc.duckmelang.domain.postimage.dto.PostImageResponseDto;
 import umc.duckmelang.domain.postimage.dto.PostThumbnailResponseDto;
@@ -9,6 +10,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PostImageConverter {
+    public static PostImage toPostImage(Post post, String imageUrl){
+        return PostImage.builder()
+                .post(post)
+                .postImageUrl(imageUrl)
+                .build();
+    }
+
     public static PostImageResponseDto.PostThumbnailListResponseDto toPostThumbnailListResponseDto(Page<PostThumbnailResponseDto> thumbnails){
         List<PostThumbnailResponseDto> thumbnailList = thumbnails.stream().collect(Collectors.toList());
         return PostImageResponseDto.PostThumbnailListResponseDto.builder()
