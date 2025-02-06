@@ -44,7 +44,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     private final EventCategoryRepository eventCategoryRepository;
     private final MemberEventRepository memberEventRepository;
     private final LandmineRepository landmineRepository;
-    private final MemberProfileImageRepository memberProfileImageRepository;
 
     @Override
     @Transactional
@@ -77,7 +76,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Override
     @Transactional
     public List<MemberIdol> selectIdols(Long memberId, MemberRequestDto.SelectIdolsDto request) {
-        // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -101,7 +99,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Override
     @Transactional
     public List<MemberEvent> selectEvents(Long memberId, MemberRequestDto.SelectEventsDto request) {
-        // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 

@@ -14,17 +14,18 @@ import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageResponseDt
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageCommandService;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 import umc.duckmelang.global.apipayload.ApiResponse;
+import umc.duckmelang.global.validation.annotation.ValidPageNumber;
 
 @RestController
 @RequestMapping("/mypage/profile/image")
 @RequiredArgsConstructor
-public class MemberProfileImageController {
+public class MemberProfileImageRestController {
     private final MemberProfileImageQueryService memberProfileImageQueryService;
     private final MemberProfileImageCommandService memberProfileImageCommandService;
 
     @Operation(summary = "내 프로필 사진 전체 조회 API", description = "특정 회원 본인의 프로필 사진을 모두 조회하는 API입니다. 비공개된 사진과 공개된 사진 모두 확인 가능합니다.")
     @GetMapping("")
-    public ApiResponse<MemberProfileImageResponseDto.MemberProfileImageListDto> getAllProfileImages(@RequestParam Long memberId, int page) {
+    public ApiResponse<MemberProfileImageResponseDto.MemberProfileImageListDto> getAllProfileImages(@RequestParam Long memberId, @ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page) {
         Page<MemberProfileImage> memberProfileImagePage = memberProfileImageQueryService.getAllMemberProfileImageByMemberId(memberId, page);
         return ApiResponse.onSuccess(MemberProfileImageConverter.toMemberProfileImageListDto(memberProfileImagePage));
     }

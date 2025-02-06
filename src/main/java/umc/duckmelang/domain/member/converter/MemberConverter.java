@@ -118,14 +118,6 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberProfileImage toMemberProfileImage(Member member, String profileImageUrl) {
-        return MemberProfileImage.builder()
-                .member(member)
-                .memberImage(profileImageUrl)
-                .isPublic(true)  // 새로운 프로필 이미지 등록 시에는 항상 전체공개 속성으로 생성됨
-                .build();
-    }
-
     public static MemberResponseDto.CreateMemberProfileImageResultDto toCreateMemberProfileImageResponseDto(MemberProfileImage memberProfileImage) {
         return MemberResponseDto.CreateMemberProfileImageResultDto.builder()
                 .memberId(memberProfileImage.getMember().getId())

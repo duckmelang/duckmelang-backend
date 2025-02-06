@@ -1,8 +1,8 @@
-package umc.duckmelang.domain.idolcategory.validation.annotation;
+package umc.duckmelang.global.validation.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import umc.duckmelang.domain.idolcategory.validation.validator.IdolExistValidator;
+import umc.duckmelang.global.validation.validator.IdolExistValidator;
 
 import java.lang.annotation.*;
 

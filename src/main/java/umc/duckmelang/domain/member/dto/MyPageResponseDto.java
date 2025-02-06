@@ -24,7 +24,7 @@ public class MyPageResponseDto {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MypageMemberProfileResultDto {
+    public static class ProfileDto {
         private Long memberId;
         private String nickname;
         private Gender gender;
@@ -32,7 +32,7 @@ public class MyPageResponseDto {
         private String latestPublicMemberProfileImage;
         private String introduction;
         private long postCount;
-        private long succeedApplicationCount;
+        private long matchCount;
     }
 
     @Builder
@@ -52,20 +52,5 @@ public class MyPageResponseDto {
         private Long memberId;
         private String nickname;
         private String introduction;
-    }
-
-    @Builder
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class OtherProfileDto {
-        String nickname;
-        Gender gender;
-        int age;
-        String introduction;
-        String profileImageUrl;
-
-        int postCnt;
-        int matchCnt;
     }
 }

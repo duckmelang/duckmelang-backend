@@ -1,16 +1,14 @@
-package umc.duckmelang.domain.idolcategory.validation.validator;
+package umc.duckmelang.global.validation.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
-import umc.duckmelang.domain.idolcategory.repository.IdolCategoryRepository;
 import umc.duckmelang.domain.idolcategory.service.IdolCategoryQueryService;
-import umc.duckmelang.domain.idolcategory.validation.annotation.ExistIdol;
+import umc.duckmelang.global.validation.annotation.ExistIdol;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 
-import java.util.List;
 import java.util.Optional;
 
 @Component

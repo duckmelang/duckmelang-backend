@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.post.validation.validator;
+package umc.duckmelang.global.validation.validator;
 
 
 import jakarta.validation.ConstraintValidator;
@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.service.PostQueryService;
-import umc.duckmelang.domain.post.validation.annotation.ExistPost;
+import umc.duckmelang.global.validation.annotation.ExistPost;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 
 import java.util.Optional;

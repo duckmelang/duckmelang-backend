@@ -16,8 +16,8 @@ public class MemberProfileConverter {
                 .build();
     }
 
-    public static MyPageResponseDto.MypageMemberProfileResultDto toGetMemberProfileResponseDto(Member member, MemberProfileImage memberProfileImage, long postCount, long succeedApplicationCount) {
-        return  MyPageResponseDto.MypageMemberProfileResultDto.builder()
+    public static MyPageResponseDto.ProfileDto toGetProfileResponseDto(Member member, MemberProfileImage memberProfileImage, long postCount, long matchCount) {
+        return  MyPageResponseDto.ProfileDto.builder()
                 .memberId(member.getId())
                 .nickname(member.getNickname())
                 .gender(member.getGender())
@@ -25,7 +25,7 @@ public class MemberProfileConverter {
                 .latestPublicMemberProfileImage(memberProfileImage.getMemberImage())
                 .introduction(member.getIntroduction())
                 .postCount(postCount)
-                .succeedApplicationCount(succeedApplicationCount)
+                .matchCount(matchCount)
                 .build();
 
     }
@@ -42,21 +42,6 @@ public class MemberProfileConverter {
         return MyPageResponseDto.MyPageMemberProfileEditBeforeDto.builder()
                 .nickname(member.getNickname())
                 .latestPublicMemberProfileImage(profileImage != null ? profileImage.getMemberImage() : null)
-                .build();
-    }
-
-    public static MyPageResponseDto.OtherProfileDto ToOtherProfileDto(Member member,
-                                                                      int postCnt,
-                                                                      int matchCnt,
-                                                                      MemberProfileImage image){
-        return MyPageResponseDto.OtherProfileDto.builder()
-                .nickname(member.getNickname())
-                .gender(member.getGender())
-                .age(member.calculateAge())
-                .introduction(member.getIntroduction())
-                .profileImageUrl(image.getMemberImage())
-                .postCnt(postCnt)
-                .matchCnt(matchCnt)
                 .build();
     }
 }

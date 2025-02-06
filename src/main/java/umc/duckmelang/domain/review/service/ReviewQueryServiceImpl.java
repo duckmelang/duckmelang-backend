@@ -43,5 +43,4 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
                 .orElse(0) * 10) / 10.0;
 
     }
-
 }

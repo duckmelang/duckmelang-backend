@@ -1,8 +1,8 @@
-package umc.duckmelang.domain.post.validation.annotation;
+package umc.duckmelang.global.validation.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import umc.duckmelang.domain.post.validation.validator.PageNumberValidator;
+import umc.duckmelang.global.validation.validator.PageNumberValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

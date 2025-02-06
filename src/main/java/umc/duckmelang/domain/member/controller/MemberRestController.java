@@ -31,8 +31,8 @@ public class MemberRestController {
     private final MemberCommandService memberCommandService;
     private final MemberProfileImageCommandService memberProfileImageCommandService;
 
-    @PostMapping("/signup")
     @Operation(summary = "회원가입 API", description = "사용자 정보를 받아 회원가입을 처리하는 API입니다.")
+    @PostMapping("/signup")
     public ApiResponse<MemberSignUpDto.SignupResultDto> signup(@RequestBody @Valid MemberSignUpDto.SignupDto request){
         Member member = memberCommandService.signupMember(request);
         return ApiResponse.onSuccess(MemberConverter.toSignupResultDto(member));
@@ -68,7 +68,7 @@ public class MemberRestController {
         return ApiResponse.onSuccess(MemberConverter.toCreateLandmineResponseDto(updatedLandmineList));
     }
 
-    @Operation(summary = "프로필 사진 설정 API(실제 이미지 업로드)", description = "회원이 최초로 프로필 사진을 설정하는 API입니다. 프로필 사진을 설정하지 않을 경우 기본 프로필이 설정됩니다.")
+    @Operation(summary = "프로필 사진 설정 API (실제 이미지 업로드)", description = "회원이 최초로 프로필 사진을 설정하는 API입니다. 프로필 사진을 설정하지 않을 경우 기본 프로필이 설정됩니다.")
     @PostMapping(value = "/{memberId}/profile-image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ApiResponse<MemberResponseDto.CreateMemberProfileImageResultDto> createMemberProfileImage(
             @PathVariable(name = "memberId") Long memberId,
