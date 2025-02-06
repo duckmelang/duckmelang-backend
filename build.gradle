@@ -58,7 +58,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	// mongoDB (채팅 이력 저장용)
-	implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+	// websocket (채팅 통신용)
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {
