@@ -17,6 +17,7 @@ public class RefreshToken{
     private String token;
 
     private Long memberId;
+
     private LocalDateTime expiryDate;
 
     @Builder
