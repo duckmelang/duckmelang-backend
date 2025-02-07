@@ -13,5 +13,5 @@ spring:
     level:
       org:
         springframework:
-          web: DEBUG-
+          web: DEBUG
       root: DEBUG
