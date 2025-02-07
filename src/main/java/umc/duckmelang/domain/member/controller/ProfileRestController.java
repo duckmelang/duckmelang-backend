@@ -34,29 +34,29 @@ public class ProfileRestController {
     private final PostQueryService postQueryService;
     private final ReviewQueryService reviewQueryService;
 
+    @Operation(summary = "다른 멤버 프로필 조회 API",description = "path variable로 프로필을 조회하고자하는 상대 member의 id를 받습니다.")
     @GetMapping(path = "/{memberId}")
-    @Operation(summary = "다른 멤버 프로필 조회",description = "path variable로 프로필을 조회하고자하는 상대 member의 id를 받습니다.")
     ApiResponse<MyPageResponseDto.MyPageProfileDto> getOtherProfile(@PathVariable @ExistsMember Long memberId) {
         return ApiResponse.onSuccess(profileFacadeService.getProfileByMemberId(memberId));
     }
 
+    @Operation(summary = "다른 멤버 프로필 사진 조회 API",description = "path variable로 프로필 사진들을 조회하고자하는 상대 member의 id를 받습니다.")
     @GetMapping(path = "/{memberId}/images")
-    @Operation(summary = "다른 멤버 프로필 사진 조회",description = "path variable로 프로필 사진들을 조회하고자하는 상대 member의 id를 받습니다.")
     ApiResponse<MemberProfileImageResponseDto.MemberProfileImageListDto> getProfileImages(@PathVariable @ExistsMember Long memberId, @ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page) {
         Page<MemberProfileImage> memberProfileImagePage = memberProfileImageQueryService.getPublicMemberProfileImageByMemberId(memberId, page);
         return ApiResponse.onSuccess(MemberProfileImageConverter.toMemberProfileImageListDto(memberProfileImagePage));
     }
 
+    @Operation(summary = "다른 멤버가 업로드한 게시글들 조회 API",description = "path variable로 게시글 조회하고자하는 상대 member의 id를 받습니다.")
     @GetMapping(path = "/{memberId}/posts")
-    @Operation(summary = "다른 멤버가 업로드한 게시글들 조회",description = "path variable로 게시글 조회하고자하는 상대 member의 id를 받습니다.")
     ApiResponse<PostResponseDto.PostPreviewListDto> getOtherPostList(@PathVariable @ExistsMember Long memberId, @ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page) {
         Page<Post> postList = postQueryService.getPostListByMember(memberId, page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
 
+    @Operation(summary = "다른 사람의 동행 후기 조회 API", description = "path variable로 동행 후기를 조회하고자 하는 상대 member의 id를 받습니다.")
     @GetMapping("/{memberId}/reviews")
     @CommonApiResponses
-    @Operation(summary = "다른 사람의 동행 후기 조회 API", description = "path variable로 동행 후기를 조회하고자 하는 상대 member의 id를 받습니다.")
     public ApiResponse<ReviewResponseDto.ReviewListDto> getOtherReviewList(@PathVariable @ExistsMember Long memberId){
         List<Review> reviewList = reviewQueryService.getReviewList(memberId);
         double averageScore = reviewQueryService.calculateAverageScore(reviewList);

@@ -30,13 +30,6 @@ public class MemberProfileImageRestController {
         return ApiResponse.onSuccess(MemberProfileImageConverter.toMemberProfileImageListDto(memberProfileImagePage));
     }
 
-    @Operation(summary = "내 프로필 사진 추가 API", description = "특정 회원 본인의 프로필 사진을 추가하는 API입니다.")
-    @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ApiResponse<MemberProfileImageResponseDto.MemberProfileImageDto> createProfileImage (@RequestParam("memberId") Long memberId, @RequestPart("profileImage")MultipartFile profileImage) {
-        MemberProfileImage memberProfileImage = memberProfileImageCommandService.createProfileImage(memberId, profileImage);
-        return ApiResponse.onSuccess(MemberProfileImageConverter.toMemberProfileImageDto(memberProfileImage));
-    }
-
     @Operation(summary = "내 프로필 사진 삭제 API", description = "특정 회원 본인의 프로필 사진 중 하나를 삭제하는 API입니다.")
     @DeleteMapping("")
     public ApiResponse<MemberProfileImageResponseDto.DeleteProfileImageResultDto> deleteProfileImage (@RequestParam("memberId") Long memberId, @RequestBody @Valid MemberProfileImageRequestDto.MemberProfileImageDto request) {

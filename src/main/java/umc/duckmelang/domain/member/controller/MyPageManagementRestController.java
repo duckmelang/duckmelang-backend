@@ -6,15 +6,15 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import umc.duckmelang.domain.member.converter.MemberConverter;
 import umc.duckmelang.domain.member.converter.MemberProfileConverter;
 import umc.duckmelang.domain.member.domain.Member;
-import umc.duckmelang.domain.member.dto.MemberResponseDto;
 import umc.duckmelang.domain.member.dto.MyPageRequestDto;
 import umc.duckmelang.domain.member.dto.MyPageResponseDto;
 import umc.duckmelang.domain.member.service.mypage.MyPageCommandService;
 import umc.duckmelang.domain.member.service.mypage.MyPageQueryService;
+import umc.duckmelang.domain.memberprofileimage.converter.MemberProfileImageConverter;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
+import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageResponseDto;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageCommandService;
 import umc.duckmelang.domain.post.service.PostCommandService;
 import umc.duckmelang.global.apipayload.ApiResponse;
@@ -43,11 +43,11 @@ public class MyPageManagementRestController {
         return ApiResponse.onSuccess(MemberProfileConverter.toMemberProfileEditAfterDto(updatedMember));
     }
 
-    @Operation(summary = "내 프로필 수정 API - 프로필 이미지 업로드", description = "내 프로필을 수정하는 API입니다. 사용자의 프로필 이미지를 추가합니다.")
+    @Operation(summary = "내 프로필 수정 API - 내 프로필 사진 추가", description = "내 프로필을 수정하는 API입니다. 사용자의 프로필 이미지를 추가합니다.")
     @PostMapping(value = "/profile/image/edit", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ApiResponse<MemberResponseDto.CreateMemberProfileImageResultDto> updateProfileImage(@RequestParam("memberId") Long memberId, @RequestPart MultipartFile profileImage){
-        MemberProfileImage updatedMemberProfileImage = memberProfileImageCommandService.createProfileImage(memberId, profileImage);
-        return ApiResponse.onSuccess(MemberConverter.toCreateMemberProfileImageResponseDto(updatedMemberProfileImage));
+    public ApiResponse<MemberProfileImageResponseDto.MemberProfileImageDto> updateProfileImage (@RequestParam("memberId") Long memberId, @RequestPart("profileImage")MultipartFile profileImage) {
+        MemberProfileImage memberProfileImage = memberProfileImageCommandService.createProfileImage(memberId, profileImage);
+        return ApiResponse.onSuccess(MemberProfileImageConverter.toMemberProfileImageDto(memberProfileImage));
     }
 
     @Operation(summary = "피드 관리 - 피드 목록 삭제", description = "내 피드 목록을 삭제하는 API입니다.")
