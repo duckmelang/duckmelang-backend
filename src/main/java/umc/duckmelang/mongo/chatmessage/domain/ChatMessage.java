@@ -1,6 +1,5 @@
-package umc.duckmelang.domain.chatmessage.domain;
+package umc.duckmelang.mongo.chatmessage.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
