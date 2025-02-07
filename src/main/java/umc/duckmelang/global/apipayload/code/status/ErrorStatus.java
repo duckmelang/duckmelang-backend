@@ -55,10 +55,15 @@ public enum ErrorStatus implements BaseErrorCode {
     INVALID_EVENTCATEGORY(HttpStatus.BAD_REQUEST, "EVENTCATEGORY4001", "선택한 행사 중 유효하지 않은 항목이 있습니다."),
     EVENT_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "EVENT_CATEGORY4002", "이번트 카테고리가 없습니다."),
 
-    //동행요청 관련 에러
+    // 동행요청 관련 에러
     ALREADY_PROCESSED_APPLICATION(HttpStatus.CONFLICT, "APPLICATION4001","이미 처리된 동행 요청입니다."),
     NOT_POSSESSED_APPLICATION(HttpStatus.CONFLICT, "APPLICATION4002", "본인 소유의 동행 요청이 아닙니다."),
-    APPLICATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLICATION4003", "존재하지 않는 동행 요청입니다.");
+    APPLICATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLICATION4003", "존재하지 않는 동행 요청입니다."),
+
+    // 채팅 통신 관련 에러
+    JSON_PROCESSING_ERROR(HttpStatus.BAD_REQUEST, "WEBSOCKET4001", "메시지 변환 중 매핑 오류가 발생했습니다."),
+    INVALID_JSON_FORMAT(HttpStatus.BAD_REQUEST, "WEBSOCKET4002", "유효하지 않은 JSON 형식입니다."),
+    JSON_CONVERSION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "WEBSOCKET5001", "JSON 변환에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
