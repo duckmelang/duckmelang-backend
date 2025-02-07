@@ -17,7 +17,7 @@ public class MyPageQueryServiceImpl implements MyPageQueryService{
     private final MemberRepository memberRepository;
     private final MemberProfileImageQueryService memberProfileImageQueryService;
 
-    public MyPageResponseDto.MyPageMemberProfileEditBeforeDto getMemberProfileBeforeEdit(Long memberId){
+    public MyPageResponseDto.MyPagProfileEditBeforeDto getMemberProfileBeforeEdit(Long memberId){
         // 회원 조회
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));

@@ -30,28 +30,28 @@ public class MyPageRestController {
 
     @Operation(summary = "마이페이지 조회 API", description = "마이페이지 첫 화면에 노출되는 회원 정보를 조회해오는 API입니다. 사용자의 닉네임, 성별, 나이, 대표 프로필 사진을 불러옵니다.")
     @GetMapping("")
-    public ApiResponse<MyPageResponseDto.MypageMemberPreviewResultDto> getMyPageMemberPreview(@RequestParam Long memberId) {
+    public ApiResponse<MyPageResponseDto.MyPagePreviewDto> getMyPageMemberPreview(@RequestParam("memberId") Long memberId) {
         return ApiResponse.onSuccess(profileFacadeService.getMyPageMemberPreview(memberId));
     }
 
     @Operation(summary = "내 프로필 조회 API", description = "마이페이지를 통해 접근할 수 있는 내 프로필을 조회해오는 API입니다. 사용자의 닉네임, 성별, 나이, 자기소개, 대표 프로필 사진, 특정 사용자가 작성한 게시글 수, 특정 사용자의 매칭 횟수를 불러옵니다.")
     @GetMapping("/profile")
-    public ApiResponse<MyPageResponseDto.ProfileDto> getMyPageMemberProfile(@RequestParam Long memberId) {
+    public ApiResponse<MyPageResponseDto.MyPageProfileDto> getMyPageMemberProfile(@RequestParam("memberId") Long memberId) {
         return ApiResponse.onSuccess(profileFacadeService.getProfileByMemberId(memberId));
     }
 
     @GetMapping("/reviews")
     @CommonApiResponses
-    @Operation(summary = "나와의 동행 후기 조회 API", description = "내 프로필에서 나와의 동행 후기 볼 때 이용하는 API 입니다.")
-    public ApiResponse<ReviewResponseDto.ReviewListDto> getMyReviewList(@RequestParam Long memberId){
+    @Operation(summary = "나와의 동행 후기 조회 API", description = "내 프로필에서 '나와의 동행 후기' 볼 때 이용하는 API 입니다.")
+    public ApiResponse<ReviewResponseDto.ReviewListDto> getMyReviewList(@RequestParam("memberId") Long memberId){
         List<Review> reviewList = reviewQueryService.getReviewList(memberId);
         double averageScore = reviewQueryService.calculateAverageScore(reviewList);
         return ApiResponse.onSuccess(ReviewConverter.reviewListDto(reviewList, averageScore));
     }
 
     @GetMapping("/posts")
-    @Operation(summary = "내가 업로드한 게시글들 조회 API & 피드 관리 - 내 피드 목록 조회", description = "마이페이지에서 업로드한 게시글 조회와 피드 관리에서 내 피드 목록 조회에 사용되는 API입니다.")
-    ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@RequestParam Long memberId, @ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page) {
+    @Operation(summary = "내가 업로드한 게시글들 조회 API & 피드 관리 - 내 피드 목록 조회", description = "내 프로필에서 '업로드한 게시글 조회'와 피드 관리에서 '내 피드 목록' 조회에 사용되는 API입니다.")
+    ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@RequestParam("memberId") Long memberId, @ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page) {
         Page<Post> postList = postQueryService.getPostListByMember(memberId, page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }

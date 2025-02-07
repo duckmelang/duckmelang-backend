@@ -43,7 +43,7 @@ public class PostRestController {
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
 
-    @GetMapping("/idol/{idolId}")
+    @GetMapping("/idols/{idolId}")
     @CommonApiResponses
     @Operation(summary = "홈화면 게시글 아이돌 기반 조회 API", description = "해당하는 아이돌의 글만 조회하는 API 입니다. 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
     @Parameters({@Parameter(name = "idolId", description = "아이돌 Id, path variable 입니다!")})
@@ -63,10 +63,7 @@ public class PostRestController {
     @PostMapping(value = "/{memberId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CommonApiResponses
     @Operation(summary = "게시글 작성 API (실제 이미지 업로드)", description = "게시글 쓰기 API입니다. 최대 5개의 이미지 업로드 가능.. ")
-    public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (
-            @PathVariable(name="memberId") Long memberId,
-            @RequestPart @Valid PostRequestDto.PostJoinDto request,
-            @Size(max = 5) @RequestPart("images") List<MultipartFile> images){
+    public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (@PathVariable(name="memberId") Long memberId, @RequestPart @Valid PostRequestDto.PostJoinDto request, @Size(max = 5) @RequestPart("images") List<MultipartFile> images){
         Post post = postCommandService.joinPost(request, memberId, images);
         return ApiResponse.onSuccess(PostConverter.postJoinResultDto(post));
     }

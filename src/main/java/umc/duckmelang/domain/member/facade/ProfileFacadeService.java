@@ -24,7 +24,7 @@ public class ProfileFacadeService {
     private final MemberProfileImageQueryService memberProfileImageQueryService;
 
     @Transactional(readOnly = true)
-    public MyPageResponseDto.MypageMemberPreviewResultDto getMyPageMemberPreview(Long memberId) {
+    public MyPageResponseDto.MyPagePreviewDto getMyPageMemberPreview(Long memberId) {
         Member member = memberQueryService.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -36,7 +36,7 @@ public class ProfileFacadeService {
     }
 
     @Transactional(readOnly = true)
-    public MyPageResponseDto.ProfileDto getProfileByMemberId(Long memberId) {
+    public MyPageResponseDto.MyPageProfileDto getProfileByMemberId(Long memberId) {
         Member member = memberQueryService.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 

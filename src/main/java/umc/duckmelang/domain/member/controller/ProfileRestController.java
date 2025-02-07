@@ -36,7 +36,7 @@ public class ProfileRestController {
 
     @GetMapping(path = "/{memberId}")
     @Operation(summary = "다른 멤버 프로필 조회",description = "path variable로 프로필을 조회하고자하는 상대 member의 id를 받습니다.")
-    ApiResponse<MyPageResponseDto.ProfileDto> getOtherProfile(@PathVariable @ExistsMember Long memberId) {
+    ApiResponse<MyPageResponseDto.MyPageProfileDto> getOtherProfile(@PathVariable @ExistsMember Long memberId) {
         return ApiResponse.onSuccess(profileFacadeService.getProfileByMemberId(memberId));
     }
 

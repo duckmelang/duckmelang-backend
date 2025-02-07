@@ -6,8 +6,8 @@ import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 
 public class MemberProfileConverter {
 
-    public static MyPageResponseDto.MypageMemberPreviewResultDto toGetMemberPreviewResponseDto(Member member, MemberProfileImage memberProfileImage) {
-        return MyPageResponseDto.MypageMemberPreviewResultDto.builder()
+    public static MyPageResponseDto.MyPagePreviewDto toGetMemberPreviewResponseDto(Member member, MemberProfileImage memberProfileImage) {
+        return MyPageResponseDto.MyPagePreviewDto.builder()
                 .memberId(member.getId())
                 .nickname(member.getNickname())
                 .gender(member.getGender())
@@ -16,8 +16,8 @@ public class MemberProfileConverter {
                 .build();
     }
 
-    public static MyPageResponseDto.ProfileDto toGetProfileResponseDto(Member member, MemberProfileImage memberProfileImage, long postCount, long matchCount) {
-        return  MyPageResponseDto.ProfileDto.builder()
+    public static MyPageResponseDto.MyPageProfileDto toGetProfileResponseDto(Member member, MemberProfileImage memberProfileImage, long postCount, long matchCount) {
+        return  MyPageResponseDto.MyPageProfileDto.builder()
                 .memberId(member.getId())
                 .nickname(member.getNickname())
                 .gender(member.getGender())
@@ -27,21 +27,20 @@ public class MemberProfileConverter {
                 .postCount(postCount)
                 .matchCount(matchCount)
                 .build();
-
     }
 
-    public static MyPageResponseDto.MypageMemberProfileEditResultDto toUpdateMemberProfileDto(Member updatedMember) {
-        return MyPageResponseDto.MypageMemberProfileEditResultDto.builder()
-                .memberId(updatedMember.getId())
-                .nickname(updatedMember.getNickname())
-                .introduction(updatedMember.getIntroduction())
+    public static MyPageResponseDto.MyPagProfileEditBeforeDto toMemberProfileEditBeforeDto(Member member, MemberProfileImage profileImage) {
+        return MyPageResponseDto.MyPagProfileEditBeforeDto.builder()
+                .nickname(member.getNickname())
+                .latestPublicMemberProfileImage(profileImage != null ? profileImage.getMemberImage() : null)
                 .build();
     }
 
-    public static MyPageResponseDto.MyPageMemberProfileEditBeforeDto toMemberProfileEditBeforeDto(Member member, MemberProfileImage profileImage) {
-        return MyPageResponseDto.MyPageMemberProfileEditBeforeDto.builder()
-                .nickname(member.getNickname())
-                .latestPublicMemberProfileImage(profileImage != null ? profileImage.getMemberImage() : null)
+    public static MyPageResponseDto.MyPageProfileEditAfterDto toMemberProfileEditAfterDto(Member updatedMember) {
+        return MyPageResponseDto.MyPageProfileEditAfterDto.builder()
+                .memberId(updatedMember.getId())
+                .nickname(updatedMember.getNickname())
+                .introduction(updatedMember.getIntroduction())
                 .build();
     }
 }

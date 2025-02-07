@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import umc.duckmelang.domain.eventcategory.domain.EventCategory;
 import umc.duckmelang.domain.member.domain.enums.Gender;
 
 import java.time.LocalDate;
@@ -56,6 +55,5 @@ public class ReviewResponseDto {
         private LocalDate date;
         private String postImageUrl;
         private String latestPublicMemberProfileImage;
-
     }
 }

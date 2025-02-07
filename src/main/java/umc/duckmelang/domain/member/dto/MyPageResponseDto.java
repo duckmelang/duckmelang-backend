@@ -12,7 +12,7 @@ public class MyPageResponseDto {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MypageMemberPreviewResultDto {
+    public static class MyPagePreviewDto {
         private Long memberId;
         private String nickname;
         private Gender gender;
@@ -24,7 +24,7 @@ public class MyPageResponseDto {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ProfileDto {
+    public static class MyPageProfileDto {
         private Long memberId;
         private String nickname;
         private Gender gender;
@@ -39,7 +39,7 @@ public class MyPageResponseDto {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MyPageMemberProfileEditBeforeDto {
+    public static class MyPagProfileEditBeforeDto {
         private String nickname;
         private String latestPublicMemberProfileImage;
     }
@@ -48,7 +48,7 @@ public class MyPageResponseDto {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MypageMemberProfileEditResultDto {
+    public static class MyPageProfileEditAfterDto {
         private Long memberId;
         private String nickname;
         private String introduction;
