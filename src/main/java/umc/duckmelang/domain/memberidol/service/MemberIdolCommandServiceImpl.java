@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.idolcategory.repository.IdolCategoryRepository;
 import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.memberidol.converter.MemberIdolConverter;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberidol.repository.MemberIdolRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
@@ -34,12 +35,7 @@ public class MemberIdolCommandServiceImpl implements MemberIdolCommandService{
         if(alreadyExists){
             throw new IdolCategoryException(ErrorStatus.ALREADY_ADDED_IDOL);
         }
-
-        MemberIdol memberIdol = MemberIdol.builder()
-                .member(Member.builder().id(memberId).build())
-                .idolCategory(idolCategory)
-                .build();
-
+        MemberIdol memberIdol = MemberIdolConverter.toMemberIdol(memberId, idolCategory);
         return memberIdolRepository.save(memberIdol);
     }
 }

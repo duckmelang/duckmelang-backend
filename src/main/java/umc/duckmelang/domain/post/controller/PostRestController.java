@@ -8,13 +8,20 @@ import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import umc.duckmelang.domain.idolcategory.converter.IdolCategoryConverter;
+import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
+import umc.duckmelang.domain.idolcategory.dto.IdolCategoryResponseDto;
+import umc.duckmelang.domain.idolcategory.service.IdolCategoryQueryService;
 import umc.duckmelang.domain.memberidol.converter.MemberIdolConverter;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberidol.dto.MemberIdolResponseDto;
+import umc.duckmelang.domain.memberidol.service.MemberIdolCommandService;
 import umc.duckmelang.domain.memberidol.service.MemberIdolQueryService;
+import umc.duckmelang.global.security.user.CustomUserDetails;
 import umc.duckmelang.global.validation.annotation.ExistIdol;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
@@ -39,6 +46,8 @@ public class PostRestController {
     private final PostCommandService postCommandService;
     private final PostFacadeService postFacadeService;
     private final MemberIdolQueryService memberIdolQueryService;
+    private final MemberIdolCommandService memberIdolCommandService;
+    private final IdolCategoryQueryService idolCategoryQueryService;
 
     @Operation(summary = "홈화면 게시글 전체 조회 API", description = "조건 없이 모든 게시글을 조회하는 API 입니다. 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
     @GetMapping("")
@@ -70,9 +79,9 @@ public class PostRestController {
         return ApiResponse.onSuccess(postFacadeService.getPostDetail(postId));
     }
 
+    @Operation(summary = "게시글 작성 API (실제 이미지 업로드)", description = "게시글 쓰기 API입니다. 최대 5개의 이미지 업로드 가능")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CommonApiResponses
-    @Operation(summary = "게시글 작성 API (실제 이미지 업로드)", description = "게시글 쓰기 API입니다. 최대 5개의 이미지 업로드 가능")
     public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (@PathVariable(name="memberId") Long memberId, @RequestPart @Valid PostRequestDto.PostJoinDto request, @Size(max = 5) @RequestPart("images") List<MultipartFile> images){
         Post post = postCommandService.joinPost(request, memberId, images);
         return ApiResponse.onSuccess(PostConverter.postJoinResultDto(post));
@@ -100,5 +109,19 @@ public class PostRestController {
     public ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@RequestParam("memberId") Long memberId, @ValidPageNumber @RequestParam(name ="page", defaultValue = "0") Integer page){
         Page<Post> postList = postQueryService.getMyPostList(memberId, page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
+    }
+
+    @Operation(summary = "아이돌 목록 검색 API", description = "키워드를 통해 관심있는 아이돌을 찾는 API입니다.")
+    @GetMapping("/idols/search")
+    public ApiResponse<IdolCategoryResponseDto.IdolListDto> getIdolListByKeyword(@RequestParam("keyword") String keyword){
+        List<IdolCategory> idolCategoryList = idolCategoryQueryService.getIdolListByKeyword(keyword);
+        return ApiResponse.onSuccess(IdolCategoryConverter.toIdolListDto(idolCategoryList));
+    }
+
+    @Operation(summary = "관심 아이돌 추가 API", description = "관심 아이돌을 추가하는 API입니다.")
+    @PostMapping("/idols/{idolId}")
+    public ApiResponse<MemberIdolResponseDto.IdolDto> addMemberIdol(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable("idolId") Long idolId){
+        Long memberId = userDetails.getMemberId();
+        return ApiResponse.onSuccess(MemberIdolConverter.toIdolDto(memberIdolCommandService.addMemberIdol(memberId, idolId)));
     }
 }
