@@ -12,6 +12,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import umc.duckmelang.domain.eventcategory.dto.EventCategoryResponseDto;
+import umc.duckmelang.domain.eventcategory.service.EventCategoryQueryService;
 import umc.duckmelang.domain.idolcategory.converter.IdolCategoryConverter;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.idolcategory.dto.IdolCategoryResponseDto;
@@ -48,6 +50,7 @@ public class PostRestController {
     private final MemberIdolQueryService memberIdolQueryService;
     private final MemberIdolCommandService memberIdolCommandService;
     private final IdolCategoryQueryService idolCategoryQueryService;
+    private final EventCategoryQueryService eventCategoryQueryService;
 
     @Operation(summary = "홈화면 게시글 전체 조회 API", description = "조건 없이 모든 게시글을 조회하는 API 입니다. 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
     @GetMapping("")
@@ -85,6 +88,13 @@ public class PostRestController {
     public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (@PathVariable(name="memberId") Long memberId, @RequestPart @Valid PostRequestDto.PostJoinDto request, @Size(max = 5) @RequestPart("images") List<MultipartFile> images){
         Post post = postCommandService.joinPost(request, memberId, images);
         return ApiResponse.onSuccess(PostConverter.postJoinResultDto(post));
+    }
+
+    @Operation(summary = "게시글 작성 시 행사 종류 전체 조회 API", description = "게시글 작성하는 페이지에서 행사 목록 전체를 받아오는 API입니다.")
+    @GetMapping("/events")
+    public ApiResponse<List<EventCategoryResponseDto.EventCategoryDto>> getAllCategories(){
+        List<EventCategoryResponseDto.EventCategoryDto> eventCategories = eventCategoryQueryService.getGroupedCategories();
+        return ApiResponse.onSuccess(eventCategories);
     }
 
     @Operation(summary = "게시글 검색 API", description = "게시글 검색 API입니다. title 기준으로 검색합니다. 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
