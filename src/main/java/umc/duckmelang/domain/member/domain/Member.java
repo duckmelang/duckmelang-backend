@@ -140,8 +140,7 @@ public class Member extends BaseEntity {
         this.introduction = introduction;
     }
 
-//    // 성별 반환 메서드
-//    public String stringGender(){
-//        return this.gender.name();
-//    }
+    public Member(Long id) {
+        this.id = id;
+    }
 }

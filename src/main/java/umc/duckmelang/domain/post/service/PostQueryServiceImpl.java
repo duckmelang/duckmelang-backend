@@ -18,7 +18,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostQueryServiceImpl implements PostQueryService{
-
     private final PostRepository postRepository;
 
     @Override
@@ -49,7 +48,6 @@ public class PostQueryServiceImpl implements PostQueryService{
     @Override
     public Page<Post> getPostListByTitle(String searchKeyword, Integer page){
         return postRepository.findByTitle(searchKeyword, PageRequest.of(page, 10));
-
     }
 
     @Override
