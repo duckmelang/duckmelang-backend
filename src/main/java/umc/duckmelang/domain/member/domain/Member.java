@@ -1,5 +1,6 @@
 package umc.duckmelang.domain.member.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.*;
 import umc.duckmelang.domain.auth.domain.Auth;
@@ -16,6 +17,7 @@ import umc.duckmelang.domain.landmine.domain.Landmine;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.MemberException;
 import umc.duckmelang.global.common.BaseEntity;
+import umc.duckmelang.global.common.serializer.LocalDateSerializer;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -39,6 +41,7 @@ public class Member extends BaseEntity {
     private String introduction;
 
     @Column(nullable = true)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birth;
 
     @Enumerated(EnumType.STRING)
@@ -140,8 +143,7 @@ public class Member extends BaseEntity {
         this.introduction = introduction;
     }
 
-//    // 성별 반환 메서드
-//    public String stringGender(){
-//        return this.gender.name();
-//    }
+    public Member(Long id) {
+        this.id = id;
+    }
 }

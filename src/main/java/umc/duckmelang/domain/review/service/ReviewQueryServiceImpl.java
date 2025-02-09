@@ -41,7 +41,5 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
                 .mapToInt(Review::getScore)
                 .average()
                 .orElse(0) * 10) / 10.0;
-
     }
-
 }

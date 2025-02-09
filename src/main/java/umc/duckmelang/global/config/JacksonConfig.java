@@ -6,8 +6,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import umc.duckmelang.global.common.serializer.LocalDateSerializer;
 import umc.duckmelang.global.common.serializer.LocalDateTimeSerializer;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Configuration
@@ -19,10 +20,12 @@ public class JacksonConfig {
         SimpleModule module = new SimpleModule();
         // 내가 커스텀한 직렬화기를 추가한다.
         module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
+        module.addSerializer(LocalDate.class, new LocalDateSerializer());
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule()); // JavaTimeModule 등록
         mapper.registerModule(module);
+
         return mapper;
     }
 }

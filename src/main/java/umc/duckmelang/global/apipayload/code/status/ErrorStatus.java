@@ -45,14 +45,15 @@ public enum ErrorStatus implements BaseErrorCode {
     POST_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "POSTIMAGE4001","해당하는 게시글 이미지가 없습니다"),
 
     // 아이돌 카테고리 관련 에러
-    IDOL_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "IDOLCATEGORY4001", "아이돌 카테고리가 없습니다."),
-    INVALID_IDOLCATEGORY(HttpStatus.BAD_REQUEST, "IDOLCATEGORY4002", "선택한 아이돌 중 유효하지 않은 항목이 있습니다."),
+    IDOL_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "IDOLCATEGORY4001", "해당하는 아이돌 항목이 없습니다."),
+    INVALID_IDOL_CATEGORY(HttpStatus.BAD_REQUEST, "IDOLCATEGORY4002", "선택한 아이돌 중 유효하지 않은 항목이 있습니다."),
+    ALREADY_ADDED_IDOL(HttpStatus.BAD_REQUEST, "IDOLCATEGORY4003", "이미 선택한 아이돌 입니다."),
 
     // 지뢰 관련 에러
     DUPLICATE_LANDMINE(HttpStatus.BAD_REQUEST, "LANDMINE4001", "중복된 키워드가 존재합니다."),
-
+    INVALID_LANDMINE(HttpStatus.BAD_REQUEST, "LANDMINE4002", "존재하지 않는 ㅣ워드입니다."),
     // 행사 카테고리 관련 에러
-    INVALID_EVENTCATEGORY(HttpStatus.BAD_REQUEST, "EVENTCATEGORY4001", "선택한 행사 중 유효하지 않은 항목이 있습니다."),
+    INVALID_EVENT_CATEGORY(HttpStatus.BAD_REQUEST, "EVENTCATEGORY4001", "선택한 행사 중 유효하지 않은 항목이 있습니다."),
     EVENT_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "EVENT_CATEGORY4002", "이번트 카테고리가 없습니다."),
 
     // 동행요청 관련 에러
