@@ -11,7 +11,4 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
   logging:
     level:
-      org:
-        springframework:
-          web: DEBUG
-      root: DEBUG
+      root: INFO
