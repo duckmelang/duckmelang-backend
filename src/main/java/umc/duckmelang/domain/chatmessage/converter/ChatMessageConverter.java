@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import umc.duckmelang.domain.chatmessage.domain.ChatMessage;
@@ -14,6 +15,8 @@ import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.ChatMessageException;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ChatMessageConverter {
@@ -63,4 +66,26 @@ public class ChatMessageConverter {
         }
     }
 
+    // 특정 채팅방 내 채팅 메시지 조회 결과 DTO 생성
+    public static ChatMessageResponseDto.ChatMessageListDto toChatMessageListDto(Slice<ChatMessage> chatMessageSlice) {
+        // Slice의 콘텐츠(ChatMessage)를 ChatMessageDto로 변환
+        List<ChatMessageResponseDto.ChatMessageDto> chatMessageDtoList = chatMessageSlice.getContent().stream()
+                .map(ChatMessageConverter::toChatMessageDto)
+                .collect(Collectors.toList());
+
+        // hasNext는 Slice에서 제공하는 값을 그대로 사용
+        boolean hasNext = chatMessageSlice.hasNext();
+
+        // 마지막 메시지의 ID 추출 (리스트가 비어 있지 않은 경우)
+        String lastMessageId = !chatMessageDtoList.isEmpty()
+                ? chatMessageDtoList.get(chatMessageDtoList.size() - 1).getId()
+                : null;
+
+        // 최종 결과 DTO 생성 및 반환
+        return ChatMessageResponseDto.ChatMessageListDto.builder()
+                .chatMessageList(chatMessageDtoList)
+                .hasNext(hasNext)
+                .lastMessageId(lastMessageId)
+                .build();
+    }
 }

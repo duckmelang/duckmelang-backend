@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import umc.duckmelang.global.common.serializer.LocalDateTimeSerializer;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ChatMessageResponseDto {
 
@@ -25,9 +26,14 @@ public class ChatMessageResponseDto {
         private LocalDateTime createdAt;
     }
 
-
-//    public class ChatMessageListDto {
-//    }
-
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChatMessageListDto {
+        private List<ChatMessageDto> chatMessageList;
+        private boolean hasNext;
+        private String lastMessageId;  // 마지막 메시지 ID (다음 페이지 조회시 커서로 사용)
+    }
 
 }
