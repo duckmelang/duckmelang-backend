@@ -1,8 +1,8 @@
-package umc.duckmelang.domain.post.validation.annotation;
+package umc.duckmelang.global.validation.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import umc.duckmelang.domain.post.validation.validator.PostExistValidator;
+import umc.duckmelang.global.validation.validator.PostExistValidator;
 
 import java.lang.annotation.*;
 

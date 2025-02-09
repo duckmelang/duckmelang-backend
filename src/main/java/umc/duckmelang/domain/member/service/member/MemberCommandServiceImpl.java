@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.member.service;
+package umc.duckmelang.domain.member.service.member;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +15,12 @@ import umc.duckmelang.domain.member.converter.MemberProfileConverter;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberSignUpDto;
+import umc.duckmelang.domain.member.dto.MyPageRequestDto;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberevent.repository.MemberEventRepository;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberidol.repository.MemberIdolRepository;
-import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.EventCategoryException;
@@ -44,7 +44,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     private final EventCategoryRepository eventCategoryRepository;
     private final MemberEventRepository memberEventRepository;
     private final LandmineRepository landmineRepository;
-    private final MemberProfileImageRepository memberProfileImageRepository;
 
     @Override
     @Transactional
@@ -77,7 +76,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Override
     @Transactional
     public List<MemberIdol> selectIdols(Long memberId, MemberRequestDto.SelectIdolsDto request) {
-        // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -101,7 +99,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Override
     @Transactional
     public List<MemberEvent> selectEvents(Long memberId, MemberRequestDto.SelectEventsDto request) {
-        // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -178,20 +175,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         // 자기소개 업데이트
         updatedMember.completeProfile();
-
-        return memberRepository.save(updatedMember);
-    }
-
-    @Override
-    @Transactional
-    public Member updateMemberProfile(Long memberId, MemberRequestDto.UpdateMemberProfileDto request) {
-
-        // 회원 조회 및 유효성 검증
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
-
-        // 프로필 업데이트
-        Member updatedMember = MemberProfileConverter.toUpdateMember(member, request.getNickname(), request.getIntroduction());
 
         return memberRepository.save(updatedMember);
     }

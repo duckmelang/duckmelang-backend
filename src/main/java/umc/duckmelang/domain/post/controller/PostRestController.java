@@ -11,12 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import umc.duckmelang.domain.bookmark.converter.BookmarkConverter;
-import umc.duckmelang.domain.bookmark.domain.Bookmark;
-import umc.duckmelang.domain.bookmark.dto.BookmarkResponseDto;
-import umc.duckmelang.domain.bookmark.service.BookmarkCommandService;
-import umc.duckmelang.domain.bookmark.service.BookmarkQueryService;
-import umc.duckmelang.domain.idolcategory.validation.annotation.ExistIdol;
+import umc.duckmelang.global.validation.annotation.ExistIdol;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostRequestDto;
@@ -24,9 +19,8 @@ import umc.duckmelang.domain.post.dto.PostResponseDto;
 import umc.duckmelang.domain.post.facade.PostFacadeService;
 import umc.duckmelang.domain.post.service.PostCommandService;
 import umc.duckmelang.domain.post.service.PostQueryService;
-import umc.duckmelang.domain.post.validation.annotation.ExistPost;
-import umc.duckmelang.domain.post.validation.annotation.ValidPageNumber;
-import umc.duckmelang.domain.review.service.ReviewQueryService;
+import umc.duckmelang.global.validation.annotation.ExistPost;
+import umc.duckmelang.global.validation.annotation.ValidPageNumber;
 import umc.duckmelang.global.annotations.CommonApiResponses;
 import umc.duckmelang.global.apipayload.ApiResponse;
 
@@ -37,11 +31,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class PostRestController {
-
     private final PostQueryService postQueryService;
     private final PostCommandService postCommandService;
-    private final ReviewQueryService reviewQueryService;
-    private final BookmarkQueryService bookmarkQueryService;
     private final PostFacadeService postFacadeService;
 
     @GetMapping("")
@@ -52,13 +43,11 @@ public class PostRestController {
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
 
-    @GetMapping("/idol/{idolId}")
+    @GetMapping("/idols/{idolId}")
     @CommonApiResponses
     @Operation(summary = "홈화면 게시글 아이돌 기반 조회 API", description = "해당하는 아이돌의 글만 조회하는 API 입니다. 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
-    @Parameters({
-            @Parameter(name = "idolId", description = "아이돌 Id, path variable 입니다!")
-    })
-    public ApiResponse<PostResponseDto.PostPreviewListDto> getPostListByIdol (@ExistIdol @PathVariable(name="idolId") Long idolId, @ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page){
+    @Parameters({@Parameter(name = "idolId", description = "아이돌 Id, path variable 입니다!")})
+    public ApiResponse<PostResponseDto.PostPreviewListDto> getPostListByIdol (@ExistIdol @PathVariable Long idolId, @ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page){
         Page<Post> postList = postQueryService.getPostListByIdol(idolId, page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
@@ -73,11 +62,8 @@ public class PostRestController {
 
     @PostMapping(value = "/{memberId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CommonApiResponses
-    @Operation(summary = "게시글 작성 API(실제 이미지 업로드)", description = "게시글 쓰기 API입니다. 최대 5개의 이미지 업로드 가능.. ")
-    public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (
-            @PathVariable(name="memberId") Long memberId,
-            @RequestPart @Valid PostRequestDto.PostJoinDto request,
-            @Size(max = 5) @RequestPart("images") List<MultipartFile> images){
+    @Operation(summary = "게시글 작성 API (실제 이미지 업로드)", description = "게시글 쓰기 API입니다. 최대 5개의 이미지 업로드 가능.. ")
+    public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (@PathVariable(name="memberId") Long memberId, @RequestPart @Valid PostRequestDto.PostJoinDto request, @Size(max = 5) @RequestPart("images") List<MultipartFile> images){
         Post post = postCommandService.joinPost(request, memberId, images);
         return ApiResponse.onSuccess(PostConverter.postJoinResultDto(post));
     }
@@ -90,15 +76,6 @@ public class PostRestController {
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
 
-
-    @GetMapping("/my")
-    @CommonApiResponses
-    @Operation(summary = "내 게시글 조회 API", description = "나의 동행에서 내 게시글을 확인하는 API입니다. memberId를 받고, 추후 JWT로 변경예정, 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
-    public ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@RequestParam("memberId") Long memberId, @ValidPageNumber @RequestParam(name ="page", defaultValue = "0") Integer page){
-        Page<Post> postList = postQueryService.getMyPostList(memberId, page);
-        return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
-    }
-
     @PatchMapping("/{postId}/status")
     @CommonApiResponses
     @Operation(summary = "게시글 상태 변경 API", description = "게시글을 상태를 모집 중 -> 모집 완료/ 또는 모집 완료 -> 모집 중으로 바꿉니다. 모집 중은 wanted가 1, 모집 완료는 0입니다.")
@@ -107,4 +84,11 @@ public class PostRestController {
         return ApiResponse.onSuccess(PostConverter.postStatusDto(post));
     }
 
+    @GetMapping("/my")
+    @CommonApiResponses
+    @Operation(summary = "나의 동행 - 내 게시글 조회 API", description = "나의 동행에서 내 게시글을 확인하는 API입니다. memberId를 받고, 추후 JWT로 변경예정, 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
+    public ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@RequestParam("memberId") Long memberId, @ValidPageNumber @RequestParam(name ="page", defaultValue = "0") Integer page){
+        Page<Post> postList = postQueryService.getMyPostList(memberId, page);
+        return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
+    }
 }

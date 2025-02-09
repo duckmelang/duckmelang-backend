@@ -3,7 +3,6 @@ package umc.duckmelang.domain.memberprofileimage.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import umc.duckmelang.domain.member.domain.Member;
@@ -24,11 +23,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class MemberProfileImageCommandServiceImpl implements MemberProfileImageCommandService {
-
     private final MemberProfileImageRepository memberProfileImageRepository;
     private final MemberRepository memberRepository;
     private final UuidRepository uuidRepository;
-
     private final AmazonS3Manager s3Manager;
 
     @Value("${spring.custom.default.profile-image}")
@@ -40,11 +37,9 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
         // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
-
         // 프로필 이미지 조회 및 유효성 검증
         MemberProfileImage profileImage = memberProfileImageRepository.findById(request.getImageId())
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
-
         memberProfileImageRepository.delete(profileImage);
     }
 
@@ -54,27 +49,12 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
         // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
-
         // 프로필 이미지 조회 및 유효성 검증
         MemberProfileImage profileImage = memberProfileImageRepository.findById(request.getImageId())
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
-
         //프로필 이미지 공개 범위 변경
         MemberProfileImage updatedProfileImage = MemberProfileImageConverter.toMemberProfileImageWithChangedStatus(profileImage, request.isPublicStatus());
-
         return memberProfileImageRepository.save(updatedProfileImage);
-    }
-
-    @Override
-    @Transactional
-    public MemberProfileImage createMemberProfile(Long memberId, String memberProfileImageURL) {
-        // 회원 조회 및 유효성 검증
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
-
-        // 프로필 이미지 생성
-        MemberProfileImage createdProfileImage = MemberProfileImageConverter.toCreateMemberProfileImage(member, memberProfileImageURL);
-        return memberProfileImageRepository.save(createdProfileImage);
     }
 
     @Override
@@ -94,8 +74,5 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
         else profileImageUrl = s3Manager.uploadFile(s3Manager.generateMemberProfileImageKeyName(savedUuid), profileImage);
 
         return memberProfileImageRepository.save(MemberProfileImageConverter.toCreateMemberProfileImage(member, profileImageUrl));
-
     }
-
-
 }

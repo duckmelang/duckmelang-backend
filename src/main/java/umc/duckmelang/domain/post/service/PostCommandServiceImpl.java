@@ -58,10 +58,8 @@ public class PostCommandServiceImpl implements PostCommandService {
         if (idolCategories.isEmpty()) {
             throw new IdolCategoryException(ErrorStatus.IDOL_CATEGORY_NOT_FOUND);
         }
-
         Post newPost = PostConverter.toPost(request, member, eventCategory, idolCategories);
         return postRepository.save(newPost);
-
     }
 
     @Override
@@ -76,7 +74,6 @@ public class PostCommandServiceImpl implements PostCommandService {
             String imageUrl = s3Manager.uploadFile(s3Manager.generatePostImageKeyName(savedUuid), file);
             postImageRepository.save(PostImageConverter.toPostImage(post, imageUrl));
         }
-
         return post;
     }
 
@@ -87,6 +84,13 @@ public class PostCommandServiceImpl implements PostCommandService {
         post.toggleWanted();
 
         return postRepository.save(post);
+    }
+
+    @Override
+    public void deleteMyPost(Long postId){
+        Post post = postRepository.findById(postId)
+                .orElseThrow(()-> new PostException(ErrorStatus.POST_NOT_FOUND));
+        postRepository.delete(post);
     }
 }
 

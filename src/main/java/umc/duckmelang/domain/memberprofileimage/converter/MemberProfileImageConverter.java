@@ -29,7 +29,6 @@ public class MemberProfileImageConverter {
                 .build();
     }
 
-
     public static MemberProfileImageResponseDto.MemberProfileImageDto toMemberProfileImageDto(MemberProfileImage memberProfileImage){
         return MemberProfileImageResponseDto.MemberProfileImageDto.builder()
                 .memberProfileImageUrl(memberProfileImage.getMemberImage())
