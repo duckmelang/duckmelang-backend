@@ -2,7 +2,9 @@ package umc.duckmelang.domain.notification.converter;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.notification.domain.Notification;
+import umc.duckmelang.domain.notification.domain.enums.NotificationType;
 import umc.duckmelang.domain.notification.dto.NotificationResponseDto;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
@@ -36,4 +38,15 @@ public class NotificationConverter {
                 .notificationList(notificationDtoList)
                 .build();
     }
+
+    public static Notification toNotification(Member receiver, NotificationType notificationType, String content) {
+        return Notification.builder()
+                .receiver(receiver)
+                .notificationType(notificationType)
+                .content(content)
+                .isRead(false)
+                .build();
+    }
+
+
 }
