@@ -11,17 +11,14 @@ import umc.duckmelang.domain.idolcategory.repository.IdolCategoryRepository;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import umc.duckmelang.domain.landmine.repository.LandmineRepository;
 import umc.duckmelang.domain.member.converter.MemberConverter;
-import umc.duckmelang.domain.member.converter.MemberProfileConverter;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MemberRequestDto;
 import umc.duckmelang.domain.member.dto.MemberSignUpDto;
-import umc.duckmelang.domain.member.dto.MyPageRequestDto;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberevent.repository.MemberEventRepository;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberidol.repository.MemberIdolRepository;
-import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.EventCategoryException;
 import umc.duckmelang.global.apipayload.exception.IdolCategoryException;
@@ -82,7 +79,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         // 아이돌 카테고리 조회 및 유효성 검증
         List<IdolCategory> idolCategoryList = idolCategoryRepository.findAllById(request.getIdolCategoryIds());
         if (idolCategoryList.size() != request.getIdolCategoryIds().size()) {
-            throw new IdolCategoryException(ErrorStatus.INVALID_IDOLCATEGORY);
+            throw new IdolCategoryException(ErrorStatus.INVALID_IDOL_CATEGORY);
         }
 
         // 기존 데이터 존재 시 삭제
@@ -110,7 +107,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         //행사 카테고리 조회 및 유효성 검증
         List<EventCategory> eventCategoryList = eventCategoryRepository.findAllById(request.getEventCategoryIds());
         if (eventCategoryList.size() != request.getEventCategoryIds().size()) {
-            throw new EventCategoryException(ErrorStatus.INVALID_EVENTCATEGORY);
+            throw new EventCategoryException(ErrorStatus.INVALID_EVENT_CATEGORY);
         }
 
         // 기존 데이터 존재 시 삭제

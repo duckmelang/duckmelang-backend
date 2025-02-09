@@ -34,9 +34,6 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
     @Override
     @Transactional
     public void deleteProfileImage(Long memberId, MemberProfileImageRequestDto.MemberProfileImageDto request) {
-        // 회원 조회 및 유효성 검증
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
         // 프로필 이미지 조회 및 유효성 검증
         MemberProfileImage profileImage = memberProfileImageRepository.findById(request.getImageId())
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
@@ -46,9 +43,6 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
     @Override
     @Transactional
     public MemberProfileImage updateProfileImageStatus(Long memberId, MemberProfileImageRequestDto.MemberProfileImageDto request) {
-        // 회원 조회 및 유효성 검증
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
         // 프로필 이미지 조회 및 유효성 검증
         MemberProfileImage profileImage = memberProfileImageRepository.findById(request.getImageId())
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));

@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.idolcategory.repository.IdolCategoryRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,5 +18,10 @@ public class IdolCategoryQueryServiceImpl implements IdolCategoryQueryService {
     @Override
     public Optional<IdolCategory> findIdolCategory(Long id) {
         return idolCategoryRepository.findById(id);
+    }
+
+    @Override
+    public List<IdolCategory> getIdolListByKeyword(String keyword){
+        return idolCategoryRepository.findByKeyword(keyword);
     }
 }

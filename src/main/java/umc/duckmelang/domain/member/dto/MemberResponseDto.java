@@ -29,7 +29,6 @@ public class MemberResponseDto {
     public static class SelectIdolsResultDto{
         private Long memberId;
         private List<Long> idolCategoryIds;
-
     }
 
     @Builder
