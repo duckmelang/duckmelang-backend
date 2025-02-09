@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EventCategoryConverter {
 
-    public List<EventCategoryResponseDto.EventCategoryDto> toGroupedDto(List<EventCategory> eventCategories){
+    public List<EventCategoryResponseDto.EventCategoryDto> groupCategoriesByKind(List<EventCategory> eventCategories){
         Map<String, List<String>> groupedCategories = eventCategories.stream()
                 .collect(Collectors.groupingBy(
                         category -> category.getKind().getName(),
@@ -27,5 +27,4 @@ public class EventCategoryConverter {
                         .build())
                 .collect(Collectors.toList());
     }
-
 }

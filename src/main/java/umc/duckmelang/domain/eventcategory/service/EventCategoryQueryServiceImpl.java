@@ -8,7 +8,6 @@ import umc.duckmelang.domain.eventcategory.dto.EventCategoryResponseDto;
 import umc.duckmelang.domain.eventcategory.repository.EventCategoryRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +18,6 @@ public class EventCategoryQueryServiceImpl implements EventCategoryQueryService{
     @Override
     public List<EventCategoryResponseDto.EventCategoryDto> getGroupedCategories() {
         List<EventCategory> eventCategories = eventCategoryRepository.findAll();
-        return eventCategoryConverter.toGroupedDto(eventCategories);
+        return eventCategoryConverter.groupCategoriesByKind(eventCategories);
     }
 }

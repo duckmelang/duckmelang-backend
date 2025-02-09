@@ -1,8 +1,6 @@
 package umc.duckmelang.domain.post.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +60,8 @@ public class PostRestController {
 
     @Operation(summary = "현재 관심 아이돌 목록 조회 API", description = "현재 내가 설정한 관심 있는 아이돌 목록을 조회합니다.")
     @GetMapping("/idols")
-    public ApiResponse<MemberIdolResponseDto.IdolListDto> getSelectIdolResult(@RequestParam("memberId") Long memberId){
+    public ApiResponse<MemberIdolResponseDto.IdolListDto> getSelectIdolResult(@AuthenticationPrincipal CustomUserDetails userDetails){
+        Long memberId = userDetails.getMemberId();
         List<MemberIdol> memberIdolList = memberIdolQueryService.getIdolListByMember(memberId);
         return ApiResponse.onSuccess(MemberIdolConverter.toIdolListDto(memberIdolList));
     }
@@ -82,7 +81,7 @@ public class PostRestController {
         return ApiResponse.onSuccess(postFacadeService.getPostDetail(postId));
     }
 
-    @Operation(summary = "게시글 작성 API (실제 이미지 업로드)", description = "게시글 쓰기 API입니다. 최대 5개의 이미지 업로드 가능")
+    @Operation(summary = "게시글 작성 API", description = "게시글 쓰기 API입니다. 최대 5개의 이미지 업로드 가능")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CommonApiResponses
     public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (@PathVariable(name="memberId") Long memberId, @RequestPart @Valid PostRequestDto.PostJoinDto request, @Size(max = 5) @RequestPart("images") List<MultipartFile> images){
@@ -93,11 +92,10 @@ public class PostRestController {
     @Operation(summary = "게시글 작성 시 행사 종류 전체 조회 API", description = "게시글 작성하는 페이지에서 행사 목록 전체를 받아오는 API입니다.")
     @GetMapping("/events")
     public ApiResponse<List<EventCategoryResponseDto.EventCategoryDto>> getAllCategories(){
-        List<EventCategoryResponseDto.EventCategoryDto> eventCategories = eventCategoryQueryService.getGroupedCategories();
-        return ApiResponse.onSuccess(eventCategories);
+        return ApiResponse.onSuccess(eventCategoryQueryService.getGroupedCategories());
     }
 
-    @Operation(summary = "게시글 검색 API", description = "게시글 검색 API입니다. title 기준으로 검색합니다. 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
+    @Operation(summary = "게시글 검색 API", description = "게시글 검색 API입니다. title 기준으로 검색합니다. 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다.")
     @GetMapping("/search")
     @CommonApiResponses
     public ApiResponse<PostResponseDto.PostPreviewListDto> getPostListByTitle (@ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page, @RequestParam(name="searchKeyword") String searchKeyword){
@@ -116,7 +114,8 @@ public class PostRestController {
     @Operation(summary = "나의 동행 페이지- 내 게시글 조회 API", description = "나의 동행에서 내 게시글을 확인하는 API입니다. memberId를 받고, 추후 JWT로 변경예정, 페이징을 포함하며 한 페이지 당 10개 게시글을 보여줍니다. query String으로 page 번호를 주세요. page 번호는 0부터 시작합니다")
     @GetMapping("/my")
     @CommonApiResponses
-    public ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@RequestParam("memberId") Long memberId, @ValidPageNumber @RequestParam(name ="page", defaultValue = "0") Integer page){
+    public ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@AuthenticationPrincipal CustomUserDetails userDetails, @ValidPageNumber @RequestParam(name ="page", defaultValue = "0") Integer page){
+        Long memberId = userDetails.getMemberId();
         Page<Post> postList = postQueryService.getMyPostList(memberId, page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
