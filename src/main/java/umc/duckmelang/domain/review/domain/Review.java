@@ -29,7 +29,7 @@ public class Review extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id", referencedColumnName = "member_id")
-    private Member receiver; // 리뷰 보내는 회원
+    private Member receiver; // 리뷰 받는 회원
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "application_id", referencedColumnName = "application_id", nullable = false)

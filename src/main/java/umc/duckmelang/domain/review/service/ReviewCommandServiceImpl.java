@@ -7,6 +7,9 @@ import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.application.repository.ApplicationRepository;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.repository.MemberRepository;
+import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
+import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
+import umc.duckmelang.domain.notification.service.NotificationCommandService;
 import umc.duckmelang.domain.review.converter.ReviewConverter;
 import umc.duckmelang.domain.review.domain.Review;
 import umc.duckmelang.domain.review.dto.ReviewRequestDto;
@@ -15,6 +18,12 @@ import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.ApplicationException;
 import umc.duckmelang.global.apipayload.exception.MemberException;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static umc.duckmelang.domain.notification.domain.enums.NotificationType.REVIEW;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -22,6 +31,9 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final ApplicationRepository applicationRepository;
+    //자신에 대한 후기가 남겨졌을 때 알림
+    private final NotificationCommandService notificationCommandService;
+    private final MemberProfileImageQueryService memberProfileImageQueryService;
 
     @Override
     public Review joinReview(ReviewRequestDto.ReviewJoinDto request , Long memberId){
@@ -31,8 +43,13 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
         Application application = applicationRepository.findById(request.getApplicationId())
                 .orElseThrow(() -> new ApplicationException(ErrorStatus.APPLICATION_NOT_FOUND));
+        Optional<MemberProfileImage> profileImageOptional = memberProfileImageQueryService.getLatestPublicMemberProfileImage(sender.getId());
+        String profileImageUrl = profileImageOptional
+                .map(MemberProfileImage::getMemberImage)  // memberImage 필드를 가져옴
+                .orElse(null);  // 이미지가 없으면 null
 
         Review review = ReviewConverter.toReview(request, sender, receiver,application);
+        notificationCommandService.send(sender, receiver,REVIEW,sender.getNickname() + " 님이 후기를 작성했어요", profileImageUrl);
         return reviewRepository.save(review);
     }
 }

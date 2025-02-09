@@ -24,7 +24,7 @@ public class NotificationController {
 
     @GetMapping("")
     @CommonApiResponses
-    @Operation(summary = "알림 목록 조회 API", description = "지금까지의 모든 알림 내역을 보여줍니다. memberId는 추후 JWT에서 추출 예정")
+    @Operation(summary = "알림 목록 조회 API", description = "지금까지의 모든 알림 내역을 보여줍니다. memberId는 추후 JWT에서 추출 예정. extraData는 postImage 또는 memberProfileImage을 반환합니다. postImage -> BOOKMARK일때, memberProfileImage -> MATE, REQUEST, REVIEW 일때.")
     public ApiResponse<NotificationResponseDto.NotificationListDto> getNotificationList (@RequestParam Long memberId){
         List<Notification> NotificationList = notificationQueryService.getNotificationList(memberId);
         return ApiResponse.onSuccess(NotificationConverter.notificationListDto(NotificationList));
@@ -32,7 +32,7 @@ public class NotificationController {
 
     @GetMapping(value ="/subscribe", produces = "text/event-stream")
     @CommonApiResponses
-    @Operation(summary = "실시간 알림 API", description = "프론트에서의 요청 없이 자동으로 통신합니다.")
+    @Operation(summary = "실시간 알림 API", description = "프론트에서의 요청 없이 자동으로 통신합니다. Swagger로 테스트는 불가하여 Postman으로 테스트해보셔야 합니다. 통신 시 SSE 연결하셔야 합니다. lastEventId는 처음 연결할 땐 안 쓰셔도 되며, 두번째 연결부터 쓰시면 됩니다. 미전송 데이터 여부 확인용입니다.")
     public SseEmitter getRealtimeNotification (@RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId, @RequestParam Long memberId) {
         return notificationQueryService.subscribe(memberId, lastEventId);
     }

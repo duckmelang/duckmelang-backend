@@ -37,7 +37,7 @@ public class NotificationQueryServiceImpl implements NotificationQueryService {
         emitter.onTimeout(() -> emitterRepository.deleteById(emitterId));
         // (1-5) 503 에러를 방지하기 위한 더미 이벤트 전송
         String eventId = makeTimeIncludeId(memberId);
-        notificationCommandService.sendNotification(emitter, eventId, emitterId, "EventStream Created. [userEmail=" + memberId + "]");
+        notificationCommandService.sendNotification(emitter, eventId, emitterId, "EventStream Created. [memberId=" + memberId + "]");
         // (1-6) 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
         if (hasLostData(lastEventId)) {
             notificationCommandService.sendLostData(lastEventId, memberId, emitterId, emitter);

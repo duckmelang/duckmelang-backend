@@ -12,6 +12,7 @@ import umc.duckmelang.domain.review.converter.ReviewConverter;
 import umc.duckmelang.domain.review.dto.ReviewResponseDto;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -22,9 +23,9 @@ public class NotificationConverter {
                 .id(notification.getId())
                 .content(notification.getContent())
                 .isRead(notification.getIsRead())
-                .isDelivered(notification.getIsDelivered())
+//                .isDelivered(notification.getIsDelivered())
                 .type(notification.getNotificationType())
-                .senderNickname(notification.getSender().getNickname())
+//                .senderNickname(notification.getSender().getNickname())
                 .extraData(notification.getExtraData())
                 .createdAt(notification.getCreatedAt())
                 .build();
@@ -39,12 +40,14 @@ public class NotificationConverter {
                 .build();
     }
 
-    public static Notification toNotification(Member receiver, NotificationType notificationType, String content) {
+    public static Notification toNotification(Member sender, Member receiver, NotificationType notificationType, String content, String extraData) {
         return Notification.builder()
+                .sender(sender)
                 .receiver(receiver)
                 .notificationType(notificationType)
                 .content(content)
                 .isRead(false)
+                .extraData(extraData)
                 .build();
     }
 

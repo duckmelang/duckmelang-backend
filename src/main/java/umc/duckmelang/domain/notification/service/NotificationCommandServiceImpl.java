@@ -15,6 +15,10 @@ import umc.duckmelang.domain.notification.repository.NotificationRepository;
 import java.io.IOException;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -25,6 +29,8 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(NotificationCommandServiceImpl.class);
+
     @Override
     public void sendLostData(String lastEventId, Long memberId, String emitterId, SseEmitter emitter) { // (6)
         Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByMemberId(memberId);
@@ -33,8 +39,8 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
                 .forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
     }
     @Override
-    public void send(Member receiver, NotificationType notificationType, String content) {
-        Notification notification = notificationRepository.save(NotificationConverter.toNotification(receiver, notificationType, content)); // (2-1)
+    public void send(Member sender, Member receiver, NotificationType notificationType, String content, String extraData ) {
+        Notification notification = notificationRepository.save(NotificationConverter.toNotification(sender, receiver, notificationType, content, extraData)); // (2-1)
         Long receiverId = receiver.getId(); // (2-2)
         String eventId = receiverId + "_" + System.currentTimeMillis(); // (2-3)
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverId);
@@ -49,12 +55,14 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
     @Override
     public void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data) { // (4)
         try {
+            logger.info("Sending eventId: {}, data: {}", eventId, data);
             emitter.send(SseEmitter.event()
                     .id(eventId)
                     .name("sse")
                     .data(data)
             );
         } catch (IOException exception) {
+            logger.error("SSE 전송 실패: ", exception);
             emitterRepository.deleteById(emitterId);
         }
     }
