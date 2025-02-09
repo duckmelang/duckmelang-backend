@@ -1,6 +1,7 @@
 package umc.duckmelang.domain.post.domain;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,6 +14,7 @@ import umc.duckmelang.domain.postimage.domain.PostImage;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.PostException;
 import umc.duckmelang.global.common.BaseEntity;
+import umc.duckmelang.global.common.serializer.LocalDateSerializer;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -40,6 +42,7 @@ public class Post extends BaseEntity {
     private String title;
 
     @Column(name = "event_date", columnDefinition = "DATE", nullable = false)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate eventDate;
 
     @Column(name = "wanted", columnDefinition = "BIT", nullable = false)
