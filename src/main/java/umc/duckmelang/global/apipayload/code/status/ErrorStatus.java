@@ -22,6 +22,7 @@ public enum ErrorStatus implements BaseErrorCode {
     MEMBER_EMPTY_INTRODUCTION(HttpStatus.BAD_REQUEST, "MEMBER4003", "자기소개는 공란으로 비워둘 수 없습니다."),
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "MEMBER4004", "이미 존재하는 이메일입니다."),
     DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "MEMBER4005", "이미 존재하는 닉네임입니다."),
+    UNAUTHORIZED_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4006", "잘못된 인증입니다. 해당 작업에 대한 권한이 없습니다."),
 
     // 멤버 프로필 사진 관련 에러
     MEMBER_PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND,"MEMBERPROFILEIMAGE4001", "프로필 이미지가 존재하지 않습니다."),
@@ -51,7 +52,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 지뢰 관련 에러
     DUPLICATE_LANDMINE(HttpStatus.BAD_REQUEST, "LANDMINE4001", "중복된 키워드가 존재합니다."),
-    INVALID_LANDMINE(HttpStatus.BAD_REQUEST, "LANDMINE4002", "존재하지 않는 ㅣ워드입니다."),
+    INVALID_LANDMINE(HttpStatus.BAD_REQUEST, "LANDMINE4002", "존재하지 않는 키워드입니다."),
+
     // 행사 카테고리 관련 에러
     INVALID_EVENT_CATEGORY(HttpStatus.BAD_REQUEST, "EVENTCATEGORY4001", "선택한 행사 중 유효하지 않은 항목이 있습니다."),
     EVENT_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "EVENT_CATEGORY4002", "이번트 카테고리가 없습니다."),

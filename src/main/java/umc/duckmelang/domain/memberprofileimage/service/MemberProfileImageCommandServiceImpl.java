@@ -33,30 +33,31 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
 
     @Override
     @Transactional
-    public void deleteProfileImage(Long memberId, MemberProfileImageRequestDto.MemberProfileImageDto request) {
-        // 프로필 이미지 조회 및 유효성 검증
-        MemberProfileImage profileImage = memberProfileImageRepository.findById(request.getImageId())
+    public void deleteProfileImage(Long memberId, Long imageId) {
+        MemberProfileImage profileImage = memberProfileImageRepository.findById(imageId)
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
+        if(!profileImage.getMember().getId().equals(memberId)){
+            throw new MemberException(ErrorStatus.UNAUTHORIZED_MEMBER);
+        }
         memberProfileImageRepository.delete(profileImage);
     }
 
     @Override
     @Transactional
-    public MemberProfileImage updateProfileImageStatus(Long memberId, MemberProfileImageRequestDto.MemberProfileImageDto request) {
-        // 프로필 이미지 조회 및 유효성 검증
-        MemberProfileImage profileImage = memberProfileImageRepository.findById(request.getImageId())
+    public MemberProfileImage updateProfileImageStatus(Long memberId, Long imageId, MemberProfileImageRequestDto.UpdateProfileImageStatusDto request) {
+        MemberProfileImage profileImage = memberProfileImageRepository.findById(imageId)
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
-        //프로필 이미지 공개 범위 변경
+        if(!profileImage.getMember().getId().equals(memberId)){
+            throw new MemberException(ErrorStatus.UNAUTHORIZED_MEMBER);
+        }
         MemberProfileImage updatedProfileImage = MemberProfileImageConverter.toMemberProfileImageWithChangedStatus(profileImage, request.isPublicStatus());
         return memberProfileImageRepository.save(updatedProfileImage);
     }
 
     @Override
     public MemberProfileImage createProfileImage(Long memberId, MultipartFile profileImage) {
-        // 회원 조회 및 유효성 검증
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
-
         String uuid = UUID.randomUUID().toString();
         Uuid savedUuid = uuidRepository.save(Uuid.builder()
                 .uuid(uuid).build());
