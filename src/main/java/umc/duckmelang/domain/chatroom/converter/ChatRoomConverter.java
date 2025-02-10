@@ -11,10 +11,10 @@ import java.util.List;
 
 @Component
 public class ChatRoomConverter {
-    public static ChatRoom toChatRoom(ChatMessageRequestDto.CreateChatMessageDto request) {
+    public static ChatRoom toChatRoom(ChatMessageRequestDto.CreateChatMessageDto request, Post post, Member member) {
         return ChatRoom.builder()
-                .post(null)
-                .otherMemberId(null)
+                .post(post)
+                .otherMember(member)
                 .hasMatched(false)                    // 채팅방이 처음 생성된 시점에는 반드시 매칭 전이다.
                 .hasSenderReviewDone(false)           // 채팅방이 처음 생성된 시점에는 반드시 매칭 전이므로 리뷰 또한 없다.
                 .hasReceiverReviewDone(false)

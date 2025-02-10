@@ -4,6 +4,13 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.member.repository.MemberRepository;
+import umc.duckmelang.domain.post.domain.Post;
+import umc.duckmelang.domain.post.repository.PostRepository;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.MemberException;
+import umc.duckmelang.global.apipayload.exception.PostException;
 import umc.duckmelang.mongo.chatmessage.converter.ChatMessageConverter;
 import umc.duckmelang.mongo.chatmessage.domain.ChatMessage;
 import umc.duckmelang.mongo.chatmessage.dto.ChatMessageRequestDto;
@@ -20,15 +27,21 @@ public class ChatMessageCommandServiceImpl implements ChatMessageCommandService 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomCommandService chatRoomCommandService;
+    private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     @Transactional
     public ChatMessage processMessage(ChatMessageRequestDto.@Valid CreateChatMessageDto request){
         // 1. 채팅방이 있는지 조회하고, 없으면 생성한다.
+        Post post = postRepository.findById(request.getPostId()).orElseThrow(()->new PostException(ErrorStatus.POST_NOT_FOUND));
+        Member otherMember = memberRepository.findById(request.getReceiverId()).orElseThrow(()->new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findById(request.getSenderId()).orElseThrow(()->new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+
         ChatRoom chatRoom = chatRoomRepository.findByPostIdAndOtherMemberId(request.getPostId(), request.getReceiverId())
                 .or(() -> chatRoomRepository.findByPostIdAndOtherMemberId(request.getPostId(), request.getSenderId()))
                 .orElseGet(() -> {
-                    ChatRoom newChatRoom = ChatRoomConverter.toChatRoom(request);
+                    ChatRoom newChatRoom = ChatRoomConverter.toChatRoom(request, post, otherMember);
                     return chatRoomRepository.save(newChatRoom); // 채팅방 생성 후 DB에 저장
                 });
 
