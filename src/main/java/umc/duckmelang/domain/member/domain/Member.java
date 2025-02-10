@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.*;
 import umc.duckmelang.domain.auth.domain.Auth;
+import umc.duckmelang.domain.chatroom.domain.ChatRoom;
 import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.member.domain.enums.Gender;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
@@ -98,6 +99,9 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "secondMember", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MateRelationship> mateRelationshipinSecondList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "otherMember", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatRoom> chatRoomList = new ArrayList<>();
 
     // 비밀번호 설정 함수
     public void encodePassword(String password){

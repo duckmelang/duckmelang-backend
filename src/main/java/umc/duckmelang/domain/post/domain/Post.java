@@ -7,6 +7,7 @@ import lombok.*;
 
 import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.bookmark.domain.Bookmark;
+import umc.duckmelang.domain.chatroom.domain.ChatRoom;
 import umc.duckmelang.domain.eventcategory.domain.EventCategory;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.postidol.domain.PostIdol;
@@ -66,6 +67,9 @@ public class Post extends BaseEntity {
     //n:1 단방향 고려
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Application> applicationList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<ChatRoom> chatRoomList = new ArrayList<>();
 
 
     // 연관관계 편의 메서드
