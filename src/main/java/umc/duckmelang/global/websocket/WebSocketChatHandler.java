@@ -9,10 +9,10 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import umc.duckmelang.domain.chatmessage.converter.ChatMessageConverter;
-import umc.duckmelang.domain.chatmessage.domain.ChatMessage;
-import umc.duckmelang.domain.chatmessage.dto.ChatMessageRequestDto;
-import umc.duckmelang.domain.chatmessage.service.ChatMessageCommandService;
+import umc.duckmelang.mongo.chatmessage.converter.ChatMessageConverter;
+import umc.duckmelang.mongo.chatmessage.domain.ChatMessage;
+import umc.duckmelang.mongo.chatmessage.dto.ChatMessageRequestDto;
+import umc.duckmelang.mongo.chatmessage.service.ChatMessageCommandService;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;

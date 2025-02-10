@@ -1,7 +1,7 @@
 package umc.duckmelang.domain.chatroom.converter;
 
 import org.springframework.stereotype.Component;
-import umc.duckmelang.domain.chatmessage.dto.ChatMessageRequestDto;
+import umc.duckmelang.mongo.chatmessage.dto.ChatMessageRequestDto;
 import umc.duckmelang.domain.chatroom.domain.ChatRoom;
 
 @Component

@@ -3,7 +3,8 @@ package umc.duckmelang.domain.chatroom.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import umc.duckmelang.domain.chatmessage.dto.ChatMessageRequestDto;
+
+import umc.duckmelang.mongo.chatmessage.dto.ChatMessageRequestDto;
 import umc.duckmelang.domain.chatroom.converter.ChatRoomConverter;
 import umc.duckmelang.domain.chatroom.domain.ChatRoom;
 import umc.duckmelang.domain.chatroom.repository.ChatRoomRepository;
