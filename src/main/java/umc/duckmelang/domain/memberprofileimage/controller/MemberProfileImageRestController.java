@@ -19,7 +19,7 @@ import umc.duckmelang.global.validation.annotation.ValidPageNumber;
 @RestController
 @RequestMapping("/mypage/profile/image")
 @RequiredArgsConstructor
-public class MemberProfileImageRestController {
+public class MemberProfileImageRestController{
     private final MemberProfileImageQueryService memberProfileImageQueryService;
     private final MemberProfileImageCommandService memberProfileImageCommandService;
 
