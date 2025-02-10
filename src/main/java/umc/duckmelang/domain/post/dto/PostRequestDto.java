@@ -29,6 +29,7 @@ public class PostRequestDto {
         private LocalDate date;
         @Size(max = 5)
         private List<PostImageRequestDto.ImageMetadata> imageInfos;  // 이미지 메타데이터 리스트
-        // private List<String> postImageUrls;
+
+        private List<String> postImageUrls;
     }
 }

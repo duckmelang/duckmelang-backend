@@ -84,8 +84,7 @@ public class PostRestController {
     @Operation(summary = "게시글 작성 API", description = "게시글 쓰기 API입니다. 최대 5개의 이미지 업로드 가능")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CommonApiResponses
-    public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (@AuthenticationPrincipal CustomUserDetails userDetails, @RequestPart @Valid PostRequestDto.PostJoinDto request, @Size(max = 5) @RequestPart("images") List<MultipartFile> images){
-        Long memberId = userDetails.getMemberId();;
+    public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (@PathVariable(name="memberId") Long memberId, @RequestPart @Valid PostRequestDto.PostJoinDto request, @Size(max = 5) @RequestPart("images") List<MultipartFile> images){
         Post post = postCommandService.joinPost(request, memberId, images);
         return ApiResponse.onSuccess(PostConverter.postJoinResultDto(post));
     }

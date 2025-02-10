@@ -121,17 +121,17 @@ public class PostConverter {
 
         post.getPostIdolList().addAll(postIdols);
 
-//        // Post 이미지 URL 리스트 처리
-//        List<PostImage> postImages = request.getPostImageUrls().stream()
-//                .map(url -> PostImage.builder()
-//                        .post(post)
-//                        .postImageUrl(url)
-//                        .build())
-//                .toList();
-//        if (post.getPostImageList() == null) {
-//            post.setPostImageList(new ArrayList<>());
-//        }
-//        post.getPostImageList().addAll(postImages);
+        // Post 이미지 URL 리스트 처리
+        List<PostImage> postImages = request.getPostImageUrls().stream()
+                .map(url -> PostImage.builder()
+                        .post(post)
+                        .postImageUrl(url)
+                        .build())
+                .toList();
+        if (post.getPostImageList() == null) {
+            post.setPostImageList(new ArrayList<>());
+        }
+        post.getPostImageList().addAll(postImages);
 
         return post;
     }
