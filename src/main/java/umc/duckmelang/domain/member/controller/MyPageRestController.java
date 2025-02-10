@@ -55,7 +55,7 @@ public class MyPageRestController {
     }
 
     @GetMapping("/posts")
-    @Operation(summary = "마이페지이 - 내가 업로드한 게시글들 조회 API & 피드 관리 - 내 피드 목록 조회", description = "내 프로필에서 '업로드한 게시글 조회'와 피드 관리에서 '내 피드 목록' 조회에 사용되는 API입니다.")
+    @Operation(summary = "마이페이지 - 내가 업로드한 게시글들 조회 API & 피드 관리 - 내 피드 목록 조회", description = "내 프로필에서 '업로드한 게시글 조회'와 피드 관리에서 '내 피드 목록' 조회에 사용되는 API입니다.")
     ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@AuthenticationPrincipal CustomUserDetails userDetails, @ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page) {
         Long memberId = userDetails.getMemberId();
         Page<Post> postList = postQueryService.getPostListByMember(memberId, page);
