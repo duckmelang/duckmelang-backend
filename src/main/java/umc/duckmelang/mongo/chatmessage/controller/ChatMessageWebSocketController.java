@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.chatmessage.controller;
+package umc.duckmelang.mongo.chatmessage.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -7,10 +7,10 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
-import umc.duckmelang.domain.chatmessage.converter.ChatMessageConverter;
-import umc.duckmelang.domain.chatmessage.domain.ChatMessage;
-import umc.duckmelang.domain.chatmessage.dto.ChatMessageResponseDto;
-import umc.duckmelang.domain.chatmessage.service.ChatMessageQueryService;
+import umc.duckmelang.mongo.chatmessage.converter.ChatMessageConverter;
+import umc.duckmelang.mongo.chatmessage.domain.ChatMessage;
+import umc.duckmelang.mongo.chatmessage.dto.ChatMessageResponseDto;
+import umc.duckmelang.mongo.chatmessage.service.ChatMessageQueryService;
 import umc.duckmelang.global.apipayload.ApiResponse;
 
 @RestController

@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.chatmessage.service;
+package umc.duckmelang.mongo.chatmessage.service;
 
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import umc.duckmelang.domain.chatmessage.domain.ChatMessage;
-import umc.duckmelang.domain.chatmessage.repository.ChatMessageRepository;
+import umc.duckmelang.mongo.chatmessage.domain.ChatMessage;
+import umc.duckmelang.mongo.chatmessage.repository.ChatMessageRepository;
 
 import java.util.List;
 

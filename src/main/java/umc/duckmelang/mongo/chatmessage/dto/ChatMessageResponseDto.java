@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.chatmessage.dto;
+package umc.duckmelang.mongo.chatmessage.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;

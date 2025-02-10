@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.chatmessage.dto;
+package umc.duckmelang.mongo.chatmessage.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,19 +1,17 @@
-package umc.duckmelang.domain.chatmessage.service;
+package umc.duckmelang.mongo.chatmessage.service;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import umc.duckmelang.domain.chatmessage.converter.ChatMessageConverter;
-import umc.duckmelang.domain.chatmessage.domain.ChatMessage;
-import umc.duckmelang.domain.chatmessage.dto.ChatMessageRequestDto;
-import umc.duckmelang.domain.chatmessage.repository.ChatMessageRepository;
+import umc.duckmelang.mongo.chatmessage.converter.ChatMessageConverter;
+import umc.duckmelang.mongo.chatmessage.domain.ChatMessage;
+import umc.duckmelang.mongo.chatmessage.dto.ChatMessageRequestDto;
 import umc.duckmelang.domain.chatroom.converter.ChatRoomConverter;
 import umc.duckmelang.domain.chatroom.domain.ChatRoom;
 import umc.duckmelang.domain.chatroom.repository.ChatRoomRepository;
 import umc.duckmelang.domain.chatroom.service.ChatRoomCommandService;
-
-import java.util.Optional;
+import umc.duckmelang.mongo.chatmessage.repository.ChatMessageRepository;
 
 @Service
 @RequiredArgsConstructor

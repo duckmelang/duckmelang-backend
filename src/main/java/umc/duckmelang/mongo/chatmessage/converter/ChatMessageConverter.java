@@ -1,4 +1,4 @@
-package umc.duckmelang.domain.chatmessage.converter;
+package umc.duckmelang.mongo.chatmessage.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -7,9 +7,9 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
-import umc.duckmelang.domain.chatmessage.domain.ChatMessage;
-import umc.duckmelang.domain.chatmessage.dto.ChatMessageRequestDto;
-import umc.duckmelang.domain.chatmessage.dto.ChatMessageResponseDto;
+import umc.duckmelang.mongo.chatmessage.domain.ChatMessage;
+import umc.duckmelang.mongo.chatmessage.dto.ChatMessageRequestDto;
+import umc.duckmelang.mongo.chatmessage.dto.ChatMessageResponseDto;
 import umc.duckmelang.domain.chatroom.domain.ChatRoom;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.ChatMessageException;
