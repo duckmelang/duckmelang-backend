@@ -23,7 +23,8 @@ public class ChatRoomConverter {
 
     public static ChatRoomResponseDto.ChatRoomItemDto toChatRoomItemDto(ChatRoom chatRoom, Member member, Post post) {
         //TODO
-        return ChatRoomResponseDto.ChatRoomItemDto.builder().build();
+        return ChatRoomResponseDto.ChatRoomItemDto.builder()
+                .build();
     }
 
     public static ChatRoomResponseDto.ChatRoomItemListDto toChatRoomItemListDto(List<ChatRoomResponseDto.ChatRoomItemDto> chatRooms) {
