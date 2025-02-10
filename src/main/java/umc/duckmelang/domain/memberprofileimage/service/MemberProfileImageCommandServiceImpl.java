@@ -36,8 +36,13 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
     public void deleteProfileImage(Long memberId, Long imageId) {
         MemberProfileImage profileImage = memberProfileImageRepository.findById(imageId)
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
+        // 삭제하려는 이미지가 사용자의 프로필 이미지인지 확인
         if(!profileImage.getMember().getId().equals(memberId)){
             throw new MemberException(ErrorStatus.UNAUTHORIZED_MEMBER);
+        }
+        // 기본 프로필 이미지인지 확인하여 삭제 불가 처리
+        if(profileImage.getMemberImage().equals(defaultProfileImage)){
+            throw new MemberProfileImageException(ErrorStatus.CANNOT_UPDATE_DEFAULT_PROFILE_IMAGE);
         }
         memberProfileImageRepository.delete(profileImage);
     }
@@ -47,8 +52,13 @@ public class MemberProfileImageCommandServiceImpl implements MemberProfileImageC
     public MemberProfileImage updateProfileImageStatus(Long memberId, Long imageId, MemberProfileImageRequestDto.UpdateProfileImageStatusDto request) {
         MemberProfileImage profileImage = memberProfileImageRepository.findById(imageId)
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
+        // 업데이트하려는 이미지가 사용자의 프로필 이미지인지 확인
         if(!profileImage.getMember().getId().equals(memberId)){
             throw new MemberException(ErrorStatus.UNAUTHORIZED_MEMBER);
+        }
+        // 기본 프로필 이미지인지 확인하여 업데이트 불가 처리
+        if(profileImage.getMemberImage().equals(defaultProfileImage)){
+            throw new MemberProfileImageException(ErrorStatus.CANNOT_DELETE_DEFAULT_PROFILE_IMAGE);
         }
         MemberProfileImage updatedProfileImage = MemberProfileImageConverter.toMemberProfileImageWithChangedStatus(profileImage, request.isPublicStatus());
         return memberProfileImageRepository.save(updatedProfileImage);
