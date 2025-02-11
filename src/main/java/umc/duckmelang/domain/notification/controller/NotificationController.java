@@ -23,7 +23,7 @@ import java.util.List;
 public class NotificationController {
     private final NotificationQueryService notificationQueryService;
 
-    @Operation(summary = "알림 목록 조회 API", description = "지금까지의 모든 알림 내역을 보여줍니다. memberId는 추후 JWT에서 추출 예정. extraData는 postImage 또는 memberProfileImage을 반환합니다. postImage -> BOOKMARK일때, memberProfileImage -> MATE, REQUEST, REVIEW 일때.")
+    @Operation(summary = "알림 목록 조회 API", description = "지금까지의 모든 알림 내역을 보여줍니다. extraData는 postImage 또는 memberProfileImage을 반환합니다. postImage -> BOOKMARK일때, memberProfileImage -> MATE, REQUEST, REVIEW 일때.")
     @GetMapping("")
     @CommonApiResponses
     public ApiResponse<NotificationResponseDto.NotificationListDto> getNotificationList (@AuthenticationPrincipal CustomUserDetails userDetails){
