@@ -34,8 +34,8 @@ public class PostQueryServiceImpl implements PostQueryService{
     }
 
     @Override
-    public Page<Post> getPostListByIdol(Long idolId, Integer page){
-        return postRepository.findByIdol(idolId, PageRequest.of(page, 10));
+    public Page<Post> getFilteredPostListByIdol(Long idolId, Gender gender, Integer minAge, Integer maxAge, Integer page){
+        return postRepository.findFilteredPostsByIdol(idolId, gender, minAge, maxAge,PageRequest.of(page, 10));
     }
 
     @Override

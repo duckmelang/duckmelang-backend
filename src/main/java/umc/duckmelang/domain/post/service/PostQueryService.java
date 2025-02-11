@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface PostQueryService {
     PostResponseDto.PostPreviewListDto getFilteredPostList(Integer page, Gender gender, Integer minAge, Integer maxAge);
-    Page<Post> getPostListByIdol(Long idolId, Integer page);
+    Page<Post> getFilteredPostListByIdol(Long idolId, Gender gender, Integer minAge, Integer maxAge, Integer page);
     Page<Post> getPostListByMember(Long memberId, Integer page);
     Optional<Post> getPostDetail(Long postId);
     Page<Post> getFilteredPostListByTitle(String keyword, Gender gender, Integer minAge, Integer maxAge, Integer page);
