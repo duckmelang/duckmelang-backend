@@ -1,0 +1,19 @@
+package umc.duckmelang.domain.member.converter;
+
+import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.member.dto.MemberFilterDto;
+
+public class MemberFilterConverter {
+
+    public static MemberFilterDto.FilterResponseDto toFilterResponseDto(Member member) {
+        return new MemberFilterDto.FilterResponseDto(
+                member.getFilterGender() != null ? member.getFilterGender() : null,
+                member.getFilterMinAge(),
+                member.getFilterMaxAge()
+        );
+    }
+
+    public static void applyFilterRequest(Member member, MemberFilterDto.FilterRequestDto request){
+        member.updateFilter(request.getGender(), request.getMinAge(), request.getMaxAge());
+    }
+}

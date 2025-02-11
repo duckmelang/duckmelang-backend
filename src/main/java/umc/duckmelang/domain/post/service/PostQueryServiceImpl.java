@@ -6,7 +6,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.member.domain.enums.Gender;
+import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
+import umc.duckmelang.domain.post.dto.PostResponseDto;
 import umc.duckmelang.domain.post.repository.PostRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.MemberException;
@@ -21,8 +24,15 @@ public class PostQueryServiceImpl implements PostQueryService{
     private final PostRepository postRepository;
 
     @Override
-    public Page<Post> getPostList(Integer page){
-        return postRepository.findAll(PageRequest.of(page, 10));
+    public PostResponseDto.PostPreviewListDto getFilteredPostList(Integer page, Gender gender, Integer minAge, Integer maxAge){
+        Page<Post> postList;
+
+        if(gender == null && minAge == null && maxAge == null){
+            postList = postRepository.findAll(PageRequest.of(page,10));
+        } else{
+            postList = postRepository.findFilteredPosts(gender, minAge, maxAge, PageRequest.of(page,10));
+        }
+        return PostConverter.postPreviewListDto(postList);
     }
 
     @Override
@@ -70,8 +80,4 @@ public class PostQueryServiceImpl implements PostQueryService{
     public int getPostCount(Long memberId) {
         return postRepository.countAllByMemberId(memberId);
     }
-
-
-
-
 }

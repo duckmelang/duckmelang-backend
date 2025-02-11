@@ -1,6 +1,7 @@
 package umc.duckmelang.domain.post.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,9 @@ import umc.duckmelang.domain.idolcategory.converter.IdolCategoryConverter;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.idolcategory.dto.IdolCategoryResponseDto;
 import umc.duckmelang.domain.idolcategory.service.IdolCategoryQueryService;
+import umc.duckmelang.domain.member.domain.enums.Gender;
+import umc.duckmelang.domain.member.dto.MemberFilterDto;
+import umc.duckmelang.domain.member.service.mypage.MyPageQueryService;
 import umc.duckmelang.domain.memberidol.converter.MemberIdolConverter;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberidol.dto.MemberIdolResponseDto;
@@ -49,13 +53,24 @@ public class PostRestController {
     private final MemberIdolCommandService memberIdolCommandService;
     private final IdolCategoryQueryService idolCategoryQueryService;
     private final EventCategoryQueryService eventCategoryQueryService;
+    private final MyPageQueryService myPageQueryService;
 
-    @Operation(summary = "홈화면 - 게시글 전체 조회 API", description = "조건 없이 모든 게시글을 조회하는 API 입니다.")
+    @Operation(summary = "홈화면 - 게시글 전체 조회 API", description = "조건이 없으면 모든 게시글을 반환하고, 조건이 있으면 해당 조건에 따라 게시글을 조회하는 API입니다.")
     @GetMapping("")
     @CommonApiResponses
-    public ApiResponse<PostResponseDto.PostPreviewListDto> getPostList (@ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page){
-        Page<Post> postList = postQueryService.getPostList(page);
-        return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
+    public ApiResponse<PostResponseDto.PostPreviewListDto> getPostList (@ValidPageNumber @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                                        @AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                        @Parameter(hidden = true) @RequestParam(required = false) Gender gender,
+                                                                        @Parameter(hidden = true) @RequestParam(required = false) Integer minAge,
+                                                                        @Parameter(hidden = true) @RequestParam(required = false) Integer maxAge){
+
+        if (gender == null && minAge == null && maxAge == null) {
+            MemberFilterDto.FilterResponseDto userFilter = myPageQueryService.getMemberFilter(userDetails.getMemberId());
+            gender = userFilter.getGender();
+            minAge = userFilter.getMinAge();
+            maxAge = userFilter.getMaxAge();
+        }
+        return ApiResponse.onSuccess(postQueryService.getFilteredPostList(page, gender, minAge, maxAge));
     }
 
     @Operation(summary = "홈화면 - 관심 아이돌 목록 조회 API", description = "현재 내가 설정한 관심 있는 아이돌 목록을 조회합니다.")

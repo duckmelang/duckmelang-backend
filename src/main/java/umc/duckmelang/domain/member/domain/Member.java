@@ -61,6 +61,19 @@ public class Member extends BaseEntity {
         this.isProfileComplete = true;
     }
 
+    @Enumerated(EnumType.STRING)
+    private Gender filterGender;
+
+    private Integer filterMinAge;
+    private Integer filterMaxAge;
+
+    // 필터 조건 업데이트 메서드
+    public void updateFilter(Gender gender, Integer minAge, Integer maxAge){
+        this.filterGender = gender;
+        this.filterMinAge = minAge;
+        this.filterMaxAge = maxAge;
+    }
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberProfileImage> memberProfileImageList = new ArrayList<>();
 
