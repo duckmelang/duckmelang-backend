@@ -5,14 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.domain.enums.Gender;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostResponseDto;
 import umc.duckmelang.domain.post.repository.PostRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
-import umc.duckmelang.global.apipayload.exception.MemberException;
 import umc.duckmelang.global.apipayload.exception.PostException;
 
 import java.util.Optional;
@@ -56,8 +54,8 @@ public class PostQueryServiceImpl implements PostQueryService{
     }
 
     @Override
-    public Page<Post> getPostListByTitle(String searchKeyword, Integer page){
-        return postRepository.findByTitle(searchKeyword, PageRequest.of(page, 10));
+    public Page<Post> getFilteredPostListByTitle(String keyword, Gender gender, Integer minAge, Integer maxAge, Integer page){
+        return postRepository.findFilteredPostsByTitle(keyword, gender, minAge, maxAge, PageRequest.of(page, 10));
     }
 
     @Override

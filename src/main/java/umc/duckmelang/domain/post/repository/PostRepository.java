@@ -15,8 +15,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p FROM Post p WHERE " +
             "(:gender IS NULL OR p.member.gender = :gender) AND " +
-            "(:minAge IS NULL OR (YEAR(CURRENT_DATE) - YEAR(p.member.birth)) >= :minAge) AND " +
-            "(:maxAge IS NULL OR (YEAR(CURRENT_DATE) - YEAR(p.member.birth)) <= :maxAge)")
+            "(:minAge IS NULL OR TIMESTAMPDIFF(YEAR, p.member.birth, CURRENT_DATE) >= :minAge) AND " +
+            "(:maxAge IS NULL OR TIMESTAMPDIFF(YEAR, p.member.birth, CURRENT_DATE) <= :maxAge)")
     Page<Post> findFilteredPosts(@Param("gender") Gender gender,
                                  @Param("minAge") Integer minAge,
                                  @Param("maxAge") Integer maxAge,
@@ -30,8 +30,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p JOIN FETCH p.member pm WHERE pm.id = :memberId")
     Page<Post> findByMember(@Param("memberId") Long memberId, Pageable pageable);
 
-    @Query("SELECT p FROM Post p WHERE p.title LIKE %:searchKeyword%")
-    Page<Post> findByTitle(String searchKeyword, Pageable pageable);
+    @Query("SELECT p FROM Post p WHERE " +
+            "(p.title LIKE %:keyword%) AND " +
+            "(:gender IS NULL OR p.member.gender = :gender) AND " +
+            "(:minAge IS NULL OR (YEAR(CURRENT_DATE) - YEAR(p.member.birth)) >= :minAge) AND " +
+            "(:maxAge IS NULL OR (YEAR(CURRENT_DATE) - YEAR(p.member.birth)) <= :maxAge)")
+    Page<Post> findFilteredPostsByTitle(@Param("keyword") String keyword,
+                                        @Param("gender") Gender gender,
+                                        @Param("minAge") Integer minAge,
+                                        @Param("maxAge") Integer maxAge,
+                                        Pageable pageable);
+
 
     @EntityGraph(attributePaths = {"member"})
     @Query("SELECT p FROM Post p WHERE p.member.id = :memberId")

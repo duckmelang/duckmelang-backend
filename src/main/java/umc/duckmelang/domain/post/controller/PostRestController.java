@@ -55,7 +55,8 @@ public class PostRestController {
     private final EventCategoryQueryService eventCategoryQueryService;
     private final MyPageQueryService myPageQueryService;
 
-    @Operation(summary = "홈화면 - 게시글 전체 조회 API", description = "조건이 없으면 모든 게시글을 반환하고, 조건이 있으면 해당 조건에 따라 게시글을 조회하는 API입니다.")
+    @Operation(summary = "홈화면 - 게시글 전체 조회 API", description = "조건이 없으면 모든 게시글을 반환하고, 조건이 있으면 해당 조건에 따라 게시글을 조회하는 API입니다." +
+            "여기서 말하는 조건은 사용자가 설정하는 필터링 조건과 지뢰 설정에 해당합니다. 일단 필터링 조건을 적용한 상태입니다. 추후에 지뢰 설정도 추가할 예정입니다.")
     @GetMapping("")
     @CommonApiResponses
     public ApiResponse<PostResponseDto.PostPreviewListDto> getPostList (@ValidPageNumber @RequestParam(name = "page", defaultValue = "0") Integer page,
@@ -111,11 +112,23 @@ public class PostRestController {
         return ApiResponse.onSuccess(eventCategoryQueryService.getGroupedCategories());
     }
 
-    @Operation(summary = "게시글 검색 API", description = "게시글 검색 API입니다. title 기준으로 검색합니다.")
+    @Operation(summary = "게시글 검색 API", description = "게시글 검색 API입니다. title 기준으로 검색합니다. " +
+            "여기서도 동일하게 사용자가 설정한 필터링 조건과 지뢰를 통해 게시글을 조회할 수 있도록 설정했습니다. 핕터링 조건까지 추가한 상황입니다.")
     @GetMapping("/search")
     @CommonApiResponses
-    public ApiResponse<PostResponseDto.PostPreviewListDto> getPostListByTitle (@ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page, @RequestParam(name="searchKeyword") String searchKeyword){
-        Page<Post> postList = postQueryService.getPostListByTitle(searchKeyword, page);
+    public ApiResponse<PostResponseDto.PostPreviewListDto> getPostListByTitle (@ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page,
+                                                                               @AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                               @Parameter(hidden = true) @RequestParam(required = false) Gender gender,
+                                                                               @Parameter(hidden = true) @RequestParam(required = false) Integer minAge,
+                                                                               @Parameter(hidden = true) @RequestParam(required = false) Integer maxAge,
+                                                                               @RequestParam(name="searchKeyword") String searchKeyword){
+        if (gender == null && minAge == null && maxAge == null) {
+            MemberFilterDto.FilterResponseDto userFilter = myPageQueryService.getMemberFilter(userDetails.getMemberId());
+            gender = userFilter.getGender();
+            minAge = userFilter.getMinAge();
+            maxAge = userFilter.getMaxAge();
+        }
+        Page<Post> postList = postQueryService.getFilteredPostListByTitle(searchKeyword, gender, minAge, maxAge, page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
 
