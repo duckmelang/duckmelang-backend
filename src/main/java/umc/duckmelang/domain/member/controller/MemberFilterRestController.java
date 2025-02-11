@@ -23,7 +23,12 @@ public class MemberFilterRestController {
         return ApiResponse.onSuccess(myPageQueryService.getMemberFilter(userDetails.getMemberId()));
     }
 
-    @Operation(summary = "필터 조건 설정 API", description = "사용자가 필터 조건을 설정하는 API입니다. 성별이나 나이 둘 중 하나만 선택할 수도, 전부 다 선택할 수도 있습니다.")
+    @Operation(summary = "필터 조건 설정 API", description = "사용자가 필터 조건을 설정하는 API입니다. " +
+            "\n" +
+            "- `gender`: 특정 성별 필터링 (예: `MALE`, `FEMALE`), 설정하지 않으면 전체 조회\n" +
+            "- `minAge`: 최소 나이 필터링, 해당 나이 이상의 사용자 게시글만 조회\n" +
+            "- `maxAge`: 최대 나이 필터링, 해당 나이 이하의 사용자 게시글만 조회\n" +
+            "- **나이 필터를 설정하지 않으려면 `null`로 요청하면 전체 조회됨**")
     @PostMapping("")
     public ApiResponse<MemberFilterDto.FilterResponseDto> setFilter(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                     @RequestBody MemberFilterDto.FilterRequestDto request) {

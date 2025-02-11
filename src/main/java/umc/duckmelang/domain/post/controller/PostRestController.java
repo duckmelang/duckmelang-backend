@@ -55,7 +55,7 @@ public class PostRestController {
     private final EventCategoryQueryService eventCategoryQueryService;
     private final MyPageQueryService myPageQueryService;
 
-    @Operation(summary = "홈화면 - 게시글 전체 조회 API", description = "조건이 없으면 모든 게시글을 반환하고, 조건이 있으면 해당 조건에 따라 게시글을 조회하는 API입니다." +
+    @Operation(summary = "홈화면 - 게시글 전체 조회 API", description = "조건이 없으면 모든 게시글을 반환하고, 조건이 있으면 해당 조건에 따라 게시글을 조회하는 API입니다." + "\n" +
             "여기서 말하는 조건은 사용자가 설정하는 필터링 조건과 지뢰 설정에 해당합니다.")
     @GetMapping("")
     @CommonApiResponses
