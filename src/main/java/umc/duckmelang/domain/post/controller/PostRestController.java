@@ -56,7 +56,7 @@ public class PostRestController {
     private final MyPageQueryService myPageQueryService;
 
     @Operation(summary = "홈화면 - 게시글 전체 조회 API", description = "조건이 없으면 모든 게시글을 반환하고, 조건이 있으면 해당 조건에 따라 게시글을 조회하는 API입니다." +
-            "여기서 말하는 조건은 사용자가 설정하는 필터링 조건과 지뢰 설정에 해당합니다. 일단 필터링 조건을 적용한 상태입니다. 추후에 지뢰 설정도 추가할 예정입니다.")
+            "여기서 말하는 조건은 사용자가 설정하는 필터링 조건과 지뢰 설정에 해당합니다.")
     @GetMapping("")
     @CommonApiResponses
     public ApiResponse<PostResponseDto.PostPreviewListDto> getPostList (@ValidPageNumber @RequestParam(name = "page", defaultValue = "0") Integer page,
@@ -71,7 +71,7 @@ public class PostRestController {
             minAge = userFilter.getMinAge();
             maxAge = userFilter.getMaxAge();
         }
-        return ApiResponse.onSuccess(postQueryService.getFilteredPostList(page, gender, minAge, maxAge));
+        return ApiResponse.onSuccess(postQueryService.getFilteredPostList(page, gender, minAge, maxAge, userDetails.getMemberId()));
     }
 
     @Operation(summary = "홈화면 - 관심 아이돌 목록 조회 API", description = "현재 내가 설정한 관심 있는 아이돌 목록을 조회합니다.")
@@ -99,7 +99,7 @@ public class PostRestController {
             maxAge = userFilter.getMaxAge();
         }
 
-        Page<Post> postList = postQueryService.getFilteredPostListByIdol(idolId, gender, minAge, maxAge, page);
+        Page<Post> postList = postQueryService.getFilteredPostListByIdol(idolId, gender, minAge, maxAge, page, userDetails.getMemberId());
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
 
@@ -141,7 +141,7 @@ public class PostRestController {
             minAge = userFilter.getMinAge();
             maxAge = userFilter.getMaxAge();
         }
-        Page<Post> postList = postQueryService.getFilteredPostListByTitle(searchKeyword, gender, minAge, maxAge, page);
+        Page<Post> postList = postQueryService.getFilteredPostListByTitle(searchKeyword, gender, minAge, maxAge, page, userDetails.getMemberId());
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
 
