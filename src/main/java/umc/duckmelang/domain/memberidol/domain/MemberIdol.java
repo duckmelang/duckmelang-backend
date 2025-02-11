@@ -6,7 +6,6 @@ import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.global.common.BaseEntity;
 
-
 @Entity
 @Getter
 @Builder
@@ -27,13 +26,13 @@ public class MemberIdol extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public void setIdolCategory(IdolCategory idolCategory) {
-        if (this.idolCategory != null) {
-            this.idolCategory.getMemberIdolList().remove(this);
-        }
-        this.idolCategory = idolCategory;
-        this.idolCategory.getMemberIdolList().add(this);
-    }
+//    public void setIdolCategory(IdolCategory idolCategory) {
+//        if (this.idolCategory != null) {
+//            this.idolCategory.getMemberIdolList().remove(this);
+//        }
+//        this.idolCategory = idolCategory;
+//        this.idolCategory.getMemberIdolList().add(this);
+//    }
 
     public void setMember(Member member) {
         if (this.member != null) {

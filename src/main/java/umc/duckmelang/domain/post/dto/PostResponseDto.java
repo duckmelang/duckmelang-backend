@@ -70,7 +70,6 @@ public class PostResponseDto {
     public static class PostJoinResultDto{
         private Long id;
         private String title;
-
     }
 
     @Getter

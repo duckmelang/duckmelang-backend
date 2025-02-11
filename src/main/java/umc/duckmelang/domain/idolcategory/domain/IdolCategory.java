@@ -37,5 +37,4 @@ public class IdolCategory extends BaseEntity {
     //n:1 단방향 고려
     @OneToMany(mappedBy = "idolCategory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberIdol> memberIdolList = new ArrayList<>();
-
 }

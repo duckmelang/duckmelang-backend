@@ -9,9 +9,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.TokenException;
 import umc.duckmelang.global.redis.blacklist.BlacklistService;
+import umc.duckmelang.global.security.user.CustomUserDetails;
 
 import java.util.Collections;
 import java.util.Date;
@@ -66,7 +68,8 @@ public class JwtUtil {
     // JWT 토큰으로부터 Authentication 객체 생성
     public Authentication getAuthentication(String token) {
         Long memberId = jwtTokenProvider.getMemberIdFromToken(token);
-        return new UsernamePasswordAuthenticationToken(memberId, null, Collections.emptyList());
+        CustomUserDetails userDetails = new CustomUserDetails(new Member(memberId));
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     // 헤더에서 JWT 토큰을 추출
