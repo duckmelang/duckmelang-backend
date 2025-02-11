@@ -17,9 +17,8 @@ import umc.duckmelang.domain.review.repository.ReviewRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.ApplicationException;
 import umc.duckmelang.global.apipayload.exception.MemberException;
+import umc.duckmelang.global.apipayload.exception.MemberProfileImageException;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static umc.duckmelang.domain.notification.domain.enums.NotificationType.REVIEW;
@@ -46,7 +45,7 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
         Optional<MemberProfileImage> profileImageOptional = memberProfileImageQueryService.getLatestPublicMemberProfileImage(sender.getId());
         String profileImageUrl = profileImageOptional
                 .map(MemberProfileImage::getMemberImage)  // memberImage 필드를 가져옴
-                .orElse(null);  // 이미지가 없으면 null
+                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
 
         Review review = ReviewConverter.toReview(request, sender, receiver,application);
         notificationCommandService.send(sender, receiver,REVIEW,sender.getNickname() + " 님이 후기를 작성했어요", profileImageUrl);

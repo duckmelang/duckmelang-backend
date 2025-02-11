@@ -21,9 +21,7 @@ public class NotificationResponseDto {
         private Long id;
         private String content;
         private Boolean isRead;
-//        private Boolean isDelivered;
         private NotificationType type;
-//        private String senderNickname;
         private String extraData;
         private LocalDateTime createdAt;
 

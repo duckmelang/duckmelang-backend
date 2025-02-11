@@ -23,8 +23,6 @@ import org.slf4j.LoggerFactory;
 @RequiredArgsConstructor
 @Transactional
 public class NotificationCommandServiceImpl implements NotificationCommandService {
-    private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60; //1시간 후 자동 종료
-    // SSE 연결 지속 시간 설정
 
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;

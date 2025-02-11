@@ -1,6 +1,7 @@
 package umc.duckmelang.domain.notification.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -14,8 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class NotificationQueryServiceImpl implements NotificationQueryService {
-    private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60; //1시간 후 자동 종료
-    // SSE 연결 지속 시간 설정
+    @Value("${notification.timeout}")
+    private Long defaultTimeout;
 
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
@@ -29,7 +30,7 @@ public class NotificationQueryServiceImpl implements NotificationQueryService {
     @Override
     public SseEmitter subscribe(Long memberId, String lastEventId){
         String emitterId = makeTimeIncludeId(memberId); // (1-2)
-        SseEmitter emitter =  new SseEmitter(DEFAULT_TIMEOUT);
+        SseEmitter emitter =  new SseEmitter(defaultTimeout);
         // 새로운 Emitter 저장
         emitterRepository.save(emitterId, emitter);
         // (1-4) 연결 종료 및 타임아웃 시 삭제
