@@ -2,6 +2,7 @@ package umc.duckmelang.domain.chatroom.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +27,7 @@ public class ChatRoomRestController {
     public ApiResponse<ChatRoomResponseDto.ChatRoomItemListDto> getChatRoomItemList(@RequestParam Long memberId,  // 임시로 사용. 나중에 JWT에서 추출할 예정
                                                                                     @RequestParam int page){
                                                                                     //TODO : 채팅방 목록 전체 조회
-        List<ChatRoomResponseDto.ChatRoomItemDto> chatRoomItemDtoList = chatRoomQueryService.findAllChatRooms(memberId, page);
+        Page<ChatRoomResponseDto.ChatRoomItemDto> chatRoomItemDtoList = chatRoomQueryService.findAllChatRooms(memberId, page);
         return ApiResponse.onSuccess(ChatRoomConverter.toChatRoomItemListDto(chatRoomItemDtoList));
     }
 

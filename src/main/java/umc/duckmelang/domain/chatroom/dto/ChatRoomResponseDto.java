@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ChatRoomResponseDto {
@@ -26,14 +27,21 @@ public class ChatRoomResponseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ChatRoomItemDto{
+        private Long chatRoomId;
+
+        private Long oppositeId;
         private String oppositeNickname;
         private String oppositeProfileImage;
-        private Long oppositeId;
+
         private Long postId;
-        private String postImage;
         private String postTitle;
+        private String postImage;
+
         private String status;
         private Long applicationId;
         private String lastMessage;
+        private LocalDateTime lastMessageTime;
+        private boolean hasMatched;
+        private boolean hasReviewDone;
     }
 }

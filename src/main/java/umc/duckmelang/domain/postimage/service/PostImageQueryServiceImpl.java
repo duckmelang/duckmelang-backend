@@ -10,8 +10,6 @@ import umc.duckmelang.domain.postimage.repository.PostImageRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.PostImageException;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class PostImageQueryServiceImpl implements PostImageQueryService {
@@ -19,7 +17,7 @@ public class PostImageQueryServiceImpl implements PostImageQueryService {
 
     @Override
     public PostThumbnailResponseDto getLatestPostImage(Long postId) {
-        return PostImageConverter.toPostThumbnailResponseDto(postImageRepository.findFirstByPostIdOrderByCreatedAtDesc(postId)
+        return PostImageConverter.toPostThumbnailResponseDto(postImageRepository.findFirstByPostIdOrderByCreatedAtAsc(postId)
                 .orElseThrow(() -> new PostImageException(ErrorStatus.POST_IMAGE_NOT_FOUND)));
     }
 

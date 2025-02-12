@@ -25,7 +25,7 @@ public class MemberProfileImageQueryServiceImpl implements MemberProfileImageQue
     @Override
     @Transactional
     public Optional<MemberProfileImage> getLatestPublicMemberProfileImage(@ExistsMember Long memberId) {
-        return memberProfileImageRepository.findFirstByMemberIdAndIsPublicTrueOrderByCreatedAtDesc(memberId);
+        return memberProfileImageRepository.findFirstByMemberIdAndIsPublicTrueOrderByCreatedAtAsc(memberId);
     }
 
     @Override

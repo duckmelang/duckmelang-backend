@@ -8,9 +8,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import umc.duckmelang.mongo.chatmessage.domain.ChatMessage;
+import umc.duckmelang.mongo.chatmessage.dto.ChatMessageResponseDto;
 import umc.duckmelang.mongo.chatmessage.repository.ChatMessageRepository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,5 +60,19 @@ public class ChatMessageQueryServiceImpl implements ChatMessageQueryService {
             return true;
         }
         return false;
+    }
+
+    /** 주어진 list의 chatroom마다 가장 마지막 메세지를 조회*/
+    public Map<Long, ChatMessageResponseDto.LatestChatMessageDto> getLatestMessagesByChatRoomIds(List<Long> chatRoomIds) {
+        if (chatRoomIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        return chatMessageRepository.findLatestMessagesByChatRoomIds(chatRoomIds)
+                .stream()
+                .collect(Collectors.toMap(
+                        ChatMessageResponseDto.LatestChatMessageDto::getChatRoomId,
+                        message -> message
+                ));
     }
 }
