@@ -10,6 +10,7 @@ import umc.duckmelang.domain.notification.repository.EmitterRepository;
 import umc.duckmelang.domain.notification.repository.NotificationRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +55,11 @@ public class NotificationQueryServiceImpl implements NotificationQueryService {
     @Override
     public boolean hasLostData(String lastEventId) { // (5)
         return lastEventId != null && !lastEventId.isEmpty();
+    }
+
+    @Override
+    public boolean existsById(Long notificationId) {
+        return notificationRepository.existsById(notificationId);
     }
 
 }

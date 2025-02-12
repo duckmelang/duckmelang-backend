@@ -38,5 +38,10 @@ public class Notification extends BaseEntity {
 
     //postImage, memberProfileImage 등
     private String extraData;
+
+//    알림 읽음
+    public void notificationReadTrue() {
+        this.isRead = true;
+    }
 }
 

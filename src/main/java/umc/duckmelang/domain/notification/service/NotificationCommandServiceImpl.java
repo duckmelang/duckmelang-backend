@@ -17,6 +17,10 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import umc.duckmelang.domain.post.domain.Post;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.NotificationException;
+import umc.duckmelang.global.apipayload.exception.PostException;
 
 
 @Service
@@ -63,5 +67,15 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
             logger.error("SSE 전송 실패: ", exception);
             emitterRepository.deleteById(emitterId);
         }
+    }
+
+    @Override
+    public Notification patchNotificationRead(Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new NotificationException(ErrorStatus.NOTIFICATION_NOT_FOUND));
+
+        notification.notificationReadTrue();
+
+        return notificationRepository.save(notification);
     }
 }
