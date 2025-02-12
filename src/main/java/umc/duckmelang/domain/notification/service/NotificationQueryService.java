@@ -12,4 +12,5 @@ public interface NotificationQueryService {
     String makeTimeIncludeId(Long memberId);
     boolean hasLostData(String lastEventId);
     boolean existsById(Long notificationId);
+
 }

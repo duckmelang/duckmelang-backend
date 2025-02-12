@@ -8,9 +8,10 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import umc.duckmelang.domain.notification.domain.Notification;
 import umc.duckmelang.domain.notification.repository.EmitterRepository;
 import umc.duckmelang.domain.notification.repository.NotificationRepository;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.NotificationException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -61,5 +62,7 @@ public class NotificationQueryServiceImpl implements NotificationQueryService {
     public boolean existsById(Long notificationId) {
         return notificationRepository.existsById(notificationId);
     }
+
+
 
 }

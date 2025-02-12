@@ -12,4 +12,5 @@ public interface NotificationCommandService {
     void send(Member sender, Member receiver, NotificationType notificationType, String content, String extraData);
     void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data);
     Notification patchNotificationRead(Long notificationId);
+    void deleteNotification(Long notificationId);
 }

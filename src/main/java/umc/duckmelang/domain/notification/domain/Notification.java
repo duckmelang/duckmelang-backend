@@ -28,11 +28,11 @@ public class Notification extends BaseEntity {
     @Column(nullable = false)
     private NotificationType notificationType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", nullable = false)
     private Member sender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id", nullable = false)
     private Member receiver;
 
