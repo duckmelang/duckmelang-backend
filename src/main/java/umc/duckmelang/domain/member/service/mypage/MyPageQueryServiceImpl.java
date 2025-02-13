@@ -20,7 +20,7 @@ public class MyPageQueryServiceImpl implements MyPageQueryService{
     private final MemberRepository memberRepository;
     private final MemberProfileImageQueryService memberProfileImageQueryService;
 
-    public MyPageResponseDto.MyPagProfileEditBeforeDto getMemberProfileBeforeEdit(Long memberId){
+    public MyPageResponseDto.MyPageProfileEditBeforeDto getMemberProfileBeforeEdit(Long memberId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
         MemberProfileImage profileImage = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
@@ -28,10 +28,15 @@ public class MyPageQueryServiceImpl implements MyPageQueryService{
         return MemberProfileConverter.toMemberProfileEditBeforeDto(member, profileImage);
     }
 
-    // 필터 조건 조회
     public MemberFilterDto.FilterResponseDto getMemberFilter(Long memberId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
         return MemberFilterConverter.toFilterResponseDto(member);
+    }
+
+    public MyPageResponseDto.LoginInfoDto getLoginInfo(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+        return MemberProfileConverter.toLoginInfoDto(member);
     }
 }

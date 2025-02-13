@@ -32,33 +32,36 @@ public class MyPageManagementRestController {
     private final MyPageQueryService myPageQueryService;
     private final PostCommandService postCommandService;
 
-    @Operation(summary = "내 프로필 수정 API - 기존 프로필 정보 조회", description = "피그마 상에서는 기존 프로필 사진만 조회하게 되어있는데 혹시 닉네임도 필요하실까 해서 일단 넣어놓았습니다.")
+    @Operation(summary = "내 프로필 수정 - 기존 프로필 정보 조회 API", description = "피그마 상에서는 기존 프로필 사진만 조회하게 되어있는데 혹시 닉네임도 필요하실까 해서 일단 넣어놓았습니다.")
     @GetMapping("/profile/edit")
-    public ApiResponse<MyPageResponseDto.MyPagProfileEditBeforeDto> getMyPageMemberProfileImage(@AuthenticationPrincipal CustomUserDetails userDetails){
-        Long memberId = userDetails.getMemberId();
-        return ApiResponse.onSuccess(myPageQueryService.getMemberProfileBeforeEdit(memberId));
+    public ApiResponse<MyPageResponseDto.MyPageProfileEditBeforeDto> getMyPageMemberProfileImage(@AuthenticationPrincipal CustomUserDetails userDetails){
+        return ApiResponse.onSuccess(myPageQueryService.getMemberProfileBeforeEdit(userDetails.getMemberId()));
     }
 
-    @Operation(summary = "내 프로필 수정 API - 닉네임, 자기소개 수정", description = "내 프로필을 수정하는 API입니다. 사용자의 닉네임과 자기소개를 수정합니다.")
+    @Operation(summary = "내 프로필 수정 - 닉네임, 자기소개 수정 API", description = "내 프로필을 수정하는 API입니다. 사용자의 닉네임과 자기소개를 수정합니다.")
     @PatchMapping("/profile/edit")
     public ApiResponse<MyPageResponseDto.MyPageProfileEditAfterDto> updateMyPageMemberProfile(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody MyPageRequestDto.UpdateMemberProfileDto request) {
-        Long memberId = userDetails.getMemberId();
-        Member updatedMember = myPageCommandService.updateMemberProfile(memberId, request);
+        Member updatedMember = myPageCommandService.updateMemberProfile( userDetails.getMemberId(), request);
         return ApiResponse.onSuccess(MemberProfileConverter.toMemberProfileEditAfterDto(updatedMember));
     }
 
-    @Operation(summary = "내 프로필 수정 API - 내 프로필 사진 추가", description = "내 프로필을 수정하는 API입니다. 사용자의 프로필 이미지를 추가합니다.")
+    @Operation(summary = "내 프로필 수정 - 내 프로필 사진 추가 API", description = "내 프로필을 수정하는 API입니다. 사용자의 프로필 이미지를 추가합니다.")
     @PostMapping(value = "/profile/image/edit", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ApiResponse<MemberProfileImageResponseDto.MemberProfileImageDto> updateProfileImage (@AuthenticationPrincipal CustomUserDetails userDetails, @RequestPart("profileImage")MultipartFile profileImage) {
-        Long memberId = userDetails.getMemberId();
-        MemberProfileImage memberProfileImage = memberProfileImageCommandService.createProfileImage(memberId, profileImage);
+        MemberProfileImage memberProfileImage = memberProfileImageCommandService.createProfileImage(userDetails.getMemberId(), profileImage);
         return ApiResponse.onSuccess(MemberProfileImageConverter.toMemberProfileImageDto(memberProfileImage));
     }
 
-    @Operation(summary = "피드 관리 - 피드 목록 삭제", description = "내 피드 목록을 삭제하는 API입니다.")
+    @Operation(summary = "피드 관리 - 피드 목록 삭제 API", description = "내 피드 목록을 삭제하는 API입니다.")
     @DeleteMapping("/posts/{postId}")
     public ApiResponse<String> deleteMyPost(@ExistPost @PathVariable("postId") Long postId){
         postCommandService.deleteMyPost(postId);
         return ApiResponse.onSuccess("피드를 성공적으로 삭제했습니다.");
+    }
+
+    @Operation(summary = "설정 - 로그인 정보 조회 API", description = "사용자의 로그인 정보를 반환합니다. 사용자 닉네임과 이메일 그리고 ")
+    @GetMapping("/mypage/info")
+    public ApiResponse<MyPageResponseDto.LoginInfoDto> getLoginInfo(@AuthenticationPrincipal CustomUserDetails userDetails){
+        return ApiResponse.onSuccess(myPageQueryService.getLoginInfo(userDetails.getMemberId()));
     }
 }
