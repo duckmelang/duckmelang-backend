@@ -1,4 +1,4 @@
-package umc.duckmelang.global.security.config;
+package umc.duckmelang.global.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
