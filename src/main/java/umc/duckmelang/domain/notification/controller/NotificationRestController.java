@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping("/notifications")
 @RequiredArgsConstructor
 @Validated
-public class NotificationController {
+public class NotificationRestController {
     private final NotificationQueryService notificationQueryService;
     private final NotificationCommandService notificationCommandService;
 

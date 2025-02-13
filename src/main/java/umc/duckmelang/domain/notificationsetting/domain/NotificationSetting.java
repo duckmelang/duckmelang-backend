@@ -17,7 +17,7 @@ public class NotificationSetting extends BaseEntity {
     @Column(name = "notification_setting_id", nullable = false)
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)  // PERSIST 추가
     @JoinColumn(name = "member_id", unique = true, nullable = false)
     private Member member;
 

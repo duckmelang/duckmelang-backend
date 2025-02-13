@@ -20,7 +20,7 @@ import umc.duckmelang.global.apipayload.ApiResponse;
 @RestController
 @RequiredArgsConstructor
 @Validated
-public class BookmarkController {
+public class BookmarkRestController {
 
     private final BookmarkQueryService bookmarkQueryService;
     private final BookmarkCommandService bookmarkCommandService;
