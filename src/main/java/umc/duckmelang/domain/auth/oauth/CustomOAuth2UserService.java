@@ -8,7 +8,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import umc.duckmelang.domain.auth.enums.ProviderKind;
+import umc.duckmelang.domain.auth.domain.enums.ProviderKind;
 import umc.duckmelang.domain.auth.repository.AuthRepository;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.repository.MemberRepository;

@@ -1,6 +1,5 @@
 package umc.duckmelang.global.common;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
