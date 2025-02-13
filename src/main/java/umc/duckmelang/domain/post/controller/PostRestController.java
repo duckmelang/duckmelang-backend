@@ -60,18 +60,9 @@ public class PostRestController {
     @GetMapping("")
     @CommonApiResponses
     public ApiResponse<PostResponseDto.PostPreviewListDto> getPostList (@ValidPageNumber @RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                                        @AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                        @Parameter(hidden = true) @RequestParam(required = false) Gender gender,
-                                                                        @Parameter(hidden = true) @RequestParam(required = false) Integer minAge,
-                                                                        @Parameter(hidden = true) @RequestParam(required = false) Integer maxAge){
-
-        if (gender == null && minAge == null && maxAge == null) {
-            MemberFilterDto.FilterResponseDto userFilter = myPageQueryService.getMemberFilter(userDetails.getMemberId());
-            gender = userFilter.getGender();
-            minAge = userFilter.getMinAge();
-            maxAge = userFilter.getMaxAge();
-        }
-        return ApiResponse.onSuccess(postQueryService.getFilteredPostList(page, gender, minAge, maxAge, userDetails.getMemberId()));
+                                                                        @AuthenticationPrincipal CustomUserDetails userDetails){
+        MemberFilterDto.FilterResponseDto userFilter = myPageQueryService.getMemberFilter(userDetails.getMemberId());
+        return ApiResponse.onSuccess(postQueryService.getFilteredPostList(page, userFilter.getGender(), userFilter.getMinAge(), userFilter.getMaxAge(), userDetails.getMemberId()));
     }
 
     @Operation(summary = "홈화면 - 관심 아이돌 목록 조회 API", description = "현재 내가 설정한 관심 있는 아이돌 목록을 조회합니다.")
@@ -88,18 +79,9 @@ public class PostRestController {
     @CommonApiResponses
     public ApiResponse<PostResponseDto.PostPreviewListDto> getPostListByIdol (@ExistIdol @PathVariable Long idolId,
                                                                               @ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page,
-                                                                              @AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                              @Parameter(hidden = true) @RequestParam(required = false) Gender gender,
-                                                                              @Parameter(hidden = true) @RequestParam(required = false) Integer minAge,
-                                                                              @Parameter(hidden = true) @RequestParam(required = false) Integer maxAge){
-        if (gender == null && minAge == null && maxAge == null) {
-            MemberFilterDto.FilterResponseDto userFilter = myPageQueryService.getMemberFilter(userDetails.getMemberId());
-            gender = userFilter.getGender();
-            minAge = userFilter.getMinAge();
-            maxAge = userFilter.getMaxAge();
-        }
-
-        Page<Post> postList = postQueryService.getFilteredPostListByIdol(idolId, gender, minAge, maxAge, page, userDetails.getMemberId());
+                                                                              @AuthenticationPrincipal CustomUserDetails userDetails){
+        MemberFilterDto.FilterResponseDto userFilter = myPageQueryService.getMemberFilter(userDetails.getMemberId());
+        Page<Post> postList = postQueryService.getFilteredPostListByIdol(idolId, userFilter.getGender(), userFilter.getMinAge(), userFilter.getMaxAge(), page, userDetails.getMemberId());
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
 
@@ -131,17 +113,9 @@ public class PostRestController {
     @CommonApiResponses
     public ApiResponse<PostResponseDto.PostPreviewListDto> getPostListByTitle (@ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page,
                                                                                @AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                               @Parameter(hidden = true) @RequestParam(required = false) Gender gender,
-                                                                               @Parameter(hidden = true) @RequestParam(required = false) Integer minAge,
-                                                                               @Parameter(hidden = true) @RequestParam(required = false) Integer maxAge,
                                                                                @RequestParam(name="searchKeyword") String searchKeyword){
-        if (gender == null && minAge == null && maxAge == null) {
-            MemberFilterDto.FilterResponseDto userFilter = myPageQueryService.getMemberFilter(userDetails.getMemberId());
-            gender = userFilter.getGender();
-            minAge = userFilter.getMinAge();
-            maxAge = userFilter.getMaxAge();
-        }
-        Page<Post> postList = postQueryService.getFilteredPostListByTitle(searchKeyword, gender, minAge, maxAge, page, userDetails.getMemberId());
+        MemberFilterDto.FilterResponseDto userFilter = myPageQueryService.getMemberFilter(userDetails.getMemberId());
+        Page<Post> postList = postQueryService.getFilteredPostListByTitle(searchKeyword, userFilter.getGender(), userFilter.getMinAge(), userFilter.getMaxAge(), page, userDetails.getMemberId());
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
 
