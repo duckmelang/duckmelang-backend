@@ -3,6 +3,7 @@ package umc.duckmelang.domain.review.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import umc.duckmelang.domain.application.domain.Application;
@@ -19,6 +20,7 @@ import umc.duckmelang.global.apipayload.ApiResponse;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.ApplicationException;
 import umc.duckmelang.global.apipayload.exception.MemberException;
+import umc.duckmelang.global.security.user.CustomUserDetails;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,16 +36,18 @@ public class ReviewRestController {
 
     @PostMapping("")
     @CommonApiResponses
-    @Operation(summary = "후기글 작성 API", description = "후기글 작성 API입니다. Sender(memberId), Receiver(receiverId)를 써주세요. applicationId는 후기글 작성 페이지 내 관련 정보 조회 API에서 얻어오면 됩니다")
-    public ApiResponse<ReviewResponseDto.ReviewJoinResultDto> joinReview (@RequestParam Long memberId, @RequestBody @Valid ReviewRequestDto.ReviewJoinDto request){
+    @Operation(summary = "후기글 작성 API", description = "후기글 작성 API입니다. applicationId는 후기글 작성 페이지 내 관련 정보 조회 API에서 얻어오면 됩니다")
+    public ApiResponse<ReviewResponseDto.ReviewJoinResultDto> joinReview (@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody @Valid ReviewRequestDto.ReviewJoinDto request){
+        Long memberId = userDetails.getMemberId();
         Review review = reviewCommandService.joinReview(request, memberId);
         return ApiResponse.onSuccess(ReviewConverter.reviewJoinResultDto(review));
     }
 
     @GetMapping("/information")
     @CommonApiResponses
-    @Operation(summary = "후기글 작성 페이지 내 관련 정보 조회 API", description = "후기글 작성 페이지에서 applicationId 외에 유저네임, 게시글 제목, 행사 날짜 등 정보를 보여주는 API 입니다. 최신 순으로 정렬되어 list로 내보냅니다. memberId를 requestParam으로 넣어주세요. myId는 추후 JWT 추출 예정")
-    public ApiResponse<List<ReviewResponseDto.ReviewInformationDto>> getReviewInformation(@RequestParam Long memberId, @RequestParam(name="myId") Long myId){
+    @Operation(summary = "후기글 작성 페이지 내 관련 정보 조회 API", description = "후기글 작성 페이지에서 applicationId 외에 유저네임, 게시글 제목, 행사 날짜 등 정보를 보여주는 API 입니다. 최신 순으로 정렬되어 list로 내보냅니다.")
+    public ApiResponse<List<ReviewResponseDto.ReviewInformationDto>> getReviewInformation(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam(name="myId") Long myId){
+        Long memberId = userDetails.getMemberId();
         List<Application> applications = reviewQueryService.getReviewInformation(myId, memberId);
 
         if (applications.isEmpty()) {
