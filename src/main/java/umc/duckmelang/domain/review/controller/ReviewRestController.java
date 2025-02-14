@@ -59,5 +59,4 @@ public class ReviewRestController {
 
         return ApiResponse.onSuccess(reviewInformationDtos);
     }
-
 }

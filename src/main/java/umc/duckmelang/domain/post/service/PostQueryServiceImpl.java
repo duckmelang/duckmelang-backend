@@ -6,7 +6,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.member.domain.enums.Gender;
+import umc.duckmelang.domain.member.repository.MemberRepository;
+import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
+import umc.duckmelang.domain.post.dto.PostResponseDto;
 import umc.duckmelang.domain.post.repository.PostRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.MemberException;
@@ -19,15 +23,24 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class PostQueryServiceImpl implements PostQueryService{
     private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
 
     @Override
-    public Page<Post> getPostList(Integer page){
-        return postRepository.findAll(PageRequest.of(page, 10));
+    public PostResponseDto.PostPreviewListDto getFilteredPostList(Integer page, Gender gender, Integer minAge, Integer maxAge, Long memberId){
+        Page<Post> postList;
+        Member member = memberRepository.findById(memberId).orElseThrow(()-> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+        if(gender == null && minAge == null && maxAge == null){
+            postList = postRepository.findAll(PageRequest.of(page,10));
+        } else{
+            postList = postRepository.findFilteredPosts(gender, minAge, maxAge, member, PageRequest.of(page,10));
+        }
+        return PostConverter.postPreviewListDto(postList);
     }
 
     @Override
-    public Page<Post> getPostListByIdol(Long idolId, Integer page){
-        return postRepository.findByIdol(idolId, PageRequest.of(page, 10));
+    public Page<Post> getFilteredPostListByIdol(Long idolId, Gender gender, Integer minAge, Integer maxAge, Integer page, Long memberId){
+        Member member = memberRepository.findById(memberId).orElseThrow(()-> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+        return postRepository.findFilteredPostsByIdol(idolId, gender, minAge, maxAge, member, PageRequest.of(page, 10));
     }
 
     @Override
@@ -46,8 +59,9 @@ public class PostQueryServiceImpl implements PostQueryService{
     }
 
     @Override
-    public Page<Post> getPostListByTitle(String searchKeyword, Integer page){
-        return postRepository.findByTitle(searchKeyword, PageRequest.of(page, 10));
+    public Page<Post> getFilteredPostListByTitle(String keyword, Gender gender, Integer minAge, Integer maxAge, Integer page, Long memberId){
+        Member member = memberRepository.findById(memberId).orElseThrow(()-> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+        return postRepository.findFilteredPostsByTitle(keyword, gender, minAge, maxAge, member, PageRequest.of(page, 10));
     }
 
     @Override
@@ -70,8 +84,4 @@ public class PostQueryServiceImpl implements PostQueryService{
     public int getPostCount(Long memberId) {
         return postRepository.countAllByMemberId(memberId);
     }
-
-
-
-
 }

@@ -27,11 +27,9 @@ public class ProfileFacadeService {
     public MyPageResponseDto.MyPagePreviewDto getMyPageMemberPreview(Long memberId) {
         Member member = memberQueryService.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
-
         // 대표 프로필 이미지 1개 조회
         MemberProfileImage latestPublicMemberProfileImage = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
-
         return MemberProfileConverter.toGetMemberPreviewResponseDto(member, latestPublicMemberProfileImage);
     }
 
@@ -39,17 +37,13 @@ public class ProfileFacadeService {
     public MyPageResponseDto.MyPageProfileDto getProfileByMemberId(Long memberId) {
         Member member = memberQueryService.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
-
         // 포스트 수 조회
         int postCount = postQueryService.getPostCount(memberId);
-
         // 매칭 수 조회
         int matchCount = applicationService.countMatchedApplications(memberId);
-
         // 프로필 이미지 1개 조회
         MemberProfileImage memberProfileImage = memberProfileImageQueryService.getLatestPublicMemberProfileImage(memberId)
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
-
         return MemberProfileConverter.toGetProfileResponseDto(member, memberProfileImage, postCount, matchCount);
     }
 }
