@@ -8,6 +8,8 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import umc.duckmelang.domain.notification.domain.Notification;
 import umc.duckmelang.domain.notification.repository.EmitterRepository;
 import umc.duckmelang.domain.notification.repository.NotificationRepository;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.NotificationException;
 
 import java.util.List;
 
@@ -55,5 +57,12 @@ public class NotificationQueryServiceImpl implements NotificationQueryService {
     public boolean hasLostData(String lastEventId) { // (5)
         return lastEventId != null && !lastEventId.isEmpty();
     }
+
+    @Override
+    public boolean existsById(Long notificationId) {
+        return notificationRepository.existsById(notificationId);
+    }
+
+
 
 }

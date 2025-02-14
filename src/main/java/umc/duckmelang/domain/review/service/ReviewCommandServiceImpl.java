@@ -10,6 +10,8 @@ import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 import umc.duckmelang.domain.notification.service.NotificationCommandService;
+import umc.duckmelang.domain.notificationsetting.domain.NotificationSetting;
+import umc.duckmelang.domain.notificationsetting.service.NotificationSettingQueryService;
 import umc.duckmelang.domain.review.converter.ReviewConverter;
 import umc.duckmelang.domain.review.domain.Review;
 import umc.duckmelang.domain.review.dto.ReviewRequestDto;
@@ -32,6 +34,7 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
     private final ApplicationRepository applicationRepository;
     //자신에 대한 후기가 남겨졌을 때 알림
     private final NotificationCommandService notificationCommandService;
+    private final NotificationSettingQueryService notificationSettingQueryService;
     private final MemberProfileImageQueryService memberProfileImageQueryService;
 
     @Override
@@ -48,7 +51,11 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
                 .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
 
         Review review = ReviewConverter.toReview(request, sender, receiver,application);
-        notificationCommandService.send(sender, receiver,REVIEW,sender.getNickname() + " 님이 후기를 작성했어요", profileImageUrl);
+//        review 알림 켜져있을때만 전송
+        NotificationSetting notificationSetting = notificationSettingQueryService.findNotificationSetting(receiver.getId());
+        if (notificationSetting.getReviewNotificationEnabled()) {
+            notificationCommandService.send(sender, receiver, REVIEW, sender.getNickname() + " 님이 후기를 작성했어요", profileImageUrl);
+        }
         return reviewRepository.save(review);
     }
 }

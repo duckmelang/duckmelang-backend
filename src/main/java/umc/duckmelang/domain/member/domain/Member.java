@@ -8,6 +8,8 @@ import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.member.domain.enums.Gender;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
+import umc.duckmelang.domain.notification.domain.Notification;
+import umc.duckmelang.domain.notificationsetting.domain.NotificationSetting;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.review.domain.Review;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
@@ -112,6 +114,11 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "secondMember", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MateRelationship> mateRelationshipinSecondList = new ArrayList<>();
 
+    //notificationSetting
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private NotificationSetting notificationSetting;
+
+
     // 비밀번호 설정 함수
     public void encodePassword(String password){
         this.password=password;
@@ -155,6 +162,7 @@ public class Member extends BaseEntity {
         this.nickname = nickname;
         this.introduction = introduction;
     }
+
 
     public Member(Long id) {
         this.id = id;

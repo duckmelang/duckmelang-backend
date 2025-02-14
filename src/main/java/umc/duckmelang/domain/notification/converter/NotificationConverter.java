@@ -45,5 +45,13 @@ public class NotificationConverter {
                 .build();
     }
 
+    public static NotificationResponseDto.NotificationReadDto notificationReadDto(Notification notification) {
+        return NotificationResponseDto.NotificationReadDto.builder()
+                .id(notification.getId())
+                .content(notification.getContent())
+                .isRead(notification.getIsRead())
+                .build();
+    }
+
 
 }

@@ -19,6 +19,8 @@ import umc.duckmelang.domain.memberevent.domain.MemberEvent;
 import umc.duckmelang.domain.memberevent.repository.MemberEventRepository;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberidol.repository.MemberIdolRepository;
+import umc.duckmelang.domain.notificationsetting.domain.NotificationSetting;
+import umc.duckmelang.domain.notificationsetting.repository.NotificationSettingRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.EventCategoryException;
 import umc.duckmelang.global.apipayload.exception.IdolCategoryException;
@@ -41,6 +43,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     private final EventCategoryRepository eventCategoryRepository;
     private final MemberEventRepository memberEventRepository;
     private final LandmineRepository landmineRepository;
+    private final NotificationSettingRepository notificationSettingRepository;
 
     @Override
     @Transactional
@@ -50,7 +53,21 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         }
         Member newMember = MemberConverter.toMember(request);
         newMember.encodePassword(passwordEncoder.encode(request.getPassword()));
-        return memberRepository.save(newMember);
+        newMember = memberRepository.save(newMember);
+
+        // 알림 설정 자동 추가
+        NotificationSetting notificationSetting = NotificationSetting.builder()
+                .member(newMember)
+                .chatNotificationEnabled(true)  // 기본값을 true로 설정
+                .requestNotificationEnabled(true)
+                .reviewNotificationEnabled(true)
+                .bookmarkNotificationEnabled(true)
+                .build();
+
+        notificationSettingRepository.save(notificationSetting);
+        newMember.setNotificationSetting(notificationSetting);
+
+        return newMember;
     }
 
     @Override

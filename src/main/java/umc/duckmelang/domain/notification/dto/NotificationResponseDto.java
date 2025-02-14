@@ -35,5 +35,15 @@ public class NotificationResponseDto {
 
     }
 
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class NotificationReadDto{
+        private Long id;
+        private String content;
+        private Boolean isRead;
+    }
+
 
 }
