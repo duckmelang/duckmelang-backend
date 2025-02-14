@@ -67,7 +67,14 @@ public enum ErrorStatus implements BaseErrorCode {
     // 채팅 통신 관련 에러
     JSON_PROCESSING_ERROR(HttpStatus.BAD_REQUEST, "WEBSOCKET4001", "메시지 변환 중 매핑 오류가 발생했습니다."),
     INVALID_JSON_FORMAT(HttpStatus.BAD_REQUEST, "WEBSOCKET4002", "유효하지 않은 JSON 형식입니다."),
-    JSON_CONVERSION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "WEBSOCKET5001", "JSON 변환에 실패했습니다.");
+    JSON_CONVERSION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "WEBSOCKET5001", "JSON 변환에 실패했습니다."),
+
+    // 채팅 메세지 관련 에러
+    INVALID_MESSAGE_TYPE(HttpStatus.BAD_REQUEST, "CHATMESSAGE4001", "지원하지 않는 메세지 타입입니다."),
+    EMPTY_MESSAGE_TEXT(HttpStatus.BAD_REQUEST, "CHATMESSAGE4002", "메세지 내용이 없습니다."),
+    EMPTY_MESSAGE_IMAGE(HttpStatus.BAD_REQUEST, "CHATMESSAGE4003", "메세지 이미지가 없습니다."),
+    EMPTY_MESSAGE_FILE(HttpStatus.BAD_REQUEST, "CHATMESSAGE4004", "메세지 파일이 없습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;

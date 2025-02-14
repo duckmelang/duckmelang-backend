@@ -46,4 +46,11 @@ public class AmazonS3Manager{
         return amazonConfig.getPostImagePath() + '/' + uuid.getUuid();
     }
 
+    public String generateChatMessageImageKeyName(Uuid uuid) {
+        return amazonConfig.getChatMessageImagePath() + '/' + uuid.getUuid();
+    }
+
+    public String generateChatMessageFileKeyName(Uuid uuid) {
+        return amazonConfig.getChatMessageFilePath() + '/' + uuid.getUuid();
+    }
 }
