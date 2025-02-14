@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import umc.duckmelang.global.common.serializer.LocalDateTimeSerializer;
+import umc.duckmelang.mongo.chatmessage.domain.enums.MessageType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +22,12 @@ public class ChatMessageResponseDto {
         private Long chatRoomId;
         private Long senderId;
         private Long receiverId;
-        private String content;
+        private MessageType messageType;
+
+        private String text;
+        private List<String> imageUrls; // 업로드된 이미지 URL 리스트
+        private String fileUrl; // 업로드된 파일 URL
+
         @JsonSerialize(using = LocalDateTimeSerializer.class)  // 커스텀 직렬화기 사용
         private LocalDateTime createdAt;
     }
