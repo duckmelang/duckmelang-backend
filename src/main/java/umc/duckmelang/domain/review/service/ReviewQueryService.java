@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface ReviewQueryService {
     List<Review> getReviewList(Long memberId);
     List<Application> getReviewInformation(Long myId, Long memberId);
+    Optional<Application> getReviewInformationByPost(Long myId, Long memberId, Long postId);
     double calculateAverageScore(List<Review> reviewList);
 }

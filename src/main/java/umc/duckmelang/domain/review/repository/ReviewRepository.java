@@ -6,6 +6,7 @@ import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.review.domain.Review;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
@@ -19,4 +20,13 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             "OR (a.member.id = :memberId AND pm.id = :myId)" +
             "ORDER BY a.createdAt DESC")
     List<Application> findReviewInformation(Long myId, Long memberId);
+
+    @Query("SELECT a FROM Application a " +
+            "JOIN FETCH a.post p " +
+            "JOIN FETCH p.member pm " +
+            "WHERE p.id = :postId " +
+            "AND ((pm.id = :memberId AND a.member.id = :myId) " +
+            "  OR (a.member.id = :memberId AND pm.id = :myId))")
+    Optional<Application> findReviewInformationByPost(Long myId, Long memberId, Long postId);
+
 }
