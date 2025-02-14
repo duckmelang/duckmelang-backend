@@ -1,6 +1,8 @@
 package umc.duckmelang.domain.chatroom.converter;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import umc.duckmelang.domain.chatroom.domain.enums.ChatRoomStatus;
 import umc.duckmelang.mongo.chatmessage.dto.ChatMessageRequestDto;
 import umc.duckmelang.domain.chatroom.domain.ChatRoom;
 import umc.duckmelang.domain.chatroom.dto.ChatRoomResponseDto;
@@ -15,20 +17,19 @@ public class ChatRoomConverter {
         return ChatRoom.builder()
                 .post(post)
                 .otherMember(member)
-                .hasMatched(false)                    // 채팅방이 처음 생성된 시점에는 반드시 매칭 전이다.
-                .hasSenderReviewDone(false)           // 채팅방이 처음 생성된 시점에는 반드시 매칭 전이므로 리뷰 또한 없다.
-                .hasReceiverReviewDone(false)
+                .chatRoomStatus(ChatRoomStatus.ONGOING)
                 .build();
     }
 
-    public static ChatRoomResponseDto.ChatRoomItemDto toChatRoomItemDto(ChatRoom chatRoom, Member member, Post post) {
-        //TODO
-        return ChatRoomResponseDto.ChatRoomItemDto.builder()
+    public static ChatRoomResponseDto.ChatRoomItemListDto toChatRoomItemListDto(Page<ChatRoomResponseDto.ChatRoomItemDto> chatRooms) {
+        List<ChatRoomResponseDto.ChatRoomItemDto> list = chatRooms.stream().toList();
+        return ChatRoomResponseDto.ChatRoomItemListDto.builder()
+                .chatRoomList(list)
+                .isFirst(chatRooms.isFirst())
+                .isLast(chatRooms.isLast())
+                .listSize(list.size())
+                .totalPage(chatRooms.getTotalPages())
+                .totalElements(chatRooms.getTotalElements())
                 .build();
-    }
-
-    public static ChatRoomResponseDto.ChatRoomItemListDto toChatRoomItemListDto(List<ChatRoomResponseDto.ChatRoomItemDto> chatRooms) {
-        //TODO
-        return null;
     }
 }

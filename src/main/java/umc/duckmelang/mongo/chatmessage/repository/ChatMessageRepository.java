@@ -13,10 +13,11 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
             "{ $match: { chatRoomId: { $in: ?0 } } }",
             "{ $sort: { chatRoomId: 1, createdAt: -1 } }",
             "{ $group: { " +
-                    "    _id: '$chatRoomId', " +
-                    "    messageId: { $first: '$_id' }, " +
-                    "    content: { $first: '$content' }, " +
-                    "    createdAt: { $first: '$createdAt' } " +
+                    "_id: \"$chatRoomId\", " +  // chatRoomId를 그룹화 키로 사용
+                    "messageId: { $first: \"$_id\" }, " +  // 첫 번째 메시지 ID
+                    "content: { $first: \"$content\" }, " +  // 첫 번째 컨텐츠
+                    "createdAt: { $first: \"$createdAt\" }, " +  // 첫 번째 생성 시간
+                    "chatRoomId: { $first: \"$chatRoomId\" } " +  // chatRoomId 유지
                     "} }"
     })
     List<ChatMessageResponseDto.LatestChatMessageDto> findLatestMessagesByChatRoomIds(List<Long> chatRoomIds);

@@ -2,9 +2,16 @@ package umc.duckmelang.domain.chatroom.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.config.core.userdetails.UserDetailsMapFactoryBean;
+import umc.duckmelang.domain.chatroom.domain.enums.ChatRoomStatus;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.post.domain.Post;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.PostException;
 import umc.duckmelang.global.common.BaseEntity;
+
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 
 @Entity
 @Getter
@@ -25,11 +32,9 @@ public class ChatRoom extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member otherMember;   // 게시글을 보는 쪽 회원
 
-    private boolean hasMatched;   // 매칭 성사 여부
-
-    private boolean hasSenderReviewDone;    // 작성자 리뷰 완료 여부
-
-    private boolean hasReceiverReviewDone; // 보는쪽 리뷰 완료 여부
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(10) DEFAULT 'ONGOING'")
+    private ChatRoomStatus chatRoomStatus;
 
     // 연관관계 편의 메서드
     public void setPost(Post post) {
@@ -50,5 +55,13 @@ public class ChatRoom extends BaseEntity {
         if (member != null) {
             member.getChatRoomList().add(this);
         }
+    }
+
+    public boolean hasTerminated(){
+        if (this.post == null) throw new PostException(ErrorStatus.POST_NOT_FOUND);
+        boolean result =  post.getEventDate().isAfter(ChronoLocalDate.from(LocalDateTime.now()));
+        if (result)
+            this.chatRoomStatus = ChatRoomStatus.TERMINATED;
+        return result;
     }
 }

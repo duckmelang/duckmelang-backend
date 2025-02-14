@@ -4,22 +4,30 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import umc.duckmelang.domain.chatroom.domain.ChatRoom;
+import umc.duckmelang.domain.chatroom.domain.enums.ChatRoomStatus;
 import umc.duckmelang.domain.chatroom.dto.ChatRoomResponseDto;
 import umc.duckmelang.domain.chatroom.repository.ChatRoomRepository;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.repository.MemberProfileImageRepository;
+import umc.duckmelang.domain.post.domain.Post;
+import umc.duckmelang.domain.post.repository.PostRepository;
 import umc.duckmelang.domain.postimage.domain.PostImage;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.postimage.repository.PostImageRepository;
 import umc.duckmelang.mongo.chatmessage.dto.ChatMessageResponseDto;
 import umc.duckmelang.mongo.chatmessage.service.ChatMessageQueryService;
 
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,13 +39,50 @@ public class ChatRoomQueryServiceImpl implements ChatRoomQueryService {
     private final MemberRepository memberRepository;
     private final MemberProfileImageRepository memberProfileImageRepository;
     private final ChatMessageQueryService chatMessageService;
+    private final PostRepository postRepository;
 
     @Value("${spring.custom.default.profile-image}")
     private String defaultImage;
 
     @Override
     public Page<ChatRoomResponseDto.ChatRoomItemDto> findAllChatRooms(Long memberId, int page) {
-        Page<ChatRoom> chatRooms = chatRoomRepository.findAllByMemberWithPostAndCounterpart(memberId, PageRequest.of(page,20));
+        Pageable pageable = PageRequest.of(page,20);
+        Page<ChatRoom> chatRooms = chatRoomRepository.findAllByMemberWithPostAndCounterpart(memberId, pageable);
+
+        List<ChatRoomResponseDto.ChatRoomItemDto> chatRoomItemDtos = getChatRoomItemDtoList(chatRooms, memberId);
+
+        return new PageImpl<>(chatRoomItemDtos, pageable, chatRooms.getTotalElements());
+    }
+
+    @Override
+    public Page<ChatRoomResponseDto.ChatRoomItemDto> findOngoingChatRooms(Long memberId, int page) {
+        Pageable pageable = PageRequest.of(page,20);
+        Page<ChatRoom> chatRooms = chatRoomRepository.findOngoingByMemberId(memberId, pageable);
+
+        List<ChatRoomResponseDto.ChatRoomItemDto> chatRoomItemDtos = getChatRoomItemDtoList(chatRooms, memberId);
+
+        return new PageImpl<>(chatRoomItemDtos, pageable, chatRooms.getTotalElements());
+    }
+
+    @Override
+    public Page<ChatRoomResponseDto.ChatRoomItemDto> findConfirmedChatRooms(Long memberId, int page) {
+        Pageable pageable = PageRequest.of(page,20);
+        Page<ChatRoom> chatRooms = chatRoomRepository.findConfirmedByMemberId(memberId, pageable);
+        List<ChatRoomResponseDto.ChatRoomItemDto> chatRoomItemDtos = getChatRoomItemDtoList(chatRooms, memberId);
+
+        return new PageImpl<>(chatRoomItemDtos, pageable, chatRooms.getTotalElements());
+    }
+
+    @Override
+    public Page<ChatRoomResponseDto.ChatRoomItemDto> findTerminatedChatRooms(Long memberId, int page) {
+        Pageable pageable = PageRequest.of(page,20);
+        Page<ChatRoom> chatRooms = chatRoomRepository.findTerminatedByMemberId(memberId, pageable);
+        List<ChatRoomResponseDto.ChatRoomItemDto> chatRoomItemDtos = getChatRoomItemDtoList(chatRooms, memberId);
+
+        return new PageImpl<>(chatRoomItemDtos, pageable, chatRooms.getTotalElements());
+    }
+
+    public List<ChatRoomResponseDto.ChatRoomItemDto> getChatRoomItemDtoList(Page<ChatRoom> chatRooms, Long memberId){
 
         // 채팅방 ID 리스트 추출
         List<Long> chatRoomIds = chatRooms.stream()
@@ -50,6 +95,15 @@ public class ChatRoomQueryServiceImpl implements ChatRoomQueryService {
 
 
         return chatRooms
+                .stream().sorted((chatRoom1, chatRoom2) -> {
+                    LocalDateTime priority1 = Optional.ofNullable(latestMessagesMap.get(chatRoom1.getId()))
+                            .map(ChatMessageResponseDto.LatestChatMessageDto::getCreatedAt)
+                            .orElse(LocalDateTime.MAX);
+                    LocalDateTime priority2 = Optional.ofNullable(latestMessagesMap.get(chatRoom2.getId()))
+                            .map(ChatMessageResponseDto.LatestChatMessageDto::getCreatedAt)
+                            .orElse(LocalDateTime.MAX);
+                    return priority1.compareTo(priority2);
+                })
                 .map(chatRoom -> {
                     // 현재 회원이 게시글 작성자인지 확인
                     boolean isPostWriter = chatRoom.getPost().getMember().getId().equals(memberId);
@@ -69,13 +123,11 @@ public class ChatRoomQueryServiceImpl implements ChatRoomQueryService {
                             .map(MemberProfileImage::getMemberImage)
                             .orElse(defaultImage);
 
+                    //post eventdate 지났는지 확인하고 chatroom status 변경
+                    chatRoom.hasTerminated();
+
                     // Map에서 해당 채팅방의 최신 메시지 조회
                     ChatMessageResponseDto.LatestChatMessageDto latestMessage = latestMessagesMap.get(chatRoom.getId());
-
-                    // 현재 회원의 리뷰 완료 여부 확인
-                    boolean hasReviewDone = isPostWriter ?
-                            chatRoom.isHasReceiverReviewDone() :
-                            chatRoom.isHasSenderReviewDone();
 
                     return ChatRoomResponseDto.ChatRoomItemDto.builder()
                             .chatRoomId(chatRoom.getId())
@@ -85,26 +137,13 @@ public class ChatRoomQueryServiceImpl implements ChatRoomQueryService {
                             .oppositeId(otherMember.getId())
                             .oppositeNickname(otherMember.getNickname())
                             .oppositeProfileImage(latestProfileImageUrl)
+                            .status(chatRoom.getChatRoomStatus().toString())
                             .lastMessage(latestMessage != null ? latestMessage.getContent() : null)
                             .lastMessageTime(latestMessage != null ? latestMessage.getCreatedAt() : null)
-                            .hasMatched(chatRoom.isHasMatched())
-                            .hasReviewDone(hasReviewDone)
                             .build();
-                });
+                })
+                .collect(Collectors.toList());
+
     }
 
-    @Override
-    public List<ChatRoomResponseDto.ChatRoomItemDto> findOngoingChatRooms(Long memberId) {
-        return List.of();
-    }
-
-    @Override
-    public List<ChatRoomResponseDto.ChatRoomItemDto> findConfirmedChatRooms(Long memberId) {
-        return List.of();
-    }
-
-    @Override
-    public List<ChatRoomResponseDto.ChatRoomItemDto> findTerminatedChatRooms(Long memberId) {
-        return List.of();
-    }
 }

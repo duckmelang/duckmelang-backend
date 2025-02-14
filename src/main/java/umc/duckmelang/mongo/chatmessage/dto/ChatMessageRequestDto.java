@@ -15,6 +15,8 @@ public class ChatMessageRequestDto {
     @NoArgsConstructor
     public static class CreateChatMessageDto {
         @NotNull
+        private Long chatRoomId;
+        @NotNull
         private Long senderId;
         @NotNull
         private Long receiverId;

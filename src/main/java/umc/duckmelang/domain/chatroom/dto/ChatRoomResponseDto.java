@@ -41,7 +41,5 @@ public class ChatRoomResponseDto {
         private Long applicationId;
         private String lastMessage;
         private LocalDateTime lastMessageTime;
-        private boolean hasMatched;
-        private boolean hasReviewDone;
     }
 }

@@ -41,8 +41,6 @@ public class ChatMessageResponseDto {
         private Long chatRoomId;
         private String messageId;
         private String content;
-        private Long senderId;
         private LocalDateTime createdAt;
-        private boolean isRead;
     }
 }
