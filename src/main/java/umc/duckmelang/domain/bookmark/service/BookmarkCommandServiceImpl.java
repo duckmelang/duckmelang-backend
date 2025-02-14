@@ -11,6 +11,8 @@ import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.notification.service.NotificationCommandService;
+import umc.duckmelang.domain.notificationsetting.domain.NotificationSetting;
+import umc.duckmelang.domain.notificationsetting.service.NotificationSettingQueryService;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostRequestDto;
@@ -36,6 +38,7 @@ public class BookmarkCommandServiceImpl implements BookmarkCommandService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final NotificationCommandService notificationCommandService;
+    private final NotificationSettingQueryService notificationSettingQueryService;
     private final PostImageQueryService postImageQueryService;
 
     @Override
@@ -51,9 +54,12 @@ public class BookmarkCommandServiceImpl implements BookmarkCommandService {
         String postImageUrl = (postThumbnail != null) ? postThumbnail.getPostImageUrl() : null;
 
         Bookmark bookmark = BookmarkConverter.toBookmark(member, post);
-        notificationCommandService.send(
-                member, post.getMember(), BOOKMARK, "내 동행글이 스크랩되었어요", postImageUrl
-        );
+        NotificationSetting notificationSetting = notificationSettingQueryService.findNotificationSetting(post.getMember().getId());
+        if(notificationSetting.getBookmarkNotificationEnabled()){
+            notificationCommandService.send(
+                    member, post.getMember(), BOOKMARK, "내 동행글이 스크랩되었어요", postImageUrl
+            );
+        }
         return bookmarkRepository.save(bookmark);
     }
 }
