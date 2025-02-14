@@ -27,4 +27,7 @@ public class NotificationSetting extends BaseEntity {
     private Boolean requestNotificationEnabled = true;  // 동행 확정 요청 알림 수신 여부
     @Column(nullable = false)
     private Boolean reviewNotificationEnabled = true;  // 후기 작성 알림 수신 여부
+    @Column(nullable = false)
+    private Boolean bookmarkNotificationEnabled = true; //내 게시글 북마크 알림 수신 여부
+
 }

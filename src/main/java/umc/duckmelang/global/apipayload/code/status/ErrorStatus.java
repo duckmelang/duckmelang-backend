@@ -67,7 +67,10 @@ public enum ErrorStatus implements BaseErrorCode {
     JSON_CONVERSION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "WEBSOCKET5001", "JSON 변환에 실패했습니다."),
 
     //알림 관련 에러
-    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTIFICATION4001", "해당하는 알림이 없습니다");
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTIFICATION4001", "해당하는 알림이 없습니다"),
+
+    //알림 설정 관련 에러
+    NOTIFICATION_SETTING_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTIFICATION_SETTING4001", "해당하는 알림 설정이 없습니다");
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -31,7 +31,7 @@ public class NotificationRestController {
     @GetMapping("")
     @CommonApiResponses
     public ApiResponse<NotificationResponseDto.NotificationListDto> getNotificationList (@AuthenticationPrincipal CustomUserDetails userDetails){
-        Long memberId = userDetails.getMemberId();;
+        Long memberId = userDetails.getMemberId();
         List<Notification> NotificationList = notificationQueryService.getNotificationList(memberId);
         return ApiResponse.onSuccess(NotificationConverter.notificationListDto(NotificationList));
     }
