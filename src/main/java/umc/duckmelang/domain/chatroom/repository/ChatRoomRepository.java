@@ -30,7 +30,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
             "LEFT JOIN FETCH cr.post p " +
             "LEFT JOIN FETCH cr.otherMember om " +
             "LEFT JOIN FETCH p.member pm " +
-            "LEFT JOIN Application a ON (a.post = cr.post AND a.member = cr.otherMember) " +
             "WHERE (cr.post.member.id = :member OR cr.otherMember.id = :member) " +
             "AND cr.chatRoomStatus = 'ONGOING' ")
     Page<ChatRoom> findOngoingByMemberId(@Param("member") Long memberId, Pageable pageable);
@@ -39,7 +38,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
             "LEFT JOIN FETCH cr.post p " +
             "LEFT JOIN FETCH cr.otherMember om " +
             "LEFT JOIN FETCH p.member pm " +
-            "LEFT JOIN Application a ON (a.post = cr.post AND a.member = cr.otherMember) " +
             "WHERE (cr.post.member.id = :member OR cr.otherMember.id = :member) " +
             "AND cr.chatRoomStatus = 'CONFIRMED' ")
     Page<ChatRoom> findConfirmedByMemberId(@Param("member") Long memberId, Pageable pageable);
@@ -48,7 +46,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
             "LEFT JOIN FETCH cr.post p " +
             "LEFT JOIN FETCH cr.otherMember om " +
             "LEFT JOIN FETCH p.member pm " +
-            "LEFT JOIN Application a ON (a.post = cr.post AND a.member = cr.otherMember) " +
             "WHERE (cr.post.member.id = :member OR cr.otherMember.id = :member) " +
             "AND cr.chatRoomStatus = 'TERMINATED' ")
     Page<ChatRoom> findTerminatedByMemberId(@Param("member") Long memberId,Pageable pageable);

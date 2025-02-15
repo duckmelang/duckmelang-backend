@@ -38,7 +38,6 @@ public class ChatRoomResponseDto {
         private String postImage;
 
         private String status;
-        private Long applicationId;
         private String lastMessage;
         private LocalDateTime lastMessageTime;
     }
