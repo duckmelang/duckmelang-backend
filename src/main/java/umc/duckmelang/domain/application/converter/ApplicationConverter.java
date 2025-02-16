@@ -9,15 +9,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ApplicationConverter {
-    public static ApplicationResponseDto.ApplicationStatusChangeResponseDto toApplicationStatusChangeResponseDto(Application application) {
-        return ApplicationResponseDto.ApplicationStatusChangeResponseDto.builder()
+    public static ApplicationResponseDto.ApplicationResponseDto toApplicationStatusChangeResponseDto(Application application) {
+        return ApplicationResponseDto.ApplicationResponseDto.builder()
                 .newStatus(application.getStatus())
                 .modifiedAt(application.getUpdatedAt())
                 .build();
     }
 
     public static ApplicationResponseDto.MateRelationshipCreateResponseDto toMateRelationshipCreateResponseDto(MateRelationship mateRelationship) {
-        return ApplicationResponseDto.MateRelationshipCreateResponseDto.builder()
+        return umc.duckmelang.domain.application.dto.ApplicationResponseDto.MateRelationshipCreateResponseDto.builder()
                 .mateRelationshipId(mateRelationship.getId())
                 .createdAt(mateRelationship.getCreatedAt())
                 .build();
@@ -25,7 +25,7 @@ public class ApplicationConverter {
 
     public static ApplicationResponseDto.ShowApplicationListDto toShowApplicationListDto(Page<ShowApplicationDto> applications) {
         List<ShowApplicationDto> receivedApplicationList = applications.stream().collect(Collectors.toList());
-        return ApplicationResponseDto.ShowApplicationListDto.builder()
+        return umc.duckmelang.domain.application.dto.ApplicationResponseDto.ShowApplicationListDto.builder()
                 .receivedApplicationList(receivedApplicationList)
                 .listSize(receivedApplicationList.size())
                 .totalPage(applications.getTotalPages())

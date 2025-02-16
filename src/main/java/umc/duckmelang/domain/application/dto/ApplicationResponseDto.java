@@ -15,7 +15,7 @@ public class ApplicationResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     // 실패, 취소로 상태 변환 시 사용
-    public static class ApplicationStatusChangeResponseDto {
+    public static class ApplicationResponseDto {
         ApplicationStatus newStatus;
         LocalDateTime modifiedAt;
     }

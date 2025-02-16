@@ -10,6 +10,7 @@ import umc.duckmelang.domain.application.converter.ApplicationConverter;
 import umc.duckmelang.domain.application.domain.Application;
 import umc.duckmelang.domain.application.facade.ApplicationFacadeService;
 import umc.duckmelang.domain.application.service.ApplicationCommandService;
+import umc.duckmelang.global.validation.annotation.ExistPost;
 import umc.duckmelang.global.validation.annotation.ExistsApplication;
 import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.global.annotations.CommonApiResponses;
@@ -26,10 +27,19 @@ public class ApplicationRestController {
     private final ApplicationCommandService applicationCommandService;
     private final ApplicationFacadeService applicationFacadeService;
 
+    @PostMapping("/send")
+    @CommonApiResponses
+    @Operation(summary = "동행 요청 API", description = "\nresponse는 사용처 없습니다.")
+    public ApiResponse<ApplicationResponseDto.ApplicationResponseDto> makeNewApplication(@PathVariable @ExistPost Long postId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        Application application = applicationCommandService.makeNewApplication(postId, userDetails.getMemberId());
+        return ApiResponse.onSuccess(ApplicationConverter.toApplicationStatusChangeResponseDto(application));
+    }
+
+
     @PostMapping("/received/failed/{applicationId}")
     @CommonApiResponses
     @Operation(summary = "받은 동행요청 거절 API", description = "path variable로 상태를 변경하고자 하는 동행요청 id를 받습니다.")
-    public ApiResponse<ApplicationResponseDto.ApplicationStatusChangeResponseDto> failApplication(@PathVariable @ExistsApplication Long applicationId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ApiResponse<ApplicationResponseDto.ApplicationResponseDto> failApplication(@PathVariable @ExistsApplication Long applicationId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         Application application = applicationCommandService.updateStatusToFailed(applicationId, userDetails.getMemberId());
         return ApiResponse.onSuccess(ApplicationConverter.toApplicationStatusChangeResponseDto(application));
     }

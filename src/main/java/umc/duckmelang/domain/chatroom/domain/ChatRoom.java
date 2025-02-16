@@ -64,4 +64,8 @@ public class ChatRoom extends BaseEntity {
             this.chatRoomStatus = ChatRoomStatus.TERMINATED;
         return result;
     }
+
+    public void setChatRoomStatus(ChatRoomStatus chatRoomStatus) {
+        this.chatRoomStatus = chatRoomStatus;
+    }
 }

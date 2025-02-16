@@ -18,6 +18,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     Optional<Application> findByIdAndMemberId(Long id, Long memberId);
 
+    boolean existsByPostIdAndStatus(Long PostId, ApplicationStatus status);
+
     @Query("SELECT a FROM Post p " +
             "JOIN p.member pm " +
             "INNER JOIN p.applicationList a " +
