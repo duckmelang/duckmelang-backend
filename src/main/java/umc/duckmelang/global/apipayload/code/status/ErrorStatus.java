@@ -69,6 +69,13 @@ public enum ErrorStatus implements BaseErrorCode {
     INVALID_JSON_FORMAT(HttpStatus.BAD_REQUEST, "WEBSOCKET4002", "유효하지 않은 JSON 형식입니다."),
     JSON_CONVERSION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "WEBSOCKET5001", "JSON 변환에 실패했습니다."),
 
+
+    //알림 관련 에러
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTIFICATION4001", "해당하는 알림이 없습니다"),
+
+    //알림 설정 관련 에러
+    NOTIFICATION_SETTING_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTIFICATION_SETTING4001", "해당하는 알림 설정이 없습니다"),
+
     // 채팅 메세지 관련 에러
     INVALID_MESSAGE_TYPE(HttpStatus.BAD_REQUEST, "CHATMESSAGE4001", "지원하지 않는 메세지 타입입니다."),
     EMPTY_MESSAGE_TEXT(HttpStatus.BAD_REQUEST, "CHATMESSAGE4002", "메세지 내용이 없습니다."),
