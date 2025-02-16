@@ -37,6 +37,12 @@ public class AmazonConfig {
     @Value("${cloud.aws.s3.path.postImage}")
     private String postImagePath;
 
+    @Value("${cloud.aws.s3.path.chatMessageImage}")
+    private String chatMessageImagePath;
+
+    @Value("${cloud.aws.s3.path.chatMessageFile}")
+    private String chatMessageFilePath;
+
     @PostConstruct
     public void init() {
         this.awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
