@@ -9,6 +9,8 @@ import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.member.domain.enums.Gender;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
+import umc.duckmelang.domain.notification.domain.Notification;
+import umc.duckmelang.domain.notificationsetting.domain.NotificationSetting;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.review.domain.Review;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
@@ -62,6 +64,19 @@ public class Member extends BaseEntity {
         this.isProfileComplete = true;
     }
 
+    @Enumerated(EnumType.STRING)
+    private Gender filterGender;
+
+    private Integer filterMinAge;
+    private Integer filterMaxAge;
+
+    // 필터 조건 업데이트 메서드
+    public void updateFilter(Gender gender, Integer minAge, Integer maxAge){
+        this.filterGender = gender;
+        this.filterMinAge = minAge;
+        this.filterMaxAge = maxAge;
+    }
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberProfileImage> memberProfileImageList = new ArrayList<>();
 
@@ -102,6 +117,11 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "otherMember", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatRoom> chatRoomList = new ArrayList<>();
+
+    //notificationSetting
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private NotificationSetting notificationSetting;
+
 
     // 비밀번호 설정 함수
     public void encodePassword(String password){

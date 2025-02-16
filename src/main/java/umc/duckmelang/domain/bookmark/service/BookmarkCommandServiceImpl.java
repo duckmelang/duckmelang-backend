@@ -10,10 +10,15 @@ import umc.duckmelang.domain.eventcategory.domain.EventCategory;
 import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.repository.MemberRepository;
+import umc.duckmelang.domain.notification.service.NotificationCommandService;
+import umc.duckmelang.domain.notificationsetting.domain.NotificationSetting;
+import umc.duckmelang.domain.notificationsetting.service.NotificationSettingQueryService;
 import umc.duckmelang.domain.post.converter.PostConverter;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.dto.PostRequestDto;
 import umc.duckmelang.domain.post.repository.PostRepository;
+import umc.duckmelang.domain.postimage.dto.PostThumbnailResponseDto;
+import umc.duckmelang.domain.postimage.service.PostImageQueryService;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.EventCategoryException;
 import umc.duckmelang.global.apipayload.exception.IdolCategoryException;
@@ -21,6 +26,8 @@ import umc.duckmelang.global.apipayload.exception.MemberException;
 import umc.duckmelang.global.apipayload.exception.PostException;
 
 import java.util.List;
+
+import static umc.duckmelang.domain.notification.domain.enums.NotificationType.BOOKMARK;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +37,9 @@ public class BookmarkCommandServiceImpl implements BookmarkCommandService {
     private final BookmarkRepository bookmarkRepository;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final NotificationCommandService notificationCommandService;
+    private final NotificationSettingQueryService notificationSettingQueryService;
+    private final PostImageQueryService postImageQueryService;
 
     @Override
     public Bookmark joinBookmark(Long postId, Long memberId) {
@@ -39,7 +49,17 @@ public class BookmarkCommandServiceImpl implements BookmarkCommandService {
 //        Post 엔티티 조회
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(ErrorStatus.POST_NOT_FOUND));
+//        게시물 대표 이미지 URL 조회
+        PostThumbnailResponseDto postThumbnail = postImageQueryService.getLatestPostImage(postId);
+        String postImageUrl = (postThumbnail != null) ? postThumbnail.getPostImageUrl() : null;
+
         Bookmark bookmark = BookmarkConverter.toBookmark(member, post);
+        NotificationSetting notificationSetting = notificationSettingQueryService.findNotificationSetting(post.getMember().getId());
+        if(notificationSetting.getBookmarkNotificationEnabled()){
+            notificationCommandService.send(
+                    member, post.getMember(), BOOKMARK, "내 동행글이 스크랩되었어요", postImageUrl
+            );
+        }
         return bookmarkRepository.save(bookmark);
     }
 }

@@ -1,6 +1,7 @@
 package umc.duckmelang.domain.review.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import umc.duckmelang.domain.review.repository.ReviewRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +33,13 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
         return reviewRepository.findReviewInformation(myId, memberId);
     }
 
-//    리뷰 평균값 계산
+    @Override
+    public Optional<Application> getReviewInformationByPost(Long myId, Long memberId, Long postId) {
+        return reviewRepository.findReviewInformationByPost(myId, memberId, postId);
+    }
+
+
+    //    리뷰 평균값 계산
     @Override
     public double calculateAverageScore(List<Review> reviewList){
         if (reviewList == null || reviewList.isEmpty()) {

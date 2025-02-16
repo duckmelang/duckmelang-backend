@@ -29,21 +29,63 @@ public class ChatMessageConverter {
                 .chatRoomId(chatRoom.getId())
                 .senderId(request.getSenderId())
                 .receiverId(request.getReceiverId())
-                .content(request.getContent())
+                .messageType(request.getMessageType())
+                .text(request.getText())
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static ChatMessage toChatMessageWithImages(ChatMessageRequestDto.@Valid CreateChatMessageDto request, ChatRoom chatRoom, List<String> imageUrls) {
+        return ChatMessage.builder()
+                .chatRoomId(chatRoom.getId())
+                .senderId(request.getSenderId())
+                .receiverId(request.getReceiverId())
+                .messageType(request.getMessageType())
+                .imageUrls(imageUrls)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static ChatMessage toChatMessageWithFile(ChatMessageRequestDto.@Valid CreateChatMessageDto request, ChatRoom chatRoom, String fileUrl) {
+        return ChatMessage.builder()
+                .chatRoomId(chatRoom.getId())
+                .senderId(request.getSenderId())
+                .receiverId(request.getReceiverId())
+                .messageType(request.getMessageType())
+                .fileUrl(fileUrl)
                 .createdAt(LocalDateTime.now())
                 .build();
     }
 
     // 채팅 메세지 DTO 생성
     public static ChatMessageResponseDto.ChatMessageDto toChatMessageDto(ChatMessage chatMessage) {
-        return ChatMessageResponseDto.ChatMessageDto.builder()
+        ChatMessageResponseDto.ChatMessageDto.ChatMessageDtoBuilder builder = ChatMessageResponseDto.ChatMessageDto.builder()
                 .id(chatMessage.getId())
                 .chatRoomId(chatMessage.getChatRoomId())
                 .senderId(chatMessage.getSenderId())
                 .receiverId(chatMessage.getReceiverId())
-                .content(chatMessage.getContent())
-                .createdAt(chatMessage.getCreatedAt())
-                .build();
+                .messageType(chatMessage.getMessageType())
+                .createdAt(chatMessage.getCreatedAt());
+
+        // 메시지 타입에 따라 필드 설정
+        switch (chatMessage.getMessageType()) {
+            case TEXT:
+                builder.text(chatMessage.getText());
+                break;
+            case IMAGE:
+                builder.imageUrls(chatMessage.getImageUrls());
+                break;
+            case FILE:
+                builder.fileUrl(chatMessage.getFileUrl());
+                break;
+            case LINK:
+                builder.text(chatMessage.getText()); // Link도 text 사용
+                break;
+            default:
+                throw new ChatMessageException(ErrorStatus.INVALID_MESSAGE_TYPE);
+        }
+
+        return builder.build();
     }
 
     // 통신 응답 메세지 생성

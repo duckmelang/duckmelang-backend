@@ -5,7 +5,6 @@ import lombok.*;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.global.common.BaseEntity;
 
-
 @Entity
 @Getter
 @Builder

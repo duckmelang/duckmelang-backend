@@ -2,7 +2,7 @@ package umc.duckmelang.domain.auth.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import umc.duckmelang.domain.auth.enums.ProviderKind;
+import umc.duckmelang.domain.auth.domain.enums.ProviderKind;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.global.common.BaseEntity;
 

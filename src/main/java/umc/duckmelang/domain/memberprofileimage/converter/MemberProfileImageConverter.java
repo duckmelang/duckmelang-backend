@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
-import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageRequestDto;
 import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageResponseDto;
 
 import java.util.stream.Collectors;
@@ -56,7 +55,6 @@ public class MemberProfileImageConverter {
         } else {
             changedStatus ="PRIVATE";
         }
-
         return MemberProfileImageResponseDto.UpdateProfileImageStatusResultDto.builder()
                 .changedStatus(changedStatus)
                 .build();

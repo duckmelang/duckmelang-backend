@@ -36,16 +36,4 @@ public class ChatMessageWebSocketController {
 
         return ApiResponse.onSuccess(ChatMessageConverter.toChatMessageListDto(chatMessageList));
     }
-
-    @GetMapping("/{chatRoomId}/test")
-    @Operation(summary = "test API", description = "채팅방 내 채팅을 20개씩 조회합니다. 무한 스크롤 방식으로 조회합니다.")
-    public ApiResponse<ChatMessageResponseDto.LatestChatMessageDto> getChatMessagesByChatRoom(
-            @PathVariable("chatRoomId") Long chatRoomId) {
-        List<Long> list = new ArrayList<>();
-        list.add(chatRoomId);
-
-        Map<Long, ChatMessageResponseDto.LatestChatMessageDto> chatMessageList = chatMessageQueryService.getLatestMessagesByChatRoomIds(list);
-
-        return ApiResponse.onSuccess(chatMessageList.get(list.get(0)));
-    }
 }

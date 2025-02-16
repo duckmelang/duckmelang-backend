@@ -24,22 +24,24 @@ public class Notification extends BaseEntity {
     @Column(nullable = false)
     private Boolean isRead = false;
 
-    @Column(nullable = false)
-    private Boolean isDelivered = false;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private NotificationType notificationType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", nullable = false)
     private Member sender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id", nullable = false)
     private Member receiver;
 
     //postImage, memberProfileImage 등
     private String extraData;
+
+//    알림 읽음
+    public void notificationReadTrue() {
+        this.isRead = true;
+    }
 }
 

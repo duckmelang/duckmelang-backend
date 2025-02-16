@@ -22,10 +22,12 @@ public enum ErrorStatus implements BaseErrorCode {
     MEMBER_EMPTY_INTRODUCTION(HttpStatus.BAD_REQUEST, "MEMBER4003", "자기소개는 공란으로 비워둘 수 없습니다."),
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "MEMBER4004", "이미 존재하는 이메일입니다."),
     DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "MEMBER4005", "이미 존재하는 닉네임입니다."),
+    UNAUTHORIZED_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4006", "잘못된 인증입니다. 해당 작업에 대한 권한이 없습니다."),
 
     // 멤버 프로필 사진 관련 에러
-    MEMBER_PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND,"MEMBERPROFILEIMAGE4001", "프로필 이미지가 존재하지 않습니다."),
-
+    MEMBER_PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND,"MEMBER_PROFILE_IMAGE4001", "프로필 이미지가 존재하지 않습니다."),
+    CANNOT_DELETE_DEFAULT_PROFILE_IMAGE(HttpStatus.BAD_REQUEST," MEMBER_PROFILE_IMAGE4002", "기본 프로필 이미지는 삭제할 수 없습니다."),
+    CANNOT_UPDATE_DEFAULT_PROFILE_IMAGE(HttpStatus.BAD_REQUEST, "MEMBER_PROFILE_IMAGE4003", "기본 프로필 이미지는 업데이트할 수 없습니다."),
     // 토큰 관련 응답
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN4000", "토큰이 만료되었습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4001", "유효하지 않은 토큰입니다."),
@@ -51,7 +53,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 지뢰 관련 에러
     DUPLICATE_LANDMINE(HttpStatus.BAD_REQUEST, "LANDMINE4001", "중복된 키워드가 존재합니다."),
-    INVALID_LANDMINE(HttpStatus.BAD_REQUEST, "LANDMINE4002", "존재하지 않는 ㅣ워드입니다."),
+    INVALID_LANDMINE(HttpStatus.BAD_REQUEST, "LANDMINE4002", "존재하지 않는 키워드입니다."),
+
     // 행사 카테고리 관련 에러
     INVALID_EVENT_CATEGORY(HttpStatus.BAD_REQUEST, "EVENTCATEGORY4001", "선택한 행사 중 유효하지 않은 항목이 있습니다."),
     EVENT_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "EVENT_CATEGORY4002", "이번트 카테고리가 없습니다."),
@@ -64,7 +67,21 @@ public enum ErrorStatus implements BaseErrorCode {
     // 채팅 통신 관련 에러
     JSON_PROCESSING_ERROR(HttpStatus.BAD_REQUEST, "WEBSOCKET4001", "메시지 변환 중 매핑 오류가 발생했습니다."),
     INVALID_JSON_FORMAT(HttpStatus.BAD_REQUEST, "WEBSOCKET4002", "유효하지 않은 JSON 형식입니다."),
-    JSON_CONVERSION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "WEBSOCKET5001", "JSON 변환에 실패했습니다.");
+    JSON_CONVERSION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "WEBSOCKET5001", "JSON 변환에 실패했습니다."),
+
+
+    //알림 관련 에러
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTIFICATION4001", "해당하는 알림이 없습니다"),
+
+    //알림 설정 관련 에러
+    NOTIFICATION_SETTING_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTIFICATION_SETTING4001", "해당하는 알림 설정이 없습니다"),
+
+    // 채팅 메세지 관련 에러
+    INVALID_MESSAGE_TYPE(HttpStatus.BAD_REQUEST, "CHATMESSAGE4001", "지원하지 않는 메세지 타입입니다."),
+    EMPTY_MESSAGE_TEXT(HttpStatus.BAD_REQUEST, "CHATMESSAGE4002", "메세지 내용이 없습니다."),
+    EMPTY_MESSAGE_IMAGE(HttpStatus.BAD_REQUEST, "CHATMESSAGE4003", "메세지 이미지가 없습니다."),
+    EMPTY_MESSAGE_FILE(HttpStatus.BAD_REQUEST, "CHATMESSAGE4004", "메세지 파일이 없습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;
