@@ -40,7 +40,7 @@ public class ChatRoomCommandServiceImpl implements ChatRoomCommandService {
                 .orElseThrow(() -> new PostException(ErrorStatus.POST_NOT_FOUND));
 
         // 채팅방을 생성한다.
-        ChatRoom newChatRoom = ChatRoomConverter.toChatRoom(request);
+        ChatRoom newChatRoom = ChatRoomConverter.toChatRoom(request, post, sendingMember);
         return chatRoomRepository.save(newChatRoom);
     }
 }

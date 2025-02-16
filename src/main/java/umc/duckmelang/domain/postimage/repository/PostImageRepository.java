@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import umc.duckmelang.domain.postimage.domain.PostImage;
-import umc.duckmelang.domain.postimage.dto.PostImageResponseDto;
 import umc.duckmelang.domain.postimage.dto.PostThumbnailResponseDto;
 import java.util.Optional;
 
@@ -18,7 +17,7 @@ public interface PostImageRepository extends JpaRepository<PostImage, Long> {
             "AND NOT EXISTS (SELECT 1 FROM PostImage pi2 WHERE pi2.post = p AND pi2.createdAt > pi.createdAt)")
     Page<PostThumbnailResponseDto> findLatestPostImagesForMemberPosts(@Param("memberId") Long memberId, Pageable pageable);
 
-    Optional<PostImage> findFirstByPostIdOrderByCreatedAtDesc(Long postId);
+    Optional<PostImage> findFirstByPostIdOrderByCreatedAtAsc(Long postId);
 }
 
 
