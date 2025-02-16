@@ -22,7 +22,7 @@ public class LandmineConverter {
 
     public static LandmineResponseDto.LandmineDto toLandmineDto(Landmine landmine){
         return LandmineResponseDto.LandmineDto.builder()
-                .id(landmine.getId())
+                .landmineId(landmine.getId())
                 .content(landmine.getContent())
                 .build();
     }
