@@ -1,13 +1,17 @@
 package umc.duckmelang.mongo.chatmessage.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import umc.duckmelang.global.common.serializer.LocalDateTimeSerializer;
+import umc.duckmelang.mongo.chatmessage.domain.enums.MessageType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Document(collection = "chat_message")  // collection = "실제 mongoDB 내 컬렉션 이름")
 @Getter
@@ -29,7 +33,14 @@ public class ChatMessage {
 
     private Long chatRoomId;   // 대화가 이루어지고 있는 채팅방 ID
 
-    private String content;   // 메세지 내용
+    @Enumerated(EnumType.STRING)
+    private MessageType messageType; // 메시지 타입
+
+    // 메세지 내용
+    // 셋 중 하나가 저장된다.
+    private String text;   // 텍스트, 링크 URL
+    private List<String> imageUrls; // 업로드된 이미지 URL 리스트
+    private String fileUrl; // 업로드된 파일 URL
 
     @CreatedDate
     @JsonSerialize(using = LocalDateTimeSerializer.class)
