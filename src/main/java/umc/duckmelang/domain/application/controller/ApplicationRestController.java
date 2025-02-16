@@ -27,10 +27,10 @@ public class ApplicationRestController {
     private final ApplicationCommandService applicationCommandService;
     private final ApplicationFacadeService applicationFacadeService;
 
-    @PostMapping("/send")
+    @PostMapping("/send/{postId}")
     @CommonApiResponses
-    @Operation(summary = "동행 요청 API", description = "\nresponse는 사용처 없습니다.")
-    public ApiResponse<ApplicationResponseDto.ApplicationResponseDto> makeNewApplication(@PathVariable @ExistPost Long postId, @AuthenticationPrincipal CustomUserDetails userDetails){
+    @Operation(summary = "동행 요청 API", description = "채팅방 내부 화면\nresponse는 사용처 없습니다.")
+    public ApiResponse<ApplicationResponseDto.CommonApplicationResponseDto> makeNewApplication(@PathVariable @ExistPost Long postId, @AuthenticationPrincipal CustomUserDetails userDetails){
         Application application = applicationCommandService.makeNewApplication(postId, userDetails.getMemberId());
         return ApiResponse.onSuccess(ApplicationConverter.toApplicationStatusChangeResponseDto(application));
     }
@@ -38,15 +38,15 @@ public class ApplicationRestController {
 
     @PostMapping("/received/failed/{applicationId}")
     @CommonApiResponses
-    @Operation(summary = "받은 동행요청 거절 API", description = "path variable로 상태를 변경하고자 하는 동행요청 id를 받습니다.")
-    public ApiResponse<ApplicationResponseDto.ApplicationResponseDto> failApplication(@PathVariable @ExistsApplication Long applicationId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    @Operation(summary = "받은 동행요청 거절 API", description = "동행요청 화면, 채팅방 내부 화면\nresponse는 사용처 없습니다.\npath variable로 상태를 변경하고자 하는 동행요청 id를 받습니다.")
+    public ApiResponse<ApplicationResponseDto.CommonApplicationResponseDto> failApplication(@PathVariable @ExistsApplication Long applicationId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         Application application = applicationCommandService.updateStatusToFailed(applicationId, userDetails.getMemberId());
         return ApiResponse.onSuccess(ApplicationConverter.toApplicationStatusChangeResponseDto(application));
     }
 
     @PostMapping("/received/succeed/{applicationId}")
     @CommonApiResponses
-    @Operation(summary = "받은 동행요청 수락 API", description = "path variable로 상태를 변경하고자 하는 동행요청 id를 받습니다.")
+    @Operation(summary = "받은 동행요청 수락 API", description = "동행요청 화면, 채팅방 내부 화면\nresponse는 사용처 없습니다.\npath variable로 상태를 변경하고자 하는 동행요청 id를 받습니다.")
     public ApiResponse<ApplicationResponseDto.MateRelationshipCreateResponseDto> succeedApplication(@PathVariable @ExistsApplication Long applicationId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         MateRelationship mateRelationship = applicationCommandService.updateStatusToSucceed(applicationId, userDetails.getMemberId());
         return ApiResponse.onSuccess(ApplicationConverter.toMateRelationshipCreateResponseDto(mateRelationship));

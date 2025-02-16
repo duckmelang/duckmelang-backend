@@ -18,7 +18,9 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     Optional<Application> findByIdAndMemberId(Long id, Long memberId);
 
-    boolean existsByPostIdAndStatus(Long PostId, ApplicationStatus status);
+    boolean existsByPostIdAndStatus(Long postId, ApplicationStatus status);
+    @EntityGraph(attributePaths = {"member","post"})
+    boolean existsByPostIdAndMemberId(Long postId, Long memberId);
 
     @Query("SELECT a FROM Post p " +
             "JOIN p.member pm " +
@@ -32,9 +34,9 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
             Pageable pageable
     );
 
+    @EntityGraph(attributePaths = "member")
     @Query(value = "SELECT a FROM Application a " +
-            "INNER JOIN a.member m " +
-            "WHERE m.id = :applicationOwnerId")
+            "WHERE a.member.id = :applicationOwnerId")
     Page<Application> findSentApplicationList(
             @Param("applicationOwnerId") Long applicationOwnerId,
             Pageable pageable

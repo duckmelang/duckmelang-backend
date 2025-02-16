@@ -15,7 +15,7 @@ public class ApplicationResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     // 실패, 취소로 상태 변환 시 사용
-    public static class ApplicationResponseDto {
+    public static class CommonApplicationResponseDto {
         ApplicationStatus newStatus;
         LocalDateTime modifiedAt;
     }
@@ -35,7 +35,7 @@ public class ApplicationResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ShowApplicationListDto {
-        List<ShowApplicationDto> receivedApplicationList;
+        List<ShowApplicationDto> applicationList;
         Integer listSize;
         Integer totalPage;
         Long totalElements;

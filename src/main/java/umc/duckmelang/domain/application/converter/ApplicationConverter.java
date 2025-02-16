@@ -9,8 +9,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ApplicationConverter {
-    public static ApplicationResponseDto.ApplicationResponseDto toApplicationStatusChangeResponseDto(Application application) {
-        return ApplicationResponseDto.ApplicationResponseDto.builder()
+    public static ApplicationResponseDto.CommonApplicationResponseDto toApplicationStatusChangeResponseDto(Application application) {
+        return ApplicationResponseDto.CommonApplicationResponseDto.builder()
                 .newStatus(application.getStatus())
                 .modifiedAt(application.getUpdatedAt())
                 .build();
@@ -26,7 +26,7 @@ public class ApplicationConverter {
     public static ApplicationResponseDto.ShowApplicationListDto toShowApplicationListDto(Page<ShowApplicationDto> applications) {
         List<ShowApplicationDto> receivedApplicationList = applications.stream().collect(Collectors.toList());
         return umc.duckmelang.domain.application.dto.ApplicationResponseDto.ShowApplicationListDto.builder()
-                .receivedApplicationList(receivedApplicationList)
+                .applicationList(receivedApplicationList)
                 .listSize(receivedApplicationList.size())
                 .totalPage(applications.getTotalPages())
                 .totalElements(applications.getTotalElements())

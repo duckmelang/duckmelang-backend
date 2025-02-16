@@ -3,14 +3,13 @@ package umc.duckmelang.domain.chatroom.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import umc.duckmelang.domain.chatroom.domain.ChatRoom;
-import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.chatroom.domain.enums.ChatRoomStatus;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -50,4 +49,17 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
             "AND cr.chatRoomStatus = 'TERMINATED' ")
     Page<ChatRoom> findTerminatedByMemberId(@Param("member") Long memberId,Pageable pageable);
 
+    @Modifying
+    @Query("UPDATE ChatRoom c SET c.chatRoomStatus = :status " +
+            "WHERE c.post.id = :post AND c.otherMember.id = :member")
+    void updateStatusByPostId(@Param("post") Long postId,
+                              @Param("member") Long memberId,
+                              @Param("status") ChatRoomStatus status);
+
+    @Modifying
+    @Query("UPDATE ChatRoom c SET c.chatRoomStatus = :status " +
+            "WHERE c.post.id = :post AND c.otherMember.id != :member")
+    void updateStatusByNonPostId(@Param("post") Long postId,
+                                 @Param("member") Long memberId,
+                                 @Param("status") ChatRoomStatus status);
 }

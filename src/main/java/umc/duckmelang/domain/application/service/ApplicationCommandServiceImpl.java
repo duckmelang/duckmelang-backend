@@ -19,7 +19,7 @@ import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.ApplicationException;
 import umc.duckmelang.global.apipayload.exception.MemberException;
 import umc.duckmelang.global.apipayload.exception.PostException;
-import java.util.List;
+
 import java.util.Optional;
 @Service
 @RequiredArgsConstructor
@@ -30,6 +30,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
     private final MemberRepository memberRepository;
     private final ChatRoomRepository chatRoomRepository;
 
+
     @Override
     public Application makeNewApplication(Long postId, Long memberId) {
         commonProcess(postId, memberId);
@@ -37,19 +38,25 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(ErrorStatus.POST_NOT_FOUND));
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
+        //이미 동행요청 보낸 적 있는지
+        if (applicationRepository.existsByPostIdAndMemberId(postId, memberId))
+            throw new ApplicationException(ErrorStatus.ALREADY_PROCESSED_APPLICATION);
+
+        //자신의 post는 아닌지
+        if (post.getMember() == member)
+            throw new ApplicationException(ErrorStatus.UNAVAILABLE_TO_PROCESS_APPLICATION);
+
         Application application = Application.builder()
                 .post(post)
                 .member(member)
                 .status(ApplicationStatus.PENDING)
                 .build();
-        return application;
+        return applicationRepository.save(application);
     }
 
     @Override
     @Transactional
     public Application updateStatusToFailed(Long applicationId, Long memberId) {
-        // TO-DO : authorize JWT
-
         Application application = applicationRepository
                 .findByIdAndPostMemberId(applicationId, memberId)
                 .orElseThrow(() -> new ApplicationException(ErrorStatus.APPLICATION_NOT_FOUND));
@@ -58,6 +65,9 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
             throw new ApplicationException(ErrorStatus.ALREADY_PROCESSED_APPLICATION);
         }
 
+        //ChatRoom.status = TERMINATED
+        chatRoomRepository.updateStatusByPostId(application.getPost().getId(), memberId, ChatRoomStatus.TERMINATED);
+
         applicationRepository.save(application);
         return application;
     }
@@ -65,8 +75,6 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
     @Override
     @Transactional
     public Application updateStatusToCanceled(Long applicationId, Long memberId) {
-        // TO-DO : authorize JWT
-
         Application application = applicationRepository
                 .findByIdAndMemberId(applicationId, memberId)
                 .orElseThrow(() -> new ApplicationException(ErrorStatus.APPLICATION_NOT_FOUND));
@@ -108,9 +116,15 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
         post.toggleWanted();
 
         //chatRoom
+        // 선택된 채팅방을 CONFIRMED로 변경
+        chatRoomRepository.updateStatusByPostId(post.getId(), memberId, ChatRoomStatus.CONFIRMED);
+
+        // 나머지 채팅방들을 TERMINATED로 변경
+        chatRoomRepository.updateStatusByNonPostId(post.getId(), memberId, ChatRoomStatus.TERMINATED);
 
         mateRelationshipRepository.save(newRelationship);
         applicationRepository.save(application);
+        postRepository.save(post);
 
         return newRelationship;
     }
@@ -118,7 +132,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
     private void commonProcess(Long postId, Long memberId){
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(ErrorStatus.POST_NOT_FOUND));
 
-        if (post.getWanted() == 0 || applicationRepository.existsByPostIdAndStatus(postId, ApplicationStatus.PENDING)) {
+        if (post.getWanted() == 0 || applicationRepository.existsByPostIdAndStatus(postId, ApplicationStatus.SUCCEED)) {
             Optional<ChatRoom> chatRoom = chatRoomRepository.findByPostIdAndOtherMemberId(postId,memberId);
             chatRoom.ifPresent(c -> c.setChatRoomStatus(ChatRoomStatus.TERMINATED));
 
