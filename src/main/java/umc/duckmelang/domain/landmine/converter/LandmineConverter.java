@@ -11,7 +11,8 @@ import java.util.stream.Collectors;
 public class LandmineConverter {
 
     public static LandmineResponseDto.LandmineListDto toLandmineListDto(List<Landmine> landmines){
-        List<String> landmineList = landmines.stream().map(Landmine::getContent)
+        List<LandmineResponseDto.LandmineDto> landmineList = landmines.stream()
+                .map(LandmineConverter::toLandmineDto)
                 .collect(Collectors.toList());
 
         return LandmineResponseDto.LandmineListDto.builder()
@@ -21,7 +22,7 @@ public class LandmineConverter {
 
     public static LandmineResponseDto.LandmineDto toLandmineDto(Landmine landmine){
         return LandmineResponseDto.LandmineDto.builder()
-                .id(landmine.getId())
+                .landmineId(landmine.getId())
                 .content(landmine.getContent())
                 .build();
     }
