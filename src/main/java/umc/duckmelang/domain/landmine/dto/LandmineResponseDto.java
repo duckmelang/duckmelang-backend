@@ -14,7 +14,7 @@ public class LandmineResponseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class LandmineListDto{
-        private List<String> landmineList;
+        private List<LandmineDto> landmineList;
     }
 
     @Getter
@@ -22,7 +22,7 @@ public class LandmineResponseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class LandmineDto {
-        private Long id;
+        private Long landmineId;
         private String content;
     }
 }
