@@ -52,11 +52,11 @@ public class NotificationRestController {
         return ApiResponse.onSuccess(NotificationConverter.notificationReadDto(notification));
     }
 
-    @Operation(summary = "알림 삭제 API", description = "알림을 삭제합니다. 204가 뜨면 성공입니다. 현재 피그마엔 없지만 알림 목록 조회에서 있으면 좋을 것 같아 만들었습니다.")
+    @Operation(summary = "알림 삭제 API", description = "알림을 삭제합니다. 현재 피그마엔 없지만 알림 목록 조회에서 있으면 좋을 것 같아 만들었습니다.")
     @DeleteMapping(value = "/{notificationId}")
     @CommonApiResponses
-    public ResponseEntity<Void> deleteNotification (@ExistNotification @PathVariable Long notificationId) {
+    public ApiResponse<String> deleteNotification (@ExistNotification @PathVariable Long notificationId) {
         notificationCommandService.deleteNotification(notificationId);
-        return ResponseEntity.noContent().build(); // 204 No Content 반환
+        return ApiResponse.onSuccess("해당 알림을 삭제했습니다.");
     }
 }
