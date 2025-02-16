@@ -14,7 +14,7 @@ public class LandmineResponseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class LandmineListDto{
-        private List<String> landmineList;
+        private List<LandmineDto> landmineList;
     }
 
     @Getter
