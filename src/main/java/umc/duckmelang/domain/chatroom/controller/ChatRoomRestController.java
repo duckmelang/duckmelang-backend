@@ -58,4 +58,12 @@ public class ChatRoomRestController {
         Page<ChatRoomResponseDto.ChatRoomItemDto> chatRoomItemDtoList = chatRoomQueryService.findTerminatedChatRooms(userDetails.getMemberId(), page);
         return ApiResponse.onSuccess(ChatRoomConverter.toChatRoomItemListDto(chatRoomItemDtoList));
     }
+
+    @GetMapping("/{chatRoomId}")
+    @CommonApiResponses
+    @Operation(summary = "채팅방 세부 내역 조회(채팅 메세지 조회 별도)",description = "채팅 메세지 조회 api : \"/chat/{chatRoomId}/messages\"\n chatRoomStatus, applicationStatus, hasReviewed, postOwner이 화면 플래그입니다")
+    public ApiResponse<ChatRoomResponseDto.ChatRoomDetailDto> getChatRoomItemList(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                                    @RequestParam Long chatRoomId){
+        return ApiResponse.onSuccess(chatRoomQueryService.findChatRoomDetail(userDetails.getMemberId(), chatRoomId));
+    }
 }
