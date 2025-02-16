@@ -22,7 +22,7 @@ public class ChatRoomConverter {
     }
 
     public static ChatRoomResponseDto.ChatRoomItemListDto toChatRoomItemListDto(Page<ChatRoomResponseDto.ChatRoomItemDto> chatRooms) {
-        List<ChatRoomResponseDto.ChatRoomItemDto> list = chatRooms.stream().toList();
+        List<ChatRoomResponseDto.ChatRoomItemDto> list = chatRooms.getContent();
         return ChatRoomResponseDto.ChatRoomItemListDto.builder()
                 .chatRoomList(list)
                 .isFirst(chatRooms.isFirst())
