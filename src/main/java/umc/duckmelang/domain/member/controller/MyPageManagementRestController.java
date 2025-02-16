@@ -60,8 +60,16 @@ public class MyPageManagementRestController {
     }
 
     @Operation(summary = "설정 - 로그인 정보 조회 API", description = "사용자의 로그인 정보를 반환합니다. 사용자 닉네임과 이메일 그리고 ")
-    @GetMapping("/mypage/info")
+    @GetMapping("/info")
     public ApiResponse<MyPageResponseDto.LoginInfoDto> getLoginInfo(@AuthenticationPrincipal CustomUserDetails userDetails){
         return ApiResponse.onSuccess(myPageQueryService.getLoginInfo(userDetails.getMemberId()));
+    }
+
+    @Operation(summary = "설정 - 회원 탈퇴 API", description = "회원 탈퇴를 처리합니다.")
+    @DeleteMapping("/account/delete")
+    public ApiResponse<String> deleteMember(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                            @RequestHeader("Authorization") String token){
+        myPageCommandService.deleteMember(userDetails.getMemberId(), token);
+        return ApiResponse.onSuccess("성공적으로 탈퇴했습니다.");
     }
 }
