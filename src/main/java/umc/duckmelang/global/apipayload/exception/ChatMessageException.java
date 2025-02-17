@@ -7,4 +7,3 @@ public class ChatMessageException extends GeneralException {
         super(errorCode);
     }
 }
-

@@ -82,6 +82,11 @@ public class ChatRoomQueryServiceImpl implements ChatRoomQueryService {
         return new PageImpl<>(chatRoomItemDtos, pageable, chatRooms.getTotalElements());
     }
 
+    @Override
+    public ChatRoomResponseDto.ChatRoomDetailDto findChatRoomDetail(Long memberId, Long chatRoomId) {
+        return null;
+    }
+
     public List<ChatRoomResponseDto.ChatRoomItemDto> getChatRoomItemDtoList(Page<ChatRoom> chatRooms, Long memberId){
 
         // 채팅방 ID 리스트 추출
