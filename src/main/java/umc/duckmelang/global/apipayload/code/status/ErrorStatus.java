@@ -63,7 +63,8 @@ public enum ErrorStatus implements BaseErrorCode {
     ALREADY_PROCESSED_APPLICATION(HttpStatus.CONFLICT, "APPLICATION4001","이미 처리된 동행 요청입니다."),
     NOT_POSSESSED_APPLICATION(HttpStatus.CONFLICT, "APPLICATION4002", "본인 소유의 동행 요청이 아닙니다."),
     APPLICATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLICATION4003", "존재하지 않는 동행 요청입니다."),
-    UNAVAILABLE_TO_PROCESS_APPLICATION(HttpStatus.FORBIDDEN, "APPLICATION4004", "동행 요청을 처리할 수 없습니다."),
+    UNAVAILABLE_TO_APPLY_FOR_CONFIRMED_POST(HttpStatus.FORBIDDEN, "APPLICATION4004", "이미 확정된 게시글에 동행 요청을 처리할 수 없습니다."),
+    UNAVAILABLE_TO_APPLY_FOR_OWN_POST(HttpStatus.FORBIDDEN, "APPLICATION4005", "본인 게시글에 동행 요청할 수 없습니다."),
 
     // 채팅 통신 관련 에러
     JSON_PROCESSING_ERROR(HttpStatus.BAD_REQUEST, "WEBSOCKET4001", "메시지 변환 중 매핑 오류가 발생했습니다."),

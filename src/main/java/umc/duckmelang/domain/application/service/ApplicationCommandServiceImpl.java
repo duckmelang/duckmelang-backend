@@ -32,8 +32,9 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
 
 
     @Override
+    @Transactional
     public Application makeNewApplication(Long postId, Long memberId) {
-        commonProcess(postId, memberId);
+        validateApplyingCondition(postId, memberId);
 
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(ErrorStatus.POST_NOT_FOUND));
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
@@ -44,7 +45,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
 
         //자신의 post는 아닌지
         if (post.getMember() == member)
-            throw new ApplicationException(ErrorStatus.UNAVAILABLE_TO_PROCESS_APPLICATION);
+            throw new ApplicationException(ErrorStatus.UNAVAILABLE_TO_APPLY_FOR_OWN_POST);
 
         Application application = Application.builder()
                 .post(post)
@@ -96,7 +97,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
                 .orElseThrow(() -> new ApplicationException(ErrorStatus.APPLICATION_NOT_FOUND));
 
         //공통
-        commonProcess(application.getPost().getId(), memberId);
+        validateApplyingCondition(application.getPost().getId(), memberId);
 
         //application.status = SUCCEED
         if (!application.updateStatus(ApplicationStatus.SUCCEED)) {
@@ -129,14 +130,14 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
         return newRelationship;
     }
 
-    private void commonProcess(Long postId, Long memberId){
+    private void validateApplyingCondition(Long postId, Long memberId){
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(ErrorStatus.POST_NOT_FOUND));
 
         if (post.getWanted() == 0 || applicationRepository.existsByPostIdAndStatus(postId, ApplicationStatus.SUCCEED)) {
             Optional<ChatRoom> chatRoom = chatRoomRepository.findByPostIdAndOtherMemberId(postId,memberId);
             chatRoom.ifPresent(c -> c.setChatRoomStatus(ChatRoomStatus.TERMINATED));
 
-            throw new ApplicationException(ErrorStatus.UNAVAILABLE_TO_PROCESS_APPLICATION);
+            throw new ApplicationException(ErrorStatus.UNAVAILABLE_TO_APPLY_FOR_CONFIRMED_POST);
         }
 
     }
