@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import umc.duckmelang.domain.auth.domain.enums.ProviderKind;
 import umc.duckmelang.domain.auth.repository.AuthRepository;
 import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.member.domain.enums.MemberStatus;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.auth.domain.Auth;
 
@@ -57,6 +58,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                             .email(attributes.getEmail())
                             .password("SOCIAL_LOGIN")
                             .isProfileComplete(false)
+                            .memberStatus(MemberStatus.ACTIVE)
                             .build();
 
                     Member savedMember = memberRepository.save(newMember);

@@ -1,6 +1,8 @@
 package umc.duckmelang.domain.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +21,7 @@ import umc.duckmelang.domain.memberprofileimage.dto.MemberProfileImageResponseDt
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageCommandService;
 import umc.duckmelang.domain.post.service.PostCommandService;
 import umc.duckmelang.global.apipayload.ApiResponse;
+import umc.duckmelang.global.security.jwt.JwtUtil;
 import umc.duckmelang.global.security.user.CustomUserDetails;
 import umc.duckmelang.global.validation.annotation.ExistPost;
 
@@ -31,6 +34,7 @@ public class MyPageManagementRestController {
     private final MemberProfileImageCommandService memberProfileImageCommandService;
     private final MyPageQueryService myPageQueryService;
     private final PostCommandService postCommandService;
+    private final JwtUtil jwtUtil;
 
     @Operation(summary = "내 프로필 수정 - 기존 프로필 정보 조회 API", description = "피그마 상에서는 기존 프로필 사진만 조회하게 되어있는데 혹시 닉네임도 필요하실까 해서 일단 넣어놓았습니다.")
     @GetMapping("/profile/edit")
@@ -67,9 +71,8 @@ public class MyPageManagementRestController {
 
     @Operation(summary = "설정 - 회원 탈퇴 API", description = "회원 탈퇴를 처리합니다.")
     @DeleteMapping("/account/delete")
-    public ApiResponse<String> deleteMember(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                            @RequestHeader("Authorization") String token){
-        myPageCommandService.deleteMember(userDetails.getMemberId(), token);
+    public ApiResponse<String> deleteMember(HttpServletRequest request){
+        myPageCommandService.deleteMember(request);
         return ApiResponse.onSuccess("성공적으로 탈퇴했습니다.");
     }
 }

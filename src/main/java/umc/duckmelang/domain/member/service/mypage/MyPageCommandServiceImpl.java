@@ -1,10 +1,12 @@
 package umc.duckmelang.domain.member.service.mypage;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import umc.duckmelang.domain.member.converter.MemberFilterConverter;
 import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.member.domain.enums.MemberStatus;
 import umc.duckmelang.domain.member.dto.MemberFilterDto;
 import umc.duckmelang.domain.member.dto.MyPageRequestDto;
 import umc.duckmelang.domain.member.repository.MemberRepository;
@@ -12,6 +14,7 @@ import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.MemberException;
 import umc.duckmelang.global.redis.blacklist.BlacklistService;
 import umc.duckmelang.global.security.jwt.JwtUtil;
+import umc.duckmelang.global.security.user.CustomUserDetails;
 
 @Service
 @RequiredArgsConstructor
@@ -40,12 +43,24 @@ public class MyPageCommandServiceImpl implements MyPageCommandService{
 
     @Override
     @Transactional
-    public void deleteMember(Long memberId, String token){
+    public void deleteMember(HttpServletRequest request){
+        CustomUserDetails userDetails = jwtUtil.extractUserDetailsFromSecurityContext();
+        Long memberId = userDetails.getMemberId();
+
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        if (member.getMemberStatus() == MemberStatus.DELETED) {
+            throw new MemberException(ErrorStatus.ALREADY_DELETED_MEMBER);
+        }
+
         member.deleteMember();
         memberRepository.save(member);
-        long expiration = jwtUtil.getExpirationFromToken(token);
-        blacklistService.addToBlacklist(token, expiration);
+
+        String token = jwtUtil.extractToken(request);
+        if (token != null && jwtUtil.validateToken(token)) {
+            long expiration = jwtUtil.getExpirationFromToken(token);
+            blacklistService.addToBlacklist(token, expiration);
+        }
     }
 }
