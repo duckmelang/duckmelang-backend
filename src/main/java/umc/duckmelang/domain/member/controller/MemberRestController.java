@@ -84,7 +84,7 @@ public class MemberRestController {
         return ApiResponse.onSuccess(MemberConverter.toCreateIntroductionResponseDto(updatedmember));
     }
 
-    @Operation(summary = "닉네임 중복 확인 API" ,description = "사용자가 입력한 닉네임이 이미 존재하는지 확인하는 API입니다.")
+    @Operation(summary = "닉네임 중복 확인 API" ,description = "사용자가 입력한 닉네임이 이미 존재하는지 확인하는 API입니다. 닉네임은 공백일 수도 없습니다.")
     @GetMapping("/check/nickname")
     public ApiResponse<MemberResponseDto.CheckNicknameResponseDto> checkNickname(@RequestParam String nickname){
         boolean exists = memberCommandService.isNicknameExists(nickname);
