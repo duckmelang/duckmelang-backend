@@ -5,6 +5,7 @@ import umc.duckmelang.domain.idolcategory.domain.IdolCategory;
 import umc.duckmelang.domain.landmine.domain.Landmine;
 import org.springframework.stereotype.Component;
 import umc.duckmelang.domain.member.domain.Member;
+import umc.duckmelang.domain.member.domain.enums.MemberStatus;
 import umc.duckmelang.domain.member.dto.MemberResponseDto;
 import umc.duckmelang.domain.member.dto.MemberSignUpDto;
 import umc.duckmelang.domain.memberevent.domain.MemberEvent;
@@ -23,6 +24,7 @@ public class MemberConverter {
         return Member.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())
+                .memberStatus(MemberStatus.ACTIVE)
                 .isProfileComplete(true) // 일반 회원가입 사용자는 true
                 .build();
     }

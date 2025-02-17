@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import umc.duckmelang.domain.member.domain.Member;
@@ -15,7 +16,6 @@ import umc.duckmelang.global.apipayload.exception.TokenException;
 import umc.duckmelang.global.redis.blacklist.BlacklistService;
 import umc.duckmelang.global.security.user.CustomUserDetails;
 
-import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -79,5 +79,21 @@ public class JwtUtil {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    // SecurityContextHolder 에서 현재 로그인한 사용자의 JWT 가져오기
+    public CustomUserDetails extractUserDetailsFromSecurityContext(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null || !authentication.isAuthenticated()){
+            throw new TokenException(ErrorStatus.INVALID_TOKEN);
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof CustomUserDetails userDetails){
+            return userDetails;
+        }else{
+            throw new TokenException(ErrorStatus.INVALID_TOKEN);
+        }
     }
 }

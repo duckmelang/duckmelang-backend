@@ -68,8 +68,7 @@ public class PostRestController {
     @Operation(summary = "홈화면 - 관심 아이돌 목록 조회 API", description = "현재 내가 설정한 관심 있는 아이돌 목록을 조회합니다.")
     @GetMapping("/idols")
     public ApiResponse<MemberIdolResponseDto.IdolListDto> getSelectIdolResult(@AuthenticationPrincipal CustomUserDetails userDetails){
-        Long memberId = userDetails.getMemberId();
-        List<MemberIdol> memberIdolList = memberIdolQueryService.getIdolListByMember(memberId);
+        List<MemberIdol> memberIdolList = memberIdolQueryService.getIdolListByMember(userDetails.getMemberId());
         return ApiResponse.onSuccess(MemberIdolConverter.toIdolListDto(memberIdolList));
     }
 
@@ -96,8 +95,7 @@ public class PostRestController {
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CommonApiResponses
     public ApiResponse<PostResponseDto.PostJoinResultDto> joinPost (@AuthenticationPrincipal CustomUserDetails userDetails, @RequestPart @Valid PostRequestDto.PostJoinDto request, @Size(max = 5) @RequestPart("images") List<MultipartFile> images){
-        Long memberId = userDetails.getMemberId();
-        Post post = postCommandService.joinPost(request, memberId, images);
+        Post post = postCommandService.joinPost(request, userDetails.getMemberId(), images);
         return ApiResponse.onSuccess(PostConverter.postJoinResultDto(post));
     }
 
@@ -131,8 +129,7 @@ public class PostRestController {
     @GetMapping("/my")
     @CommonApiResponses
     public ApiResponse<PostResponseDto.PostPreviewListDto> getMyPostList(@AuthenticationPrincipal CustomUserDetails userDetails, @ValidPageNumber @RequestParam(name ="page", defaultValue = "0") Integer page){
-        Long memberId = userDetails.getMemberId();
-        Page<Post> postList = postQueryService.getMyPostList(memberId, page);
+        Page<Post> postList = postQueryService.getMyPostList(userDetails.getMemberId(), page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
 
@@ -146,7 +143,6 @@ public class PostRestController {
     @Operation(summary = "게시글 작성 - 관심 아이돌 추가 API", description = "관심 아이돌을 추가하는 API입니다.")
     @PostMapping("/idols/{idolId}")
     public ApiResponse<MemberIdolResponseDto.IdolDto> addMemberIdol(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable("idolId") Long idolId){
-        Long memberId = userDetails.getMemberId();
-        return ApiResponse.onSuccess(MemberIdolConverter.toIdolDto(memberIdolCommandService.addMemberIdol(memberId, idolId)));
+        return ApiResponse.onSuccess(MemberIdolConverter.toIdolDto(memberIdolCommandService.addMemberIdol(userDetails.getMemberId(), idolId)));
     }
 }

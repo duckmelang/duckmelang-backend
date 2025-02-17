@@ -1,9 +1,12 @@
 package umc.duckmelang.domain.member.converter;
 
+import org.springframework.stereotype.Component;
+import umc.duckmelang.domain.auth.domain.enums.ProviderKind;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.dto.MyPageResponseDto;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 
+@Component
 public class MemberProfileConverter {
 
     public static MyPageResponseDto.MyPagePreviewDto toGetMemberPreviewResponseDto(Member member, MemberProfileImage memberProfileImage) {
@@ -29,8 +32,8 @@ public class MemberProfileConverter {
                 .build();
     }
 
-    public static MyPageResponseDto.MyPagProfileEditBeforeDto toMemberProfileEditBeforeDto(Member member, MemberProfileImage profileImage) {
-        return MyPageResponseDto.MyPagProfileEditBeforeDto.builder()
+    public static MyPageResponseDto.MyPageProfileEditBeforeDto toMemberProfileEditBeforeDto(Member member, MemberProfileImage profileImage) {
+        return MyPageResponseDto.MyPageProfileEditBeforeDto.builder()
                 .nickname(member.getNickname())
                 .latestPublicMemberProfileImage(profileImage != null ? profileImage.getMemberImage() : null)
                 .build();
@@ -41,6 +44,21 @@ public class MemberProfileConverter {
                 .memberId(updatedMember.getId())
                 .nickname(updatedMember.getNickname())
                 .introduction(updatedMember.getIntroduction())
+                .build();
+    }
+
+    public static MyPageResponseDto.LoginInfoDto toLoginInfoDto(Member member){
+        boolean isKakaoLinked = member.getAuthList().stream()
+                .anyMatch(auth-> auth.getProvider() == ProviderKind.KAKAO);
+
+        boolean isGoogleLinked = member.getAuthList().stream()
+                .anyMatch(auth-> auth.getProvider() == ProviderKind.GOOGLE);
+
+        return MyPageResponseDto.LoginInfoDto.builder()
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .isKakaoLinked(isKakaoLinked)
+                .isGoogleLinked(isGoogleLinked)
                 .build();
     }
 }
