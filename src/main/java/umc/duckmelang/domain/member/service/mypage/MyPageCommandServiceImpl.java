@@ -48,18 +48,14 @@ public class MyPageCommandServiceImpl implements MyPageCommandService{
     public void deleteMember(HttpServletRequest request){
         CustomUserDetails userDetails = jwtUtil.extractUserDetailsFromSecurityContext();
         Long memberId = userDetails.getMemberId();
-
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
-
         if (member.getMemberStatus() == MemberStatus.DELETED) {
             throw new MemberException(ErrorStatus.ALREADY_DELETED_MEMBER);
         }
 
         member.deleteMember();
         memberRepository.save(member);
-
-        authRepository.findByMember(member).ifPresent(authRepository::delete);
 
         String token = jwtUtil.extractToken(request);
         if (token != null && jwtUtil.validateToken(token)) {

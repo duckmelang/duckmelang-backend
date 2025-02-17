@@ -52,7 +52,7 @@ public class Member extends BaseEntity {
     @Column(nullable = true)
     private Gender gender;
 
-    @Column(columnDefinition = "TINYTEXT")
+    @Column(unique = true, columnDefinition = "TINYTEXT")
     private String email;
 
     @Column(nullable = false, length = 100)
