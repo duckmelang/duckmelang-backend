@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import umc.duckmelang.domain.auth.repository.AuthRepository;
 import umc.duckmelang.domain.member.converter.MemberFilterConverter;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.domain.enums.MemberStatus;
@@ -21,6 +22,7 @@ import umc.duckmelang.global.security.user.CustomUserDetails;
 public class MyPageCommandServiceImpl implements MyPageCommandService{
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
+    private final AuthRepository authRepository;
     private final BlacklistService blacklistService;
 
     @Override
@@ -56,6 +58,8 @@ public class MyPageCommandServiceImpl implements MyPageCommandService{
 
         member.deleteMember();
         memberRepository.save(member);
+
+        authRepository.findByMember(member).ifPresent(authRepository::delete);
 
         String token = jwtUtil.extractToken(request);
         if (token != null && jwtUtil.validateToken(token)) {
