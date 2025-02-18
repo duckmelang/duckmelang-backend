@@ -13,6 +13,8 @@ import umc.duckmelang.domain.auth.repository.AuthRepository;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.auth.domain.Auth;
+import umc.duckmelang.domain.notificationsetting.domain.NotificationSetting;
+import umc.duckmelang.domain.notificationsetting.repository.NotificationSettingRepository;
 
 import java.util.Collections;
 import java.util.Map;
@@ -22,6 +24,7 @@ import java.util.Map;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
     private final AuthRepository authRepository;
+    private final NotificationSettingRepository notificationSettingRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -66,6 +69,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                             .member(savedMember)
                             .build();
                     authRepository.save(newAuth);
+
+                    //소셜 회원가입 시 알림 설정 자동 생성
+                    NotificationSetting notificationSetting = NotificationSetting.builder()
+                            .member(savedMember)
+                            .chatNotificationEnabled(true)  // 기본값을 true로 설정
+                            .requestNotificationEnabled(true)
+                            .reviewNotificationEnabled(true)
+                            .bookmarkNotificationEnabled(true)
+                            .build();
+                    notificationSettingRepository.save(notificationSetting);
+                    savedMember.setNotificationSetting(notificationSetting);
 
                     return savedMember;
                 });
