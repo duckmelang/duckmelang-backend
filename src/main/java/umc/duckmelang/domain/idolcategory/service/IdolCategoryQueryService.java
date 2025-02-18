@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface IdolCategoryQueryService {
     Optional<IdolCategory> findIdolCategory(Long id);
     List<IdolCategory> getIdolListByKeyword(String keyword);
+    List<IdolCategory> getAllIdolList();
 }

@@ -192,4 +192,9 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         return memberRepository.save(updatedMember);
     }
+
+    @Override
+    public boolean isNicknameExists(String nickname){
+        return memberRepository.existsByNickname(nickname);
+    }
 }

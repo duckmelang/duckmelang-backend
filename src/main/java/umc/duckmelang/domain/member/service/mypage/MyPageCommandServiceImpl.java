@@ -22,6 +22,12 @@ public class MyPageCommandServiceImpl implements MyPageCommandService{
     public Member updateMemberProfile(Long memberId, MyPageRequestDto.UpdateMemberProfileDto request) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        if(!member.getNickname().equals(request.getNickname())){
+            if(memberRepository.existsByNickname(request.getNickname())){
+                throw new MemberException(ErrorStatus.DUPLICATE_NICKNAME);
+            }
+        }
         member.updateProfile(request.getNickname(), request.getIntroduction());
         return memberRepository.save(member);
     }

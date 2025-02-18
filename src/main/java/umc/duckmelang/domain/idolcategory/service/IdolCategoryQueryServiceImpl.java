@@ -24,4 +24,9 @@ public class IdolCategoryQueryServiceImpl implements IdolCategoryQueryService {
     public List<IdolCategory> getIdolListByKeyword(String keyword){
         return idolCategoryRepository.findByKeyword(keyword);
     }
+
+    @Override
+    public List<IdolCategory> getAllIdolList(){
+        return idolCategoryRepository.findAll();
+    }
 }
