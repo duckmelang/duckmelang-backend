@@ -57,12 +57,11 @@ public class ChatRoomResponseDto {
         private String postTitle;
         private String postImage;
 
-        private Long applicationId;
-
         //플래그
         private boolean isPostOwner;
         private ChatRoomStatus chatRoomStatus;
         private ApplicationStatus applicationStatus;
-        private boolean hasReviewed;
+        private Long applicationId;
+        private Long reviewId;
     }
 }

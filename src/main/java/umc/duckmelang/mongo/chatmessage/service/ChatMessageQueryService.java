@@ -10,4 +10,5 @@ import java.util.Map;
 public interface ChatMessageQueryService {
     Slice<ChatMessage> getChatMessageListByChatRoom(Long ChatRoomId, String lastMessageId, int size);
     public Map<Long, ChatMessageResponseDto.LatestChatMessageDto> getLatestMessagesByChatRoomIds(List<Long> chatRoomIds);
+
 }

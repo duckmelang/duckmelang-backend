@@ -18,6 +18,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     Optional<Application> findByIdAndMemberId(Long id, Long memberId);
 
+    Optional<Application> findByPostIdAndMemberId(Long postId, Long memberId);
+
     boolean existsByPostIdAndStatus(Long postId, ApplicationStatus status);
     @EntityGraph(attributePaths = {"member","post"})
     boolean existsByPostIdAndMemberId(Long postId, Long memberId);

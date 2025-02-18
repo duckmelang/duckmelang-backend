@@ -78,4 +78,5 @@ public class ReviewConverter {
                 .latestPublicMemberProfileImage(latestImage != null ? latestImage.getMemberImage() : null)
                 .build();
     }
+
 }
