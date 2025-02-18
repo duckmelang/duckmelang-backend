@@ -13,14 +13,25 @@ import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.materelationship.repository.MateRelationshipRepository;
 import umc.duckmelang.domain.member.domain.Member;
 import umc.duckmelang.domain.member.repository.MemberRepository;
+import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
+import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
+import umc.duckmelang.domain.notification.service.NotificationCommandService;
+import umc.duckmelang.domain.notification.service.NotificationHelper;
+import umc.duckmelang.domain.notificationsetting.domain.NotificationSetting;
+import umc.duckmelang.domain.notificationsetting.service.NotificationSettingQueryService;
 import umc.duckmelang.domain.post.domain.Post;
 import umc.duckmelang.domain.post.repository.PostRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.ApplicationException;
 import umc.duckmelang.global.apipayload.exception.MemberException;
+import umc.duckmelang.global.apipayload.exception.MemberProfileImageException;
 import umc.duckmelang.global.apipayload.exception.PostException;
 
 import java.util.Optional;
+
+import static umc.duckmelang.domain.notification.domain.enums.NotificationType.REQUEST;
+import static umc.duckmelang.domain.notification.domain.enums.NotificationType.REVIEW;
+
 @Service
 @RequiredArgsConstructor
 public class ApplicationCommandServiceImpl implements ApplicationCommandService{
@@ -29,6 +40,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final NotificationHelper notificationHelper;
 
 
     @Override
@@ -47,6 +59,8 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
         if (post.getMember() == member)
             throw new ApplicationException(ErrorStatus.UNAVAILABLE_TO_APPLY_FOR_OWN_POST);
 
+        notificationHelper.sendNotification(memberId, post.getMember().getId(), REQUEST, member.getNickname() + " 님이 동행을 요청했어요");
+
         Application application = Application.builder()
                 .post(post)
                 .member(member)
@@ -62,9 +76,12 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
                 .findByIdAndPostMemberId(applicationId, memberId)
                 .orElseThrow(() -> new ApplicationException(ErrorStatus.APPLICATION_NOT_FOUND));
 
+
         if (!application.updateStatus(ApplicationStatus.FAILED)) {
             throw new ApplicationException(ErrorStatus.ALREADY_PROCESSED_APPLICATION);
         }
+
+        notificationHelper.sendNotification(memberId, application.getMember().getId(), REQUEST, memberRepository.findById(memberId).get().getNickname() + " 님이 동행 요청을 거절했어요");
 
         //ChatRoom.status = TERMINATED
         chatRoomRepository.updateStatusByPostId(application.getPost().getId(), memberId, ChatRoomStatus.TERMINATED);
@@ -115,6 +132,8 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
         //post
         Post post = application.getPost();
         post.toggleWanted();
+
+        notificationHelper.sendNotification(memberId, application.getMember().getId(), REQUEST, memberRepository.findById(memberId).get().getNickname() + " 님이 동행 요청을 수락했어요");
 
         //chatRoom
         // 선택된 채팅방을 CONFIRMED로 변경

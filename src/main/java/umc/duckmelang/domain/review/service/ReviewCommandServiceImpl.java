@@ -10,6 +10,7 @@ import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.memberprofileimage.service.MemberProfileImageQueryService;
 import umc.duckmelang.domain.notification.service.NotificationCommandService;
+import umc.duckmelang.domain.notification.service.NotificationHelper;
 import umc.duckmelang.domain.notificationsetting.domain.NotificationSetting;
 import umc.duckmelang.domain.notificationsetting.service.NotificationSettingQueryService;
 import umc.duckmelang.domain.review.converter.ReviewConverter;
@@ -32,10 +33,7 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final ApplicationRepository applicationRepository;
-    //자신에 대한 후기가 남겨졌을 때 알림
-    private final NotificationCommandService notificationCommandService;
-    private final NotificationSettingQueryService notificationSettingQueryService;
-    private final MemberProfileImageQueryService memberProfileImageQueryService;
+    private final NotificationHelper notificationHelper;
 
     @Override
     public Review joinReview(ReviewRequestDto.ReviewJoinDto request , Long memberId){
@@ -45,17 +43,11 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
         Application application = applicationRepository.findById(request.getApplicationId())
                 .orElseThrow(() -> new ApplicationException(ErrorStatus.APPLICATION_NOT_FOUND));
-        Optional<MemberProfileImage> profileImageOptional = memberProfileImageQueryService.getLatestPublicMemberProfileImage(sender.getId());
-        String profileImageUrl = profileImageOptional
-                .map(MemberProfileImage::getMemberImage)  // memberImage 필드를 가져옴
-                .orElseThrow(() -> new MemberProfileImageException(ErrorStatus.MEMBER_PROFILE_IMAGE_NOT_FOUND));
 
         Review review = ReviewConverter.toReview(request, sender, receiver,application);
-//        review 알림 켜져있을때만 전송
-        NotificationSetting notificationSetting = notificationSettingQueryService.findNotificationSetting(receiver.getId());
-        if (notificationSetting.getReviewNotificationEnabled()) {
-            notificationCommandService.send(sender, receiver, REVIEW, sender.getNickname() + " 님이 후기를 작성했어요", profileImageUrl);
-        }
+
+        notificationHelper.sendNotification(sender.getId(), receiver.getId(), REVIEW, sender.getNickname() + " 님이 후기를 작성했어요");
+
         return reviewRepository.save(review);
     }
 }
