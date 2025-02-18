@@ -27,16 +27,14 @@ public class MemberProfileImageRestController{
     @GetMapping("")
     public ApiResponse<MemberProfileImageResponseDto.MemberProfileImageListDto> getAllProfileImages(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                                                     @ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page) {
-        Long memberId = userDetails.getMemberId();
-        Page<MemberProfileImage> memberProfileImagePage = memberProfileImageQueryService.getAllMemberProfileImageByMemberId(memberId, page);
+        Page<MemberProfileImage> memberProfileImagePage = memberProfileImageQueryService.getAllMemberProfileImageByMemberId(userDetails.getMemberId(), page);
         return ApiResponse.onSuccess(MemberProfileImageConverter.toMemberProfileImageListDto(memberProfileImagePage));
     }
 
     @Operation(summary = "내 프로필 사진 삭제 API", description = "본인의 프로필 사진 중 하나를 삭제하는 API입니다.")
     @DeleteMapping("/{imageId}")
     public ApiResponse<MemberProfileImageResponseDto.DeleteProfileImageResultDto> deleteProfileImage(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable("imageId") Long imageId) {
-        Long memberId = userDetails.getMemberId();
-        memberProfileImageCommandService.deleteProfileImage(memberId, imageId);
+        memberProfileImageCommandService.deleteProfileImage(userDetails.getMemberId(), imageId);
         return ApiResponse.onSuccess(MemberProfileImageConverter.toDeleteProfileImageResultDto());
     }
 
@@ -46,8 +44,7 @@ public class MemberProfileImageRestController{
     public ApiResponse<MemberProfileImageResponseDto.UpdateProfileImageStatusResultDto> updateProfileImageStatus(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                                                                  @PathVariable("imageId") Long imageId,
                                                                                                                  @RequestBody @Valid MemberProfileImageRequestDto.UpdateProfileImageStatusDto request) {
-        Long memberId = userDetails.getMemberId();
-        MemberProfileImage updatedMemberProfileImage = memberProfileImageCommandService.updateProfileImageStatus(memberId, imageId, request);
+        MemberProfileImage updatedMemberProfileImage = memberProfileImageCommandService.updateProfileImageStatus(userDetails.getMemberId(), imageId, request);
         return ApiResponse.onSuccess(MemberProfileImageConverter.toUpdateProfileImageStatusResultDto(updatedMemberProfileImage));
     }
 }

@@ -31,8 +31,7 @@ public class BookmarkRestController {
     @CommonApiResponses
     @Operation(summary = "나의 동행 페이지 - 스크랩 내역 조회 API", description = "개인 스크랩 내역 조회 API입니다.")
     public ApiResponse<PostResponseDto.PostPreviewListDto> getBookmarks(@AuthenticationPrincipal CustomUserDetails userDetails, @ValidPageNumber @RequestParam(name = "page",  defaultValue = "0") Integer page) {
-        Long memberId = userDetails.getMemberId();
-        Page<Post> postList = bookmarkQueryService.getBookmarks(memberId, page);
+        Page<Post> postList = bookmarkQueryService.getBookmarks(userDetails.getMemberId(), page);
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
 
@@ -40,8 +39,7 @@ public class BookmarkRestController {
     @CommonApiResponses
     @Operation(summary = "게시글 스크랩 API", description = "게시글 스크랩하는 API 입니다.")
     public ApiResponse<BookmarkResponseDto.BookmarkJoinResultDto>joinBookmark (@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable(name="postId") Long postId){
-        Long memberId = userDetails.getMemberId();
-        Bookmark bookmark = bookmarkCommandService.joinBookmark(postId, memberId);
+        Bookmark bookmark = bookmarkCommandService.joinBookmark(postId, userDetails.getMemberId());
         return ApiResponse.onSuccess(BookmarkConverter.bookmarkJoinResultDto(bookmark));
     }
 }
