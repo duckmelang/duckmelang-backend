@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import umc.duckmelang.mongo.chatmessage.domain.ChatMessage;
+import umc.duckmelang.mongo.chatmessage.domain.enums.MessageType;
 import umc.duckmelang.mongo.chatmessage.dto.ChatMessageResponseDto;
 import umc.duckmelang.mongo.chatmessage.repository.ChatMessageRepository;
 
@@ -70,6 +71,21 @@ public class ChatMessageQueryServiceImpl implements ChatMessageQueryService {
 
         return chatMessageRepository.findLatestMessagesByChatRoomIds(chatRoomIds)
                 .stream()
+                .map(message -> {
+                    String content;
+                    if (message.getMessageType() == MessageType.TEXT) {
+                        content = message.getContent(); // TEXT 타입은 원본 텍스트 사용
+                    } else {
+                        content = message.getMessageType().toString();
+                    }
+                    return ChatMessageResponseDto.LatestChatMessageDto.builder()
+                            .chatRoomId(message.getChatRoomId())
+                            .messageId(message.getMessageId())
+                            .messageType(message.getMessageType())
+                            .content(content)
+                            .createdAt(message.getCreatedAt())
+                            .build();
+                })
                 .collect(Collectors.toMap(
                         ChatMessageResponseDto.LatestChatMessageDto::getChatRoomId,
                         message -> message

@@ -15,7 +15,8 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
             "{ $group: { " +
                     "_id: \"$chatRoomId\", " +  // chatRoomId를 그룹화 키로 사용
                     "messageId: { $first: \"$_id\" }, " +  // 첫 번째 메시지 ID
-                    "content: { $first: \"$content\" }, " +  // 첫 번째 컨텐츠
+                    "messageType: { $first: \"$messageType\" }, " +  // 메시지 타입 추가
+                    "content: { $first: \"$text\" }, " +  // 텍스트 필드
                     "createdAt: { $first: \"$createdAt\" }, " +  // 첫 번째 생성 시간
                     "chatRoomId: { $first: \"$chatRoomId\" } " +  // chatRoomId 유지
                     "} }"
