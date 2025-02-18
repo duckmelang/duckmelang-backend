@@ -23,11 +23,13 @@ public enum ErrorStatus implements BaseErrorCode {
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "MEMBER4004", "이미 존재하는 이메일입니다."),
     DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "MEMBER4005", "이미 존재하는 닉네임입니다."),
     UNAUTHORIZED_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4006", "잘못된 인증입니다. 해당 작업에 대한 권한이 없습니다."),
+    ALREADY_DELETED_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4007", "이미 탈퇴된 사용자입니다."),
 
     // 멤버 프로필 사진 관련 에러
     MEMBER_PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND,"MEMBER_PROFILE_IMAGE4001", "프로필 이미지가 존재하지 않습니다."),
     CANNOT_DELETE_DEFAULT_PROFILE_IMAGE(HttpStatus.BAD_REQUEST," MEMBER_PROFILE_IMAGE4002", "기본 프로필 이미지는 삭제할 수 없습니다."),
     CANNOT_UPDATE_DEFAULT_PROFILE_IMAGE(HttpStatus.BAD_REQUEST, "MEMBER_PROFILE_IMAGE4003", "기본 프로필 이미지는 업데이트할 수 없습니다."),
+
     // 토큰 관련 응답
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN4000", "토큰이 만료되었습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4001", "유효하지 않은 토큰입니다."),

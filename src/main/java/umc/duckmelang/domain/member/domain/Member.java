@@ -7,6 +7,7 @@ import umc.duckmelang.domain.auth.domain.Auth;
 import umc.duckmelang.domain.chatroom.domain.ChatRoom;
 import umc.duckmelang.domain.materelationship.domain.MateRelationship;
 import umc.duckmelang.domain.member.domain.enums.Gender;
+import umc.duckmelang.domain.member.domain.enums.MemberStatus;
 import umc.duckmelang.domain.memberidol.domain.MemberIdol;
 import umc.duckmelang.domain.memberprofileimage.domain.MemberProfileImage;
 import umc.duckmelang.domain.notification.domain.Notification;
@@ -23,6 +24,7 @@ import umc.duckmelang.global.common.BaseEntity;
 import umc.duckmelang.global.common.serializer.LocalDateSerializer;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -51,7 +53,7 @@ public class Member extends BaseEntity {
     @Column(nullable = true)
     private Gender gender;
 
-    @Column(columnDefinition = "TINYTEXT")
+    @Column(unique = true, columnDefinition = "TINYTEXT")
     private String email;
 
     @Column(nullable = false, length = 100)
@@ -75,6 +77,16 @@ public class Member extends BaseEntity {
         this.filterGender = gender;
         this.filterMinAge = minAge;
         this.filterMaxAge = maxAge;
+    }
+
+    @Enumerated(EnumType.STRING)
+    private MemberStatus memberStatus = MemberStatus.ACTIVE;
+
+    private LocalDateTime deletedAt; // 탈퇴한 시간 저장
+
+    public void deleteMember(){
+        this.memberStatus = MemberStatus.DELETED;
+        this.deletedAt = LocalDateTime.now();
     }
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
