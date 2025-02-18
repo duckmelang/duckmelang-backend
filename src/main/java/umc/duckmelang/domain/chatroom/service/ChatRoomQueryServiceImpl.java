@@ -151,4 +151,9 @@ public class ChatRoomQueryServiceImpl implements ChatRoomQueryService {
 
     }
 
+    @Override
+    public Integer getChatRoomCount(Long postId){
+        return chatRoomRepository.countByPostId(postId);
+    }
+
 }

@@ -62,4 +62,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     void updateStatusByNonPostId(@Param("post") Long postId,
                                  @Param("member") Long memberId,
                                  @Param("status") ChatRoomStatus status);
+
+    Integer countByPostId(Long postId);
 }
