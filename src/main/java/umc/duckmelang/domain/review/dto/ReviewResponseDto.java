@@ -16,7 +16,7 @@ public class ReviewResponseDto {
     @NoArgsConstructor
     public static class ReviewJoinResultDto{
         private Long reviewId;
-        private Short score;
+        private double score;
         private String content;
         private Long receiverId;
     }
@@ -31,7 +31,7 @@ public class ReviewResponseDto {
         private Gender gender;
         private Integer age;
         private String content;
-        private Short score;
+        private double score;
     }
 
     @Getter

@@ -11,7 +11,7 @@ public class ReviewRequestDto {
     @NoArgsConstructor
     public static class ReviewJoinDto{
         @NotNull
-        private Short score;
+        private double score;
         @NotNull
         private String content;
         @NotNull
