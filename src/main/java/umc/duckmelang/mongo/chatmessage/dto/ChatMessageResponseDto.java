@@ -46,6 +46,7 @@ public class ChatMessageResponseDto {
     public static class LatestChatMessageDto {
         private Long chatRoomId;
         private String messageId;
+        private MessageType messageType;
         private String content;
         private LocalDateTime createdAt;
     }
