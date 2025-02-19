@@ -17,8 +17,8 @@ public class Review extends BaseEntity {
     @Column(name = "review_id")
     private Long id;
 
-    @Column(nullable = false, columnDefinition = "BIT(4) CHECK (score >= 0 AND score <= 5)")
-    private Short score;
+    @Column(nullable = false, columnDefinition = "DECIMAL(2,1) CHECK (score >= 0 AND score <= 5)")
+    private double score;
 
     @Column(nullable = false, length = 500)
     private String content;
