@@ -35,8 +35,12 @@ public class MyPageCommandServiceImpl implements MyPageCommandService{
             if(memberRepository.existsByNickname(request.getNickname())){
                 throw new MemberException(ErrorStatus.DUPLICATE_NICKNAME);
             }
+            member.setNickname(request.getNickname());
         }
-        member.updateProfile(request.getNickname(), request.getIntroduction());
+
+        if (request.getIntroduction() != null) {
+            member.setIntroduction(request.getIntroduction());
+        }
         return memberRepository.save(member);
     }
 
