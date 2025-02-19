@@ -8,6 +8,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import umc.duckmelang.domain.application.domain.Application;
+import umc.duckmelang.domain.application.repository.ApplicationRepository;
+import umc.duckmelang.domain.chatroom.converter.ChatRoomConverter;
 import umc.duckmelang.domain.chatroom.domain.ChatRoom;
 import umc.duckmelang.domain.chatroom.domain.enums.ChatRoomStatus;
 import umc.duckmelang.domain.chatroom.dto.ChatRoomResponseDto;
@@ -20,6 +23,11 @@ import umc.duckmelang.domain.post.repository.PostRepository;
 import umc.duckmelang.domain.postimage.domain.PostImage;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.postimage.repository.PostImageRepository;
+import umc.duckmelang.domain.review.domain.Review;
+import umc.duckmelang.domain.review.repository.ReviewRepository;
+import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
+import umc.duckmelang.global.apipayload.exception.ChatRoomException;
+import umc.duckmelang.global.apipayload.exception.MemberException;
 import umc.duckmelang.mongo.chatmessage.dto.ChatMessageResponseDto;
 import umc.duckmelang.mongo.chatmessage.service.ChatMessageQueryService;
 
@@ -27,6 +35,7 @@ import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,6 +49,8 @@ public class ChatRoomQueryServiceImpl implements ChatRoomQueryService {
     private final MemberProfileImageRepository memberProfileImageRepository;
     private final ChatMessageQueryService chatMessageService;
     private final PostRepository postRepository;
+    private final ApplicationRepository applicationRepository;
+    private final ReviewRepository reviewRepository;
 
     @Value("${spring.custom.default.profile-image}")
     private String defaultImage;
@@ -84,7 +95,36 @@ public class ChatRoomQueryServiceImpl implements ChatRoomQueryService {
 
     @Override
     public ChatRoomResponseDto.ChatRoomDetailDto findChatRoomDetail(Long memberId, Long chatRoomId) {
-        return null;
+        //chatroom, member, post, application, review 엔티티 조회
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithPostAndMember(chatRoomId).orElseThrow(()->new ChatRoomException(ErrorStatus.CHATROOM_NOT_FOUND));
+        Application application = applicationRepository.findByPostIdAndMemberId(chatRoom.getPost().getId(), chatRoom.getOtherMember().getId()).orElse(null);
+        Review review = null;
+        if (application != null)
+            review = reviewRepository.findSentReviewToSpecificApplication(memberId, application.getId()).orElse(null);
+
+        Member member = null;
+        if (Objects.equals(chatRoom.getPost().getMember().getId(), memberId))
+            member = chatRoom.getPost().getMember();
+        else if (Objects.equals(chatRoom.getOtherMember().getId(), memberId))
+            member = chatRoom.getOtherMember();
+        else throw new MemberException(ErrorStatus.UNAUTHORIZED_MEMBER);
+
+        MemberProfileImage memberProfileImage = memberProfileImageRepository.findFirstByMemberIdAndIsPublicTrueOrderByCreatedAtAsc(member.getId()).orElse(null);
+        PostImage postImage = postImageRepository.findFirstByPostIdOrderByCreatedAtAsc(chatRoom.getPost().getId()).orElse(null);
+
+        return ChatRoomResponseDto.ChatRoomDetailDto.builder()
+                .oppositeId(member.getId())
+                .oppositeNickname(member.getNickname())
+                .oppositeProfileImage(memberProfileImage != null ? memberProfileImage.getMemberImage() : "")
+                .postId(chatRoom.getPost().getId())
+                .postTitle(chatRoom.getPost().getTitle())
+                .postImage(postImage != null ? postImage.getPostImageUrl() : "")
+                .isPostOwner(member==chatRoom.getPost().getMember())
+                .chatRoomStatus(chatRoom.getChatRoomStatus())
+                .applicationStatus(application!=null ? application.getStatus() : null)
+                .applicationId(application != null ? application.getId() : -1)
+                .reviewId(review != null ? review.getId() : -1)
+                .build();
     }
 
     public List<ChatRoomResponseDto.ChatRoomItemDto> getChatRoomItemDtoList(Page<ChatRoom> chatRooms, Long memberId){

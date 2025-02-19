@@ -13,6 +13,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r FROM Review r JOIN FETCH r.receiver WHERE r.receiver.id = :receiverId")
     List<Review> findReceivedReview(Long receiverId);
 
+    @Query("SELECT r FROM Review r WHERE r.sender.id = :memberId AND r.application.id = :applicationId")
+    Optional<Review> findSentReviewToSpecificApplication(Long memberId, Long applicationId);
+
     @Query("SELECT a FROM Application a " +
             "JOIN FETCH a.post p " +
             "JOIN FETCH p.member pm " +

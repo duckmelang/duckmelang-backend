@@ -84,7 +84,10 @@ public enum ErrorStatus implements BaseErrorCode {
     INVALID_MESSAGE_TYPE(HttpStatus.BAD_REQUEST, "CHATMESSAGE4001", "지원하지 않는 메세지 타입입니다."),
     EMPTY_MESSAGE_TEXT(HttpStatus.BAD_REQUEST, "CHATMESSAGE4002", "메세지 내용이 없습니다."),
     EMPTY_MESSAGE_IMAGE(HttpStatus.BAD_REQUEST, "CHATMESSAGE4003", "메세지 이미지가 없습니다."),
-    EMPTY_MESSAGE_FILE(HttpStatus.BAD_REQUEST, "CHATMESSAGE4004", "메세지 파일이 없습니다.");
+    EMPTY_MESSAGE_FILE(HttpStatus.BAD_REQUEST, "CHATMESSAGE4004", "메세지 파일이 없습니다."),
+
+    // 채팅방 관련 에러
+    CHATROOM_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLICATION4003", "존재하지 않는 채팅방입니다.");
 
 
     private final HttpStatus httpStatus;
