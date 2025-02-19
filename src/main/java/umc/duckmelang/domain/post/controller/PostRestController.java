@@ -84,7 +84,7 @@ public class PostRestController {
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
 
-    @Operation(summary = "게시글 상세 - 조회 API", description = "홈화면에서 게시글 1개 클릭시 자세히 보여주는 API입니다. wanted가 0이면 종료, 1이면 진행 중입니다. 채팅수 조회 아직 만들지 않음")
+    @Operation(summary = "게시글 상세 - 조회 API", description = "홈화면에서 게시글 1개 클릭시 자세히 보여주는 API입니다. wanted가 0이면 종료, 1이면 진행 중입니다. 채팅수 조회 추가 완료")
     @GetMapping("/{postId}")
     @CommonApiResponses
     public ApiResponse<PostResponseDto.PostDetailDto> getPostDetail (@ExistPost @PathVariable(name="postId") Long postId){

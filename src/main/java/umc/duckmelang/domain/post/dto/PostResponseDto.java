@@ -52,6 +52,7 @@ public class PostResponseDto {
         private Double averageScore;
         private Integer bookmarkCount;
         private Integer viewCount;
+        private Integer chatCount;
         private String title;
         private String content;
         private Short wanted;
