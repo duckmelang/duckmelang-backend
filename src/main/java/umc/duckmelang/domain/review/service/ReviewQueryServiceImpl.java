@@ -46,7 +46,7 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
             return 0.0;
         }
         return Math.round(reviewList.stream()
-                .mapToInt(Review::getScore)
+                .mapToDouble(Review::getScore)
                 .average()
                 .orElse(0) * 10) / 10.0;
     }
