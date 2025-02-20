@@ -33,6 +33,7 @@ public class MemberConverter {
         return MemberSignUpDto.SignupResultDto.builder()
                 .memberId(member.getId())
                 .createdAt(member.getCreatedAt())
+                .profileComplete(member.isProfileComplete())
                 .build();
     }
 
