@@ -23,6 +23,7 @@ import umc.duckmelang.domain.post.repository.PostRepository;
 import umc.duckmelang.domain.postimage.domain.PostImage;
 import umc.duckmelang.domain.member.repository.MemberRepository;
 import umc.duckmelang.domain.postimage.repository.PostImageRepository;
+import umc.duckmelang.domain.postimage.service.PostImageQueryServiceImpl;
 import umc.duckmelang.domain.review.domain.Review;
 import umc.duckmelang.domain.review.repository.ReviewRepository;
 import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
@@ -48,6 +49,7 @@ public class ChatRoomQueryServiceImpl implements ChatRoomQueryService {
     private final MemberRepository memberRepository;
     private final MemberProfileImageRepository memberProfileImageRepository;
     private final ChatMessageQueryService chatMessageService;
+    private final PostImageQueryServiceImpl postImageQueryService;
     private final PostRepository postRepository;
     private final ApplicationRepository applicationRepository;
     private final ReviewRepository reviewRepository;
@@ -133,11 +135,16 @@ public class ChatRoomQueryServiceImpl implements ChatRoomQueryService {
         List<Long> chatRoomIds = chatRooms.stream()
                 .map(ChatRoom::getId)
                 .collect(Collectors.toList());
+        List<Long> postIds = chatRooms.stream()
+                .map(chatRoom -> chatRoom.getPost().getId())
+                .collect(Collectors.toList());
 
         // 한 번의 쿼리로 모든 채팅방의 최신 메시지 조회
         Map<Long, ChatMessageResponseDto.LatestChatMessageDto> latestMessagesMap =
                 chatMessageService.getLatestMessagesByChatRoomIds(chatRoomIds);
 
+        //한 번의 쿼리로 모든 post의 postImage 조회
+        Map<Long, String> postImages = postImageQueryService.getFirstImageUrlsForPosts(postIds);
 
         return chatRooms
                 .stream().sorted((chatRoom1, chatRoom2) -> {
@@ -157,10 +164,7 @@ public class ChatRoomQueryServiceImpl implements ChatRoomQueryService {
                     Member otherMember = isPostWriter ? chatRoom.getOtherMember() : chatRoom.getPost().getMember();
 
                     // 게시글의 최신 이미지 조회
-                    String latestPostImageUrl = postImageRepository
-                            .findFirstByPostIdOrderByCreatedAtAsc(chatRoom.getPost().getId())
-                            .map(PostImage::getPostImageUrl)
-                            .orElse(defaultImage);
+                    String latestPostImageUrl = postImages.get(chatRoom.getPost().getId());
 
                     // 상대방의 최신 프로필 이미지 조회
                     String latestProfileImageUrl = memberProfileImageRepository
