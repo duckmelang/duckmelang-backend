@@ -131,7 +131,7 @@ public class Member extends BaseEntity {
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
     //notificationSetting
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private NotificationSetting notificationSetting;
 
 
