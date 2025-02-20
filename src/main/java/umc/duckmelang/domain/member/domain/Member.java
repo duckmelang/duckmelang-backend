@@ -132,6 +132,7 @@ public class Member extends BaseEntity {
 
     //notificationSetting
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "notification_setting_id")
     private NotificationSetting notificationSetting;
 
 
