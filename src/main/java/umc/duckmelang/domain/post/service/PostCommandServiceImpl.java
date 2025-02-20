@@ -78,10 +78,10 @@ public class PostCommandServiceImpl implements PostCommandService {
     }
 
     @Override
-    public Post patchPostStatus(Long postId) {
+    public Post patchPostStatus(Long postId, Short wanted) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(ErrorStatus.POST_NOT_FOUND));
-        post.toggleWanted();
+        post.setWanted(wanted);
 
         return postRepository.save(post);
     }

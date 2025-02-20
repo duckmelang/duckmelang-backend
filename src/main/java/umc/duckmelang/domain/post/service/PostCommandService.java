@@ -8,6 +8,6 @@ import java.util.*;
 public interface PostCommandService {
     Post joinPost(PostRequestDto.PostJoinDto request, Long memberId);
     Post joinPost(PostRequestDto.PostJoinDto request, Long memberId, List<MultipartFile> postImages);
-    Post patchPostStatus(Long postId);
+    Post patchPostStatus(Long postId, Short wanted);
     void deleteMyPost(Long postId);
 }

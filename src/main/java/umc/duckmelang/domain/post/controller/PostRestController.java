@@ -117,11 +117,11 @@ public class PostRestController {
         return ApiResponse.onSuccess(PostConverter.postPreviewListDto(postList));
     }
 
-    @Operation(summary = "게시글 상세 - 게시글 상태 변경 API", description = "게시글을 상태를 모집 중 -> 모집 완료/ 또는 모집 완료 -> 모집 중으로 바꿉니다. 모집 중은 wanted가 1, 모집 완료는 0입니다.")
+    @Operation(summary = "게시글 상세 - 게시글 상태 변경 API", description = "모집 중은 wanted가 1, 모집 완료는 0입니다.")
     @PatchMapping("/{postId}/status")
     @CommonApiResponses
-    public ApiResponse<PostResponseDto.PostStatusDto> patchPostStatus(@ExistPost @PathVariable("postId") Long postId){
-        Post post = postCommandService.patchPostStatus(postId);
+    public ApiResponse<PostResponseDto.PostStatusDto> patchPostStatus(@ExistPost @PathVariable("postId") Long postId, @RequestParam("wanted") Short wanted){
+        Post post = postCommandService.patchPostStatus(postId, wanted);
         return ApiResponse.onSuccess(PostConverter.postStatusDto(post));
     }
 
