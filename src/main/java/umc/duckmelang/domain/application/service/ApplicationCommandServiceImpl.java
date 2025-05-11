@@ -20,7 +20,6 @@ import umc.duckmelang.global.apipayload.code.status.ErrorStatus;
 import umc.duckmelang.global.apipayload.exception.ApplicationException;
 import umc.duckmelang.global.apipayload.exception.MemberException;
 import umc.duckmelang.global.apipayload.exception.PostException;
-import umc.duckmelang.global.redis.concurrency.RedissonLock;
 
 import java.util.Optional;
 
@@ -39,7 +38,6 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService{
 
     @Override
     @Transactional
-    @RedissonLock(key = "'application:'.concat(#postId).concat('-').concat(#memberId)")
     public Application makeNewApplication(Long postId, Long memberId) {
         validateApplyingCondition(postId, memberId);
 
